@@ -15,19 +15,19 @@ namespace DataAccess
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<Booth> Booths { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<PhotoHistory> PhotoHistories { get; set; }
-        public DbSet<PhotoStyle> PhotoStyles { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Coupon> Coupons { get; set; }
-        public DbSet<MembershipCard> MembershipCards { get; set; }
-        public DbSet<LevelMemberShip> LevelMemberShips { get; set; }
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<TypeSession> TypeSessions { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<Location> Location { get; set; }
+        public DbSet<Booth> Booth { get; set; }
+        public DbSet<Photo> Photo { get; set; }
+        public DbSet<PhotoHistory> PhotoHistory { get; set; }
+        public DbSet<PhotoStyle> PhotoStyle { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Coupon> Coupon { get; set; }
+        public DbSet<MembershipCard> MembershipCard { get; set; }
+        public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
+        public DbSet<Session> Session { get; set; }
+        public DbSet<TypeSession> TypeSession { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
