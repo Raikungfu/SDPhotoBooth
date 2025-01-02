@@ -1,0 +1,16 @@
+*.suo
+*.user
+*.sln
+*.json
+.vs/
+bin/
+obj/
+DataAccess/migrations/
+BussinessObject/bin/
+BussinessObject/obj/
+ServerAPI/bin/
+ServerAPI/obj/
+WpfClient/bin/
+WpfClient/obj/
+WpfClient/App.config
+WpfClient/Properties/
