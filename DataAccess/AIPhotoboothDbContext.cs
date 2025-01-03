@@ -22,10 +22,10 @@ namespace DataAccess
         public DbSet<PhotoHistory> PhotoHistory { get; set; }
         public DbSet<PhotoStyle> PhotoStyle { get; set; }
         public DbSet<Payment> Payment { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Order> Order { get; set; }
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<MembershipCard> MembershipCard { get; set; }
-        public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
+        public DbSet<LevelMembership> LevelMemberShip { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
 
@@ -42,7 +42,7 @@ namespace DataAccess
                 .HasForeignKey(mc => mc.CustomerId);
 
             modelBuilder.Entity<MembershipCard>()
-                .HasOne(mc => mc.LevelMemberShip)
+                .HasOne(mc => mc.LevelMembership)
                 .WithMany()
                 .HasForeignKey(mc => mc.LevelMemberShipId);
 
@@ -76,20 +76,25 @@ namespace DataAccess
                 .WithMany(ph => ph.Photos)
                 .HasForeignKey(p => p.PhotoHistoryId);
 
-            modelBuilder.Entity<Transaction>()
+            modelBuilder.Entity<Order>()
                 .HasOne(t => t.User)
-                .WithMany(u => u.Transactions)
+                .WithMany(u => u.Orders)
                 .HasForeignKey(t => t.UserId);
 
-            modelBuilder.Entity<Transaction>()
+            modelBuilder.Entity<Order>()
                 .HasOne(t => t.Payment)
-                .WithMany(p => p.Transactions)
+                .WithMany(p => p.Orders)
                 .HasForeignKey(t => t.PaymentId);
 
             modelBuilder.Entity<Session>()
                 .HasOne(s => s.TypeSession)
                 .WithMany(ts => ts.Sessions)
                 .HasForeignKey(s => s.TypeSessionId);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Location)
+                .WithMany(l => l.Staffs)
+                .HasForeignKey(u => u.LocationId);
         }
 
         public override int SaveChanges()

@@ -10,9 +10,13 @@ namespace BussinessObject
 {
     public class Photo : BaseEntityNoAudit
     {
+        [Required]
         public int PhotoHistoryId { get; set; }
+
+        [Required]
         public string Url { get; set; }
-        public DateTime CreatedAt { get; set; }
+
+        [Required]
         public int PhotoStyleId { get; set; }
 
         [ForeignKey("PhotoStyleId")]

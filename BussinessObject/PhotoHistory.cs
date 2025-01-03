@@ -11,10 +11,16 @@ namespace BussinessObject
     public class PhotoHistory : BaseEntityNoAudit
     {
         public int? BoothId { get; set; }
+
         public int? CustomerId { get; set; }
+
         public int? LocationId { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public decimal Amount { get; set; }
-        public int SessionId { get; set; }
+
+        [Required]
+        public string SessionId { get; set; }
 
         [ForeignKey("SessionId")]
         public Session Session { get; set; }
@@ -28,6 +34,6 @@ namespace BussinessObject
         [ForeignKey("BoothId")]
         public Booth Booth { get; set; }
 
-        public ICollection<Photo> Photos { get; set; }
+        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
     }
 }

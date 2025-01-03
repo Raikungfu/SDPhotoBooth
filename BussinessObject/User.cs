@@ -33,7 +33,8 @@ namespace BussinessObject
         public virtual ICollection<MembershipCard> MembershipCards { get; set; }
 
         public virtual ICollection<PhotoHistory> PhotoHistories { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
 
         [NotMapped]
         public virtual ICollection<BaseEntity> CreatedEntities { get; set; }
