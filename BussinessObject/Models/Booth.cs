@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class Booth : BaseEntity
     {

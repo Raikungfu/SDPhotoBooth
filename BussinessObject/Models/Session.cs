@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class Session
     {

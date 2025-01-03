@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
 
     public class TypeSession : BaseEntity

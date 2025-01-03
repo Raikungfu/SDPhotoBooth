@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class PhotoStyle : BaseEntity
     {

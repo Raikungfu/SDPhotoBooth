@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class Payment : BaseEntity
     {

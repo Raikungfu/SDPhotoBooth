@@ -1,4 +1,4 @@
-﻿using BussinessObject;
+﻿using BussinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess
+namespace DataAccess.Data
 {
     public class AIPhotoboothDbContext : DbContext
     {

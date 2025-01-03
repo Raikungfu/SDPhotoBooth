@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class User : BaseEntityNoAudit
     {
@@ -24,7 +24,7 @@ namespace BussinessObject
 
         public decimal? Balance { get; set; }
         public string? Avatar { get; set; }
-        
+
         public int? LocationId { get; set; }
 
         [ForeignKey("LocationId")]

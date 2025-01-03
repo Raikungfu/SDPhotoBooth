@@ -1,4 +1,6 @@
-using DataAccess;
+using DataAccess.Data;
+using DataAccess.Repository.IRepository;
+using DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AIPhotoboothDbContext>(options =>
     options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess")));
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace BussinessObject
+namespace BussinessObject.Models
 {
     public class Location : BaseEntity
     {
