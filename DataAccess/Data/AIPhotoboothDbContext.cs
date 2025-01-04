@@ -31,10 +31,6 @@ namespace DataAccess.Data
 
             base.OnModelCreating(modelBuilder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.EnableSensitiveDataLogging();
-        }
         public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
@@ -48,9 +44,37 @@ namespace DataAccess.Data
                 {
                     entry.Entity.LastModified = DateTime.Now;
                 }
+                if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                }
             }
 
             return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.Now;
+                }
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModified = DateTime.Now;
+                }
+                if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                }
+            }
+
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
     }
