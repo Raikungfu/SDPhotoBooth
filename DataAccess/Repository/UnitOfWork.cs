@@ -9,10 +9,35 @@ namespace DataAccess.Repository
         public UnitOfWork(AIPhotoboothDbContext db)
         {
             _db = db;
-            //Account = new AccountRepository(_db);
+            Booth = new BoothRepository(_db);
+            Coupon = new CouponRepository(_db);
+            LevelMemberShip = new LevelMemberShipRepository(_db);
+            Location = new LocationRepository(_db);
+            MembershipCard = new MembershipCardRepository(_db);
+            Order = new OrderRepository(_db);
+            Payment = new PaymentRepository(_db);
+            PhotoHistory = new PhotoHistoryRepository(_db);
+            Photo = new PhotoRepository(_db);
+            PhotoStyle = new PhotoStyleRepository(_db);
+            Session = new SessionRepository(_db);
+            TypeSession = new TypeSessionRepository(_db);
+            User = new UserRepository(_db);
 
         }
-        //public IAccountRepository Account { get; private set; }
+        public IBoothRepository Booth { get; private set; }
+        public ICouponRepository Coupon { get; private set; }
+        public ILevelMemberShipRepository LevelMemberShip { get; private set; }
+        public ILocationRepository Location { get; private set; }
+        public IMembershipCardRepository MembershipCard { get; private set; }
+        public IOrderRepository Order { get; private set; }
+        public IPaymentRepository Payment { get; private set; }
+        public IPhotoHistoryRepository PhotoHistory { get; private set; }
+        public IPhotoRepository Photo { get; private set; }
+        public IPhotoStyleRepository PhotoStyle { get; private set; }
+        public ISessionRepository Session { get; private set; }
+        public ITypeSessionRepository TypeSession { get; private set; }
+        public IUserRepository User { get; private set; }
+
 
         public void Dispose()
         {
