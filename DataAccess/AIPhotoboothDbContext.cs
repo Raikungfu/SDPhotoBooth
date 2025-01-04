@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataAccess
 {
@@ -21,7 +22,7 @@ namespace DataAccess
         public DbSet<Photo> Photo { get; set; }
         public DbSet<PhotoHistory> PhotoHistory { get; set; }
         public DbSet<PhotoStyle> PhotoStyle { get; set; }
-        public DbSet<Payment> Payment { get; set; }
+        public DbSet<PaymentMethod> PaymentMethod { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<MembershipCard> MembershipCard { get; set; }
@@ -43,7 +44,7 @@ namespace DataAccess
 
             modelBuilder.Entity<MembershipCard>()
                 .HasOne(mc => mc.LevelMembership)
-                .WithMany()
+                .WithMany(u => u.MembershipCards)
                 .HasForeignKey(mc => mc.LevelMemberShipId);
 
             modelBuilder.Entity<PhotoHistory>()
@@ -82,9 +83,14 @@ namespace DataAccess
                 .HasForeignKey(t => t.UserId);
 
             modelBuilder.Entity<Order>()
-                .HasOne(t => t.Payment)
+                .HasOne(t => t.PaymentMethod)
                 .WithMany(p => p.Orders)
                 .HasForeignKey(t => t.PaymentId);
+
+            modelBuilder.Entity<Session>()
+                .HasOne(u => u.Order)
+                .WithOne(p => p.Session)
+                .HasForeignKey<Order>(p => p.SessionId);
 
             modelBuilder.Entity<Session>()
                 .HasOne(s => s.TypeSession)
@@ -95,6 +101,76 @@ namespace DataAccess
                 .HasOne(u => u.Location)
                 .WithMany(l => l.Staffs)
                 .HasForeignKey(u => u.LocationId);
+
+            modelBuilder.Entity<Coupon>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedCoupons)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<Coupon>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedCoupons)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<PhotoStyle>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedPhotoStyles)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<PhotoStyle>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedPhotoStyles)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedPaymentMethods)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedPaymentMethods)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<TypeSession>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedTypeSessions)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<TypeSession>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedTypeSessions)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<LevelMembership>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedLevelMemberships)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<LevelMembership>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedLevelMemberships)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<Booth>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedBooths)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<Booth>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedBooths)
+                .HasForeignKey(b => b.LastModifiedById);
+
+            modelBuilder.Entity<Location>()
+                .HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedLocations)
+                .HasForeignKey(b => b.CreatedById);
+
+            modelBuilder.Entity<Location>()
+                .HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedLocations)
+                .HasForeignKey(b => b.LastModifiedById);
         }
 
         public override int SaveChanges()

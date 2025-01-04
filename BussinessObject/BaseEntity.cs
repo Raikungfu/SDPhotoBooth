@@ -13,13 +13,13 @@ namespace BussinessObject
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime LastModified { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? LastModified { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
 
-        public int CreatedById { get; set; }
-        public int LastModifiedById { get; set; }
+        public int? CreatedById { get; set; }
+        public int? LastModifiedById { get; set; }
 
 
         [NotMapped]

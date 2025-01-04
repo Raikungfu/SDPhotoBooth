@@ -26,5 +26,7 @@ namespace BussinessObject
         public int? Point { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public ICollection<MembershipCard> MembershipCards { get; set; } = new List<MembershipCard>();
     }
 }

@@ -30,6 +30,6 @@ namespace BussinessObject
         public virtual Session Session { get; set; }
 
         [ForeignKey("PaymentId")]
-        public virtual Payment Payment { get; set; }
+        public virtual PaymentMethod PaymentMethod { get; set; }
     }
 }

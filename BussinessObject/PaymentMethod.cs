@@ -9,7 +9,7 @@ using System.Transactions;
 
 namespace BussinessObject
 {
-    public class Payment : BaseEntity
+    public class PaymentMethod : BaseEntity
     {
         [Required]
         [StringLength(100, ErrorMessage = "MethodName cannot exceed 100 characters.")]

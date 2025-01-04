@@ -36,10 +36,32 @@ namespace BussinessObject
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        [NotMapped]
-        public virtual ICollection<BaseEntity> CreatedEntities { get; set; }
+        public virtual ICollection<Booth> CreatedBooths { get; set; }
 
-        [NotMapped]
-        public virtual ICollection<BaseEntity> UpdatedEntities { get; set; }
+        public virtual ICollection<Booth> LastModifiedBooths { get; set; }
+
+        public virtual ICollection<Location> CreatedLocations { get; set; }
+
+        public virtual ICollection<Location> LastModifiedLocations { get; set; }
+
+        public virtual ICollection<TypeSession> CreatedTypeSessions { get; set; }
+
+        public virtual ICollection<TypeSession> LastModifiedTypeSessions { get; set; }
+
+        public virtual ICollection<Coupon> CreatedCoupons { get; set; }
+
+        public virtual ICollection<Coupon> LastModifiedCoupons { get; set; }
+
+        public virtual ICollection<PhotoStyle> CreatedPhotoStyles { get; set; }
+
+        public virtual ICollection<PhotoStyle> LastModifiedPhotoStyles { get; set; }
+
+        public virtual ICollection<PaymentMethod> CreatedPaymentMethods { get; set; }
+
+        public virtual ICollection<PaymentMethod> LastModifiedPaymentMethods { get; set; }
+
+        public virtual ICollection<LevelMembership> CreatedLevelMemberships { get; set; }
+
+        public virtual ICollection<LevelMembership> LastModifiedLevelMemberships { get; set; }
     }
 }

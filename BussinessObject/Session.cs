@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BussinessObject
 {
@@ -39,6 +40,8 @@ namespace BussinessObject
         public Booth Booth { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public virtual Order Order { get; set; }
 
         private static string GenerateCode(int length)
         {
