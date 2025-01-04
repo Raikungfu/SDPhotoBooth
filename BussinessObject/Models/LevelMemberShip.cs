@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BussinessObject.Models
 {
-    public class LevelMembership : BaseEntity
+    public class LevelMemberShip : BaseEntity
     {
         [Required]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
@@ -26,5 +21,7 @@ namespace BussinessObject.Models
         public int? Point { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public ICollection<MembershipCard> MembershipCards { get; set; } = new List<MembershipCard>();
     }
 }

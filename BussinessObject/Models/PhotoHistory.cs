@@ -19,10 +19,9 @@ namespace BussinessObject.Models
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public decimal Amount { get; set; }
 
-        [Required]
-        public string SessionId { get; set; }
+        public string SessionCode { get; set; }
 
-        [ForeignKey("SessionId")]
+        [ForeignKey(nameof(SessionCode))]
         public Session Session { get; set; }
 
         [ForeignKey("CustomerId")]

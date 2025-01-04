@@ -1,6 +1,6 @@
 using DataAccess.Data;
-using DataAccess.Repository.IRepository;
 using DataAccess.Repository;
+using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +11,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AIPhotoboothDbContext>(options =>
-    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess")));
+{
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess"));
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -21,6 +23,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//Seed data
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AIPhotoboothDbContext>();
+
+    dbContext.Database.Migrate();
+    SeedData.Seed(dbContext);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

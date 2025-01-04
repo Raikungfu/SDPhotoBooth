@@ -31,6 +31,6 @@ namespace BussinessObject.Models
         public User Customer { get; set; }
 
         [ForeignKey("LevelMemberShipId")]
-        public LevelMembership LevelMembership { get; set; }
+        public LevelMemberShip LevelMemberShip { get; set; }
     }
 }

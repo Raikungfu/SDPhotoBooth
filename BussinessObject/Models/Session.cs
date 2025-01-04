@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BussinessObject.Models
 {
@@ -24,19 +20,18 @@ namespace BussinessObject.Models
         public int TypeSessionId { get; set; }
 
         [Required]
-        public int PhotoHistoryId { get; set; }
-
-        [Required]
         public int BoothId { get; set; }
 
         [ForeignKey("TypeSessionId")]
         public TypeSession TypeSession { get; set; }
 
-        [ForeignKey("PhotoHistoryId")]
-        public PhotoHistory PhotoHistory { get; set; }
 
         [ForeignKey("BoothId")]
         public Booth Booth { get; set; }
+
+        public PhotoHistory PhotoHistory { get; set; }
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
