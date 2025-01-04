@@ -25,33 +25,8 @@ namespace DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            //SeedData.Seed(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AIPhotoboothDbContext).Assembly);
-
             base.OnModelCreating(modelBuilder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.EnableSensitiveDataLogging();
-        }
-        public override int SaveChanges()
-        {
-            var entries = ChangeTracker.Entries<BaseEntity>();
-            foreach (var entry in entries)
-            {
-                if (entry.State == EntityState.Added)
-                {
-                    entry.Entity.CreatedAt = DateTime.Now;
-                }
-                if (entry.State == EntityState.Modified)
-                {
-                    entry.Entity.LastModified = DateTime.Now;
-                }
-            }
-
-            return base.SaveChanges();
-        }
-
     }
 }
