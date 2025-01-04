@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface ICouponRepository : IRepository<Coupon>
     {
-        int Update(Coupon coupon);
-        Task<int> UpdateAsync(Coupon coupon);
+        void Update(Coupon coupon);
+        Task UpdateAsync(Coupon coupon);
     }
 }

@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IMembershipCardRepository : IRepository<MembershipCard>
     {
-        int Update(MembershipCard membershipCard);
-        Task<int> UpdateAsync(MembershipCard membershipCard);
+        void Update(MembershipCard membershipCard);
+        Task UpdateAsync(MembershipCard membershipCard);
     }
 }

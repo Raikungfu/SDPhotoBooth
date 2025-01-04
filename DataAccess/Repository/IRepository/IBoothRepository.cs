@@ -4,8 +4,8 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IBoothRepository : IRepository<Booth>
     {
-        int Update(Booth booth);
-        Task<int> UpdateAsync(Booth booth);
+        void Update(Booth booth);
+        Task UpdateAsync(Booth booth);
 
     }
 }

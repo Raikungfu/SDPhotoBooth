@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface ITypeSessionRepository : IRepository<TypeSession>
     {
-        int Update(TypeSession typeSession);
-        Task<int> UpdateAsync(TypeSession typeSession);
+        void Update(TypeSession typeSession);
+        Task UpdateAsync(TypeSession typeSession);
     }
 }

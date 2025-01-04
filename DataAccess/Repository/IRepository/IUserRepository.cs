@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IUserRepository : IRepository<User>
     {
-        int Update(User user);
-        Task<int> UpdateAsync(User user);
+        void Update(User user);
+        Task UpdateAsync(User user);
     }
 }

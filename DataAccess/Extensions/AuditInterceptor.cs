@@ -35,15 +35,21 @@ namespace DataAccess.Extensions
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = now;
+                    entry.Entity.LastModified = now;
+                    //Handle CreatedById and LastModifiedById
+
                 }
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModified = now;
+                    //Handle LastModifiedById
                 }
                 if (entry.State == EntityState.Deleted)
                 {
                     entry.Entity.IsDeleted = true;
+                    entry.Entity.LastModified = now;
                     entry.State = EntityState.Modified; // Xóa mềm
+                    //Handle LastModifiedById
                 }
             }
 
@@ -52,6 +58,7 @@ namespace DataAccess.Extensions
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = now;
+                    entry.Entity.UpdatedAt = now;
                 }
                 if (entry.State == EntityState.Modified)
                 {
@@ -60,7 +67,9 @@ namespace DataAccess.Extensions
                 if (entry.State == EntityState.Deleted)
                 {
                     entry.Entity.IsDeleted = true;
+                    entry.Entity.UpdatedAt = now;
                     entry.State = EntityState.Modified; // Xóa mềm
+
                 }
             }
         }

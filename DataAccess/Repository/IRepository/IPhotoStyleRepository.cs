@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IPhotoStyleRepository : IRepository<PhotoStyle>
     {
-        int Update(PhotoStyle photoStyle); 
-        Task<int> UpdateAsync(PhotoStyle photoStyle);
+        void Update(PhotoStyle photoStyle); 
+        Task UpdateAsync(PhotoStyle photoStyle);
     }
 }

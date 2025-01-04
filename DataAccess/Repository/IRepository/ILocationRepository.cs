@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface ILocationRepository : IRepository<Location>
     {
-        int Update(Location location); 
-        Task<int> UpdateAsync(Location location);
+        void Update(Location location); 
+        Task UpdateAsync(Location location);
     }
 }

@@ -4,7 +4,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IOrderRepository : IRepository<Order>
     {
-        int Update(Order order);
-        Task<int> UpdateAsync(Order order);
+        void Update(Order order);
+        Task UpdateAsync(Order order);
     }
 }
