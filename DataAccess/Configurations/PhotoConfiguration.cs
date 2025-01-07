@@ -17,6 +17,7 @@ namespace DataAccess.Configurations
             builder.HasOne(p => p.PhotoHistory)
                 .WithMany(ph => ph.Photos)
                 .HasForeignKey(p => p.PhotoHistoryId);
+
         }
     }
 }

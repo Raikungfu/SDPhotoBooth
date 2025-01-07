@@ -37,7 +37,6 @@ namespace BussinessObject.Models
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<Booth> CreatedBooths { get; set; }
-
         public virtual ICollection<Booth> LastModifiedBooths { get; set; }
 
         public virtual ICollection<Location> CreatedLocations { get; set; }

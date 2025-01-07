@@ -31,11 +31,10 @@ namespace BussinessObject.Models
 
         public PhotoHistory PhotoHistory { get; set; }
 
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual Order Order { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public virtual Order Order { get; set; }
 
         private static string GenerateCode(int length)
         {

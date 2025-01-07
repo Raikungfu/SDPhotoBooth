@@ -8,6 +8,42 @@ public static class SeedData
     {
         using var transaction = context.Database.BeginTransaction();
 
+        // Seed data for User
+        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [User] ON");
+        if (!context.User.Any())
+        {
+            context.User.AddRange(
+                new User
+                {
+                    Id = 1,
+                    Username = "admin",
+                    PasswordHash = "hashedpassword1", // Store a hashed password
+                    Email = "admin@example.com",
+                    Phone = "1234567890",
+                    UserType = "Admin",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    IsDeleted = false,
+                },
+            new User
+            {
+                Id = 2,
+                Username = "user1",
+                PasswordHash = "hashedpassword2", // Store a hashed password
+                Email = "user1@example.com",
+                Phone = "0987654321",
+                UserType = "Customer",
+                BirthDate = new DateTime(1990, 1, 1),
+                Balance = 100.00m,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            }
+            );
+        }
+        context.SaveChanges();
+        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [User] OFF");
+
         // Seed data for Location
         context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] ON");
         if (!context.Location.Any())
@@ -20,20 +56,13 @@ public static class SeedData
         context.SaveChanges();
         context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] OFF");
 
-        // Seed data for User
-        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [User] ON");
-        if (!context.User.Any())
-        {
-            context.User.AddRange(
-                new User { Id = 1, Username = "admin", PasswordHash = "hashedpassword1", Email = "admin@example.com", Phone = "1234567890", UserType = "Admin", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
-                new User { Id = 2, Username = "user1", PasswordHash = "hashedpassword2", Email = "user1@example.com", Phone = "0987654321", UserType = "Customer", BirthDate = new DateTime(1990, 1, 1), Balance = 100.00m, LocationId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
-            );
-        }
-        context.SaveChanges();
-        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [User] OFF");
+
+        
+
+       
 
         // Seed data for Payment
-        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
+        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] ON");
         if (!context.PaymentMethod.Any())
         {
             context.PaymentMethod.AddRange(
@@ -42,7 +71,7 @@ public static class SeedData
             );
         }
         context.SaveChanges();
-        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
+        context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] OFF");
 
         // Seed data for LevelMemberShip
         context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [LevelMemberShip] ON");

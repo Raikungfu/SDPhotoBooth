@@ -4,10 +4,10 @@ using DataAccess.Repository.IRepository;
 
 namespace DataAccess.Repository
 {
-    public class PaymentRepository : Repository<PaymentMethod>, IPaymentMethodRepository
+    public class PaymentMethodRepository : Repository<PaymentMethod>, IPaymentMethodRepository
     {
         private readonly AIPhotoboothDbContext _db;
-        public PaymentRepository(AIPhotoboothDbContext db) : base(db)
+        public PaymentMethodRepository(AIPhotoboothDbContext db) : base(db)
         {
             _db = db;
         }

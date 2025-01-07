@@ -16,13 +16,10 @@ namespace DataAccess.Configurations
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId);
 
-            builder.HasOne(o => o.Payment)
+            builder.HasOne(o => o.PaymentMethod)
                 .WithMany(p => p.Orders)
                 .HasForeignKey(o => o.PaymentId);
 
-            builder.HasOne(o => o.Session)
-                .WithMany(s => s.Orders)
-                .HasForeignKey(o => o.SessionId);
         }
     }
 }

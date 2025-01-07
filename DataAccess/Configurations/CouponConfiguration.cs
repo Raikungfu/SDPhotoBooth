@@ -26,6 +26,14 @@ namespace DataAccess.Configurations
             builder.Property(c => c.MinOrder)
                    .HasPrecision(18, 2);
             builder.Property(c => c.IsActive).HasDefaultValue(true);
+
+            builder.HasOne(b => b.CreatedBy)
+              .WithMany(l => l.CreatedCoupons)
+              .HasForeignKey(b => b.CreatedById);
+
+            builder.HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedCoupons)
+                .HasForeignKey(b => b.LastModifiedById);
         }
     }
 }

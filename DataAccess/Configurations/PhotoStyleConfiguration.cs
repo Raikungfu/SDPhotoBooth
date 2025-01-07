@@ -20,6 +20,10 @@ namespace DataAccess.Configurations
             // Thiết lập thuộc tính Description
             builder.Property(ps => ps.Description)
                 .HasMaxLength(500);
+
+            builder.HasOne(b => b.LastModifiedBy)
+               .WithMany(l => l.LastModifiedPhotoStyles)
+               .HasForeignKey(b => b.LastModifiedById);
         }
     }
 }

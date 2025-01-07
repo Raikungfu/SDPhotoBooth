@@ -1,6 +1,7 @@
 ﻿using BussinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace DataAccess.Configurations
 {
@@ -19,6 +20,11 @@ namespace DataAccess.Configurations
             builder.HasOne(u => u.Location)
                 .WithMany(l => l.Staffs)
                 .HasForeignKey(u => u.LocationId);
+
+            builder.HasOne(u => u.Location)        
+                .WithMany(l => l.Staffs)      
+                .HasForeignKey(u => u.LocationId)  
+                .OnDelete(DeleteBehavior.Restrict); 
         }
     }
 }

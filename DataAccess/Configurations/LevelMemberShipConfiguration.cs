@@ -12,6 +12,13 @@ namespace DataAccess.Configurations
             builder.Property(lm => lm.Name).IsRequired().HasMaxLength(100);
             builder.Property(lm => lm.Description).HasMaxLength(500);
             builder.Property(lm => lm.Price).HasPrecision(18, 2);
+            builder.HasOne(b => b.CreatedBy)
+               .WithMany(l => l.CreatedLevelMemberships)
+               .HasForeignKey(b => b.CreatedById);
+
+            builder.HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedLevelMemberships)
+                .HasForeignKey(b => b.LastModifiedById);    
         }
     }
 }

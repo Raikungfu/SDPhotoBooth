@@ -19,6 +19,14 @@ namespace DataAccess.Configurations
             builder.HasOne(b => b.Location)
                 .WithMany(l => l.Booths)
                 .HasForeignKey(b => b.LocationId);
+
+            builder.HasOne(b => b.CreatedBy)
+                .WithMany(l => l.CreatedBooths)
+                .HasForeignKey(b => b.CreatedById);
+
+            builder.HasOne(b => b.LastModifiedBy)
+                .WithMany(l => l.LastModifiedBooths)
+                .HasForeignKey(b => b.LastModifiedById);
         }
     }
 }

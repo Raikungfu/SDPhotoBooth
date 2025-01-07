@@ -15,7 +15,7 @@ namespace DataAccess.Repository
             Location = new LocationRepository(_db);
             MembershipCard = new MembershipCardRepository(_db);
             Order = new OrderRepository(_db);
-            Payment = new PaymentRepository(_db);
+            Payment = new PaymentMethodRepository(_db);
             PhotoHistory = new PhotoHistoryRepository(_db);
             Photo = new PhotoRepository(_db);
             PhotoStyle = new PhotoStyleRepository(_db);
