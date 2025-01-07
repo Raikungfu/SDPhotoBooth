@@ -1,4 +1,4 @@
-﻿using BussinessObject;
+﻿using BussinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace DataAccess
         public DbSet<Order> Order { get; set; }
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<MembershipCard> MembershipCard { get; set; }
-        public DbSet<LevelMembership> LevelMemberShip { get; set; }
+        public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
 
@@ -43,7 +43,7 @@ namespace DataAccess
                 .HasForeignKey(mc => mc.CustomerId);
 
             modelBuilder.Entity<MembershipCard>()
-                .HasOne(mc => mc.LevelMembership)
+                .HasOne(mc => mc.LevelMemberShip)
                 .WithMany(u => u.MembershipCards)
                 .HasForeignKey(mc => mc.LevelMemberShipId);
 
@@ -65,7 +65,7 @@ namespace DataAccess
             modelBuilder.Entity<PhotoHistory>()
                 .HasOne(ph => ph.Session)
                 .WithOne(s => s.PhotoHistory)
-                .HasForeignKey<PhotoHistory>(ph => ph.SessionId);
+                .HasForeignKey<PhotoHistory>(ph => ph.SessionCode);
 
             modelBuilder.Entity<Photo>()
                 .HasOne(p => p.PhotoStyle)
@@ -142,12 +142,12 @@ namespace DataAccess
                 .WithMany(l => l.LastModifiedTypeSessions)
                 .HasForeignKey(b => b.LastModifiedById);
 
-            modelBuilder.Entity<LevelMembership>()
+            modelBuilder.Entity<LevelMemberShip>()
                 .HasOne(b => b.CreatedBy)
                 .WithMany(l => l.CreatedLevelMemberships)
                 .HasForeignKey(b => b.CreatedById);
 
-            modelBuilder.Entity<LevelMembership>()
+            modelBuilder.Entity<LevelMemberShip>()
                 .HasOne(b => b.LastModifiedBy)
                 .WithMany(l => l.LastModifiedLevelMemberships)
                 .HasForeignKey(b => b.LastModifiedById);
