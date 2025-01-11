@@ -13,8 +13,8 @@ namespace BussinessObject.Models
 
         public bool IsDeleted { get; set; } = false;
 
-        public int? CreatedById { get; set; }
-        public int? LastModifiedById { get; set; }
+        public string? CreatedById { get; set; }
+        public string? LastModifiedById { get; set; }
 
 
         [NotMapped]

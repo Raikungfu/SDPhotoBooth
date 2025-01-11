@@ -6,7 +6,7 @@ namespace BussinessObject.Models
     public class Order : BaseEntity
     {
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public int PaymentId { get; set; }

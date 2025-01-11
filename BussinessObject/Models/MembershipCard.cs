@@ -11,7 +11,7 @@ namespace BussinessObject.Models
     public class MembershipCard : BaseEntity
     {
         [Required]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [Required]
         public int LevelMemberShipId { get; set; }

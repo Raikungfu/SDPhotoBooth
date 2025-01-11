@@ -1,31 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BussinessObject.Enums;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BussinessObject.Models
 {
-    public class User : BaseEntityNoAudit
+    public class User : IdentityUser
     {
-        [Required]
-        public string Username { get; set; }
-
-        [Required]
-        public string PasswordHash { get; set; }
-
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Phone]
-        public string Phone { get; set; }
-
-        [Required]
-        public string UserType { get; set; }
+        public UserGender Gender { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
         public decimal? Balance { get; set; }
+
         public string? Avatar { get; set; }
 
         public int? LocationId { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        public bool IsDeleted { get; set; } = false;
+
+        public void UpdateTimestamp()
+        {
+            UpdatedAt = DateTime.Now;
+        }
 
         [ForeignKey("LocationId")]
         public virtual Location Location { get; set; }
