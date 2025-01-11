@@ -30,6 +30,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 //Seed data
+/*
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AIPhotoboothDbContext>();
@@ -37,13 +38,17 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
     SeedData.Seed(dbContext);
 }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+*/
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
