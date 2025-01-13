@@ -1,10 +1,6 @@
 ﻿using BussinessObject.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BussinessObject.Models
 {
@@ -18,5 +14,8 @@ namespace BussinessObject.Models
         public string? Description { get; set; }
 
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        public int BoothStyleId { get; set; }
+        [ForeignKey("BoothStyleId")]
+        public BoothStyle BoothStyle { get; set; }
     }
 }

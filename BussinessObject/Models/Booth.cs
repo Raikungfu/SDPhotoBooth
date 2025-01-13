@@ -25,5 +25,9 @@ namespace BussinessObject.Models
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
 
+        public int BoothStyleId { get; set; }
+
+        [ForeignKey("BoothStyleId")]
+        public BoothStyle BoothStyle { get; set; }
     }
 }

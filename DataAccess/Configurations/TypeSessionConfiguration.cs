@@ -12,6 +12,8 @@ namespace DataAccess.Configurations
             builder.Property(ts => ts.Name).IsRequired().HasMaxLength(100);
             builder.Property(ts => ts.Description).HasMaxLength(500);
 
+            builder.Property(ts => ts.isPrinting).IsRequired();
+
             builder.HasOne(b => b.CreatedBy)
               .WithMany(l => l.CreatedTypeSessions)
               .HasForeignKey(b => b.CreatedById);

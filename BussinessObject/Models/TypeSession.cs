@@ -15,9 +15,12 @@ namespace BussinessObject.Models
         [Range(0, int.MaxValue, ErrorMessage = "Duration must be a non-negative value.")]
         public int? Duration { get; set; }
 
+        public bool isPrinting { get; set; } = true;
+
         [Range(0, int.MaxValue, ErrorMessage = "AbleTakenNumber must be a non-negative value.")]
         public int? AbleTakenNumber { get; set; }
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
+
     }
 }

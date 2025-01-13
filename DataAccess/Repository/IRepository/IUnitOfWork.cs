@@ -15,6 +15,7 @@
         ISessionRepository Session { get; }
         ITypeSessionRepository TypeSession { get; }
         IUserRepository User { get; }
+        IBoothStyleRepository BoothStyle { get; }
         void Save();
     }
 }

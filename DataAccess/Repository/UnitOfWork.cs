@@ -22,6 +22,7 @@ namespace DataAccess.Repository
             Session = new SessionRepository(_db);
             TypeSession = new TypeSessionRepository(_db);
             User = new UserRepository(_db);
+            BoothStyle = new BoothStyleRepository(_db);
 
         }
         public IBoothRepository Booth { get; private set; }
@@ -37,7 +38,7 @@ namespace DataAccess.Repository
         public ISessionRepository Session { get; private set; }
         public ITypeSessionRepository TypeSession { get; private set; }
         public IUserRepository User { get; private set; }
-
+        public IBoothStyleRepository BoothStyle { get; private set; }
 
         public void Dispose()
         {

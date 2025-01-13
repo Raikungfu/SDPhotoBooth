@@ -24,6 +24,10 @@ namespace DataAccess.Configurations
             builder.HasOne(b => b.LastModifiedBy)
                .WithMany(l => l.LastModifiedPhotoStyles)
                .HasForeignKey(b => b.LastModifiedById);
+
+            builder.HasOne(builder => builder.BoothStyle)
+                .WithMany(bs => bs.PhotoStyles)
+                .HasForeignKey(ps => ps.BoothStyleId);
         }
     }
 }

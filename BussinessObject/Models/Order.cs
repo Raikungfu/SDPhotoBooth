@@ -5,8 +5,8 @@ namespace BussinessObject.Models
 {
     public class Order : BaseEntity
     {
-        [Required]
-        public string UserId { get; set; }
+        
+        public string? UserId { get; set; }
 
         [Required]
         public int PaymentId { get; set; }
@@ -14,6 +14,10 @@ namespace BussinessObject.Models
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public decimal Amount { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? Phone { get; set; }
 
         [Required]
         public string SessionId { get; set; }

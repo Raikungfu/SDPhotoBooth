@@ -104,13 +104,25 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [LevelMemberShip] OFF");
 
+                // Seed data for BoothStyle
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [BoothStyle] ON");
+                if (!context.BoothStyle.Any())
+                {
+                    context.BoothStyle.AddRange(
+                        new BoothStyle { Id = 1, StyleName = "Modern", Description = "Modern style", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                        new BoothStyle { Id = 2, StyleName = "Classic", Description = "Classic style", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    );
+                }
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [BoothStyle] OFF");
+
                 // Seed data for Booth
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Booth] ON");
                 if (!context.Booth.Any())
                 {
                     context.Booth.AddRange(
-                        new Booth { Id = 1, LocationId = 1, BoothName = "Booth A", Description = "Main booth at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new Booth { Id = 2, LocationId = 2, BoothName = "Booth B", Description = "Branch booth", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                        new Booth { Id = 1, LocationId = 1, BoothName = "Booth A", Description = "Main booth at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 1 },
+                        new Booth { Id = 2, LocationId = 2, BoothName = "Booth B", Description = "Branch booth", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 2}
                     );
                 }
                 context.SaveChanges();
@@ -121,8 +133,8 @@ public static class SeedData
                 if (!context.TypeSession.Any())
                 {
                     context.TypeSession.AddRange(
-                        new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, AbleTakenNumber = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, AbleTakenNumber = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                        new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, AbleTakenNumber = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = false },
+                        new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, AbleTakenNumber = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = true }
                     );
                 }
                 context.SaveChanges();
@@ -157,8 +169,8 @@ public static class SeedData
                 if (!context.PhotoStyle.Any())
                 {
                     context.PhotoStyle.AddRange(
-                        new PhotoStyle { Id = 1, Type = BussinessObject.Enums.Style.Portrait, Description = "Portrait photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new PhotoStyle { Id = 2, Type = BussinessObject.Enums.Style.Landscape, Description = "Landscape photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                        new PhotoStyle { Id = 1, Type = BussinessObject.Enums.Style.Portrait, Description = "Portrait photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 1 },
+                        new PhotoStyle { Id = 2, Type = BussinessObject.Enums.Style.Landscape, Description = "Landscape photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 2 }
                     );
                 }
                 context.SaveChanges();
