@@ -19,5 +19,7 @@ namespace BussinessObject.Models
         public int? AbleTakenNumber { get; set; }
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
+
+        //bool isPrinting = false;
     }
 }
