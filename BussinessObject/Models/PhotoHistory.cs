@@ -12,7 +12,7 @@ namespace BussinessObject.Models
     {
         public int? BoothId { get; set; }
 
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         public int? LocationId { get; set; }
 

@@ -20,5 +20,4 @@ namespace BussinessObject.Models
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
-
 }

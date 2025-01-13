@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BussinessObject.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BussinessObject.Models
 {
@@ -6,7 +7,7 @@ namespace BussinessObject.Models
     {
         [Required]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
-        public string Name { get; set; }
+        public Level Name { get; set; }
 
         [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
         public string Description { get; set; }

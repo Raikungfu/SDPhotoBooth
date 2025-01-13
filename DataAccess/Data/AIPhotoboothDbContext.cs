@@ -1,15 +1,16 @@
 ﻿using BussinessObject.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Data
 {
-    public class AIPhotoboothDbContext : DbContext
+    public class AIPhotoboothDbContext : IdentityDbContext<User, IdentityRole, string>
     {
         public AIPhotoboothDbContext(DbContextOptions<AIPhotoboothDbContext> options) : base(options)
         {
         }
 
-        public DbSet<User> User{ get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<Booth> Booth { get; set; }
         public DbSet<Photo> Photo { get; set; }
