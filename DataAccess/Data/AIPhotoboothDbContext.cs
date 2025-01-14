@@ -23,6 +23,7 @@ namespace DataAccess.Data
         public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
+        public DbSet<BoothStyle> BoothStyle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

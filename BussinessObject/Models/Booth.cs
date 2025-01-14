@@ -25,9 +25,9 @@ namespace BussinessObject.Models
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
 
-        //Thêm FK 1 booth có 1 Style (BoothStyle) thêm bảng BoothStyle
+        public int BoothStyleId { get; set; }
 
-
-
+        [ForeignKey("BoothStyleId")]
+        public BoothStyle BoothStyle { get; set; }
     }
 }
