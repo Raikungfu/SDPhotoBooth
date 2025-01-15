@@ -5,7 +5,7 @@ using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Mapster;
+using BusinessLogic.ConfigMapper;
 
 namespace ServerAPI.Extensions
 {
@@ -19,8 +19,9 @@ namespace ServerAPI.Extensions
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess"));
             });
 
-            services.AddMapster();
+            services.AddAutoMapper(typeof(MapperProfile));
             services.AddScoped<IBoothStyleService, BoothStyleService>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

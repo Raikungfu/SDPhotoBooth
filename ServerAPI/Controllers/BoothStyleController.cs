@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.BoothStyleDTO;
 using BusinessLogic.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class BoothStyleController : ControllerBase
     {
         private readonly IBoothStyleService _boothStyleService;
@@ -44,10 +46,6 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid data provided.");
             }
             var boothStyle = await _boothStyleService.CreateBoothStyle(boothStyleRequestDTO);
-            if (boothStyle == null)
-            {
-                return BadRequest();
-            }
             return Ok(boothStyle);
         }
 
@@ -66,7 +64,7 @@ namespace ServerAPI.Controllers
             }
             var updatedBoothStyle = await _boothStyleService.UpdateBoothStyle(id, boothStyleRequestDTO);
 
-            return Ok(boothStyle);
+            return Ok(updatedBoothStyle);
         }
 
         [HttpDelete("{id}")]
