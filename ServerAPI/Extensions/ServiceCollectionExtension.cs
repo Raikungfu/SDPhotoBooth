@@ -21,6 +21,7 @@ namespace ServerAPI.Extensions
 
             services.AddMapster();
             services.AddScoped<IBoothStyleService, BoothStyleService>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

@@ -8,6 +8,7 @@ namespace ServerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    
     public class IdentityController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
