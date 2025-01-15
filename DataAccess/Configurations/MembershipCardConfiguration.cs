@@ -22,6 +22,14 @@ namespace DataAccess.Configurations
             builder.HasOne(mc => mc.LevelMemberShip)
                 .WithMany(lm => lm.MembershipCards)
                 .HasForeignKey(mc => mc.LevelMemberShipId);
+
+            builder.HasOne(mc => mc.CreatedBy)
+                .WithMany(u => u.CreatedMembershipCards)
+                .HasForeignKey(mc => mc.CreatedById);
+
+            builder.HasOne(mc => mc.LastModifiedBy)
+                .WithMany(u => u.LastModifiedMembershipCards)
+                .HasForeignKey(mc => mc.LastModifiedById);
         }
     }
 }

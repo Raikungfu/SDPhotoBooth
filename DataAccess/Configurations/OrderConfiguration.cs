@@ -20,6 +20,13 @@ namespace DataAccess.Configurations
                 .WithMany(p => p.Orders)
                 .HasForeignKey(o => o.PaymentId);
 
+            builder.HasOne(o => o.CreatedBy)
+                .WithMany(u => u.CreatedOrders)
+                .HasForeignKey(o => o.CreatedById);
+
+            builder.HasOne(o => o.LastModifiedBy)
+                .WithMany(u => u.LastModifiedOrders)
+                .HasForeignKey(o => o.LastModifiedById);
         }
     }
 }

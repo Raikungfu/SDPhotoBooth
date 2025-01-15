@@ -65,6 +65,15 @@ namespace BussinessObject.Models
         public virtual ICollection<LevelMemberShip> LastModifiedLevelMemberships { get; set; }
 
         public virtual ICollection<BoothStyle> CreatedBoothStyles { get; set; }
+
         public virtual ICollection<BoothStyle> LastModifiedBoothStyles { get; set; }
+
+        public virtual ICollection<MembershipCard> CreatedMembershipCards { get; set; }
+
+        public virtual ICollection<MembershipCard> LastModifiedMembershipCards { get; set; }
+
+        public virtual ICollection<Order> CreatedOrders { get; set; }
+
+        public virtual ICollection<Order> LastModifiedOrders { get; set; }
     }
 }
