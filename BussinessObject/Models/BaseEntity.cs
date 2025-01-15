@@ -17,11 +17,9 @@ namespace BussinessObject.Models
         public string? LastModifiedById { get; set; }
 
 
-        [NotMapped]
         [ForeignKey("CreatedById")]
         public virtual User CreatedBy { get; set; }
 
-        [NotMapped]
         [ForeignKey("LastModifiedById")]
         public virtual User LastModifiedBy { get; set; }
 

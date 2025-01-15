@@ -17,5 +17,6 @@
         IUserRepository User { get; }
         IBoothStyleRepository BoothStyle { get; }
         void Save();
+        Task SaveAsync();
     }
 }

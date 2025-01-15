@@ -1,9 +1,11 @@
-﻿using DataAccess.Data;
+﻿using BusinessLogic.Service.IService;
+using BusinessLogic.Service;
+using DataAccess.Data;
 using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+using Mapster;
 
 namespace ServerAPI.Extensions
 {
@@ -17,6 +19,8 @@ namespace ServerAPI.Extensions
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess"));
             });
 
+            services.AddMapster();
+            services.AddScoped<IBoothStyleService, BoothStyleService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
