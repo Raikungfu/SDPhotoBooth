@@ -12,8 +12,7 @@ namespace ServerAPI.Helpers
     {
         private static readonly HttpClient client = new HttpClient();
 
-
-        public static string DecryptToken(string encryptedToken, string EncryptionKey, string EncryptionIv)
+        public string DecryptToken(string encryptedToken, string EncryptionKey, string EncryptionIv)
         {
             using (Aes aesAlg = Aes.Create())
             {
