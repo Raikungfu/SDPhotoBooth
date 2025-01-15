@@ -5,7 +5,6 @@ namespace DataAccess.Repository.IRepository
     public interface IRepository<T> where T : class
     {
         // Đồng bộ
-        T Get(int id);
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>>? filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
@@ -24,7 +23,6 @@ namespace DataAccess.Repository.IRepository
         void RemoveRange(IEnumerable<T> entities);
 
         // Bất đồng bộ
-        Task<T> GetAsync(int id, CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> GetAllAsync(
             Expression<Func<T, bool>>? filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,

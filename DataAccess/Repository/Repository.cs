@@ -38,16 +38,6 @@ namespace DataAccess.Repository
             await dbSet.AddRangeAsync(entities, cancellationToken);
         }
 
-        // Lấy thực thể theo ID
-        public T Get(int id)
-        {
-            return dbSet.Find(id);
-        }
-
-        public async Task<T> GetAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await dbSet.FindAsync(new object[] { id }, cancellationToken);
-        }
 
         // Lấy tất cả thực thể (có điều kiện, sắp xếp, NoTracking)
         public IEnumerable<T> GetAll(
@@ -59,6 +49,7 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
+            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -81,6 +72,9 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
+
+            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -104,6 +98,7 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
+            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -125,6 +120,7 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
+            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {

@@ -1,21 +1,23 @@
-﻿using BusinessLogic.DTO.BoothStyleDTO;
+﻿using AutoMapper;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
-using Mapster;
 
 namespace BusinessLogic.Service
 {
     public class LocationService : ILocationService
     {
-        private readonly IUnitOfWork _unitOfWork;   
-        public LocationService(IUnitOfWork unitOfWork) {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public LocationService(IUnitOfWork unitOfWork, IMapper mapper) {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public async Task<int> CreateLocation(LocationRequestDTO locationRequestDTO)
         {
-            var location = locationRequestDTO.Adapt<Location>();
+
+            var location = _mapper.Map<Location>(locationRequestDTO);
             _unitOfWork.Location.Add(location);
             await _unitOfWork.SaveAsync();
             return location.Id;
@@ -23,7 +25,7 @@ namespace BusinessLogic.Service
 
         public async Task<int> DeleteLocation(int id)
         {
-            var location = await _unitOfWork.Location.GetAsync(id);
+            var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: e => e.Id == id);
             _unitOfWork.Location.Remove(location);
             await _unitOfWork.SaveAsync();
             return id;
@@ -31,40 +33,32 @@ namespace BusinessLogic.Service
 
         public async Task<IEnumerable<LocationResponseDTO>> GetAllLocations()
         {
-            var locations = await _unitOfWork.Location.GetAllAsync(filter: l => !l.IsDeleted);
-            var locationResponseDTOs = locations.Adapt<IEnumerable<LocationResponseDTO>>();
+            var locations = await _unitOfWork.Location.GetAllAsync();
+            var locationResponseDTOs = _mapper.Map<IEnumerable<LocationResponseDTO>>(locations); 
             return locationResponseDTOs;
         }
 
         public async Task<LocationResponseDTO> GetLocation(int id)
         {
-            var location = await _unitOfWork.Location.GetAsync(id);
-            if (location == null || location.IsDeleted)
-            {
-                return null;
-            }
-            var locationResponseDTO = location.Adapt<LocationResponseDTO>();
+            var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            var locationResponseDTO = _mapper.Map<LocationResponseDTO>(location);
             return locationResponseDTO;
         }
 
         public async Task<LocationResponseDTO> GetLocation(string locationName)
         {
             var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: l => l.LocationName == locationName);
-            if (location == null || location.IsDeleted)
-            {
-                return null;
-            }
-            var locationResponseDTO = location.Adapt<LocationResponseDTO>();
+            var locationResponseDTO = _mapper.Map<LocationResponseDTO>(location);
             return locationResponseDTO;
         }
 
         public async Task<LocationResponseDTO> UpdateLocation(int id, LocationRequestDTO locationRequestDTO)
         {
-            var location = await _unitOfWork.Location.GetAsync(id);
-            location = locationRequestDTO.Adapt(location);
+            var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            location = _mapper.Map(locationRequestDTO, location);
             _unitOfWork.Location.Update(location);
             await _unitOfWork.SaveAsync();
-            return location.Adapt<LocationResponseDTO>();
+            return _mapper.Map<LocationResponseDTO>(location);
         }
     }
 }

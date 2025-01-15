@@ -1,21 +1,23 @@
-﻿using BusinessLogic.DTO.BoothStyleDTO;
+﻿using AutoMapper;
+using BusinessLogic.DTO.BoothStyleDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
-using Mapster;
 
 namespace BusinessLogic.Service
 {
     public class BoothStyleService : IBoothStyleService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public BoothStyleService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public BoothStyleService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public async Task<int> CreateBoothStyle(BoothStyleRequestDTO boothStyleRequestDTO)
         {
-            var boothStyle = boothStyleRequestDTO.Adapt<BoothStyle>();
+            var boothStyle = _mapper.Map<BoothStyle>(boothStyleRequestDTO);
             _unitOfWork.BoothStyle.Add(boothStyle);
             await _unitOfWork.SaveAsync();
             return boothStyle.Id;
@@ -23,7 +25,7 @@ namespace BusinessLogic.Service
 
         public async Task<int> DeleteBoothStyle(int id)
         {
-            var boothStyle = await _unitOfWork.BoothStyle.GetAsync(id);
+            var boothStyle = await _unitOfWork.BoothStyle.GetFirstOrDefaultAsync(filter: e => e.Id == id);
             _unitOfWork.BoothStyle.Remove(boothStyle);
             await _unitOfWork.SaveAsync();
             return id;
@@ -31,29 +33,25 @@ namespace BusinessLogic.Service
 
         public async Task<IEnumerable<BoothStyleResponseDTO>> GetAllBoothStyles()
         {
-            var boothStyles = await _unitOfWork.BoothStyle.GetAllAsync(filter: b => !b.IsDeleted);
-            var boothStyleResponseDTOs = boothStyles.Adapt<IEnumerable<BoothStyleResponseDTO>>();
+            var boothStyles = await _unitOfWork.BoothStyle.GetAllAsync();
+            var boothStyleResponseDTOs = _mapper.Map<IEnumerable<BoothStyleResponseDTO>>(boothStyles);
             return boothStyleResponseDTOs;
         }
 
         public async Task<BoothStyleResponseDTO> GetBoothStyle(int id)
         {
-            var boothStyle = await _unitOfWork.BoothStyle.GetAsync(id);
-            if (boothStyle == null || boothStyle.IsDeleted)
-            {
-                return null;
-            }
-            var boothStyleResponseDTO = boothStyle.Adapt<BoothStyleResponseDTO>();
+            var boothStyle = await _unitOfWork.BoothStyle.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            var boothStyleResponseDTO = _mapper.Map<BoothStyleResponseDTO>(boothStyle);
             return boothStyleResponseDTO;
         }
 
         public async Task<BoothStyleResponseDTO> UpdateBoothStyle(int id, BoothStyleRequestDTO boothStyleRequestDTO)
         {
-            var boothStyle = await _unitOfWork.BoothStyle.GetAsync(id);
-            boothStyle = boothStyleRequestDTO.Adapt(boothStyle);
+            var boothStyle = await _unitOfWork.BoothStyle.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            boothStyle = _mapper.Map(boothStyleRequestDTO, boothStyle);
             _unitOfWork.BoothStyle.Update(boothStyle);
             await _unitOfWork.SaveAsync();
-            return boothStyle.Adapt<BoothStyleResponseDTO>();
+            return _mapper.Map<BoothStyleResponseDTO>(boothStyle);
         }
     }
 }

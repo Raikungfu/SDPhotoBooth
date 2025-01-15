@@ -109,8 +109,8 @@ public static class SeedData
                 if (!context.BoothStyle.Any())
                 {
                     context.BoothStyle.AddRange(
-                        new BoothStyle { Id = 1, StyleName = "Modern", Description = "Modern style", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new BoothStyle { Id = 2, StyleName = "Classic", Description = "Classic style", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                        new BoothStyle { Id = 1, StyleName = "Modern", Description = "Modern style",Price = 100000, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                        new BoothStyle { Id = 2, StyleName = "Classic", Description = "Classic style",Price = 200000, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
                     );
                 }
                 context.SaveChanges();
