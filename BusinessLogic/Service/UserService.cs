@@ -63,6 +63,25 @@ namespace BusinessLogic.Service
 
             return null;
         }
+        public async Task<IEnumerable<UserResponseDTO>> GetByLocation(int locationId)
+        {
+            var users = await _unitOfWork.User
+                .GetAllAsync(u => !u.IsDeleted && u.LocationId == locationId, includeProperties: "Location");
+
+            var userList = new List<UserResponseDTO>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains(UserType.Staff.ToString()))
+                {
+                    var userResponseDTO = _mapper.Map<UserResponseDTO>(user);
+                    userResponseDTO.Role = UserType.Staff.ToString();
+                    userList.Add(userResponseDTO);
+                }
+            }
+
+            return userList;
+        }
 
         public async Task<string> Create(UserRequestDTO userRequestDTO, UserType userType)
         {

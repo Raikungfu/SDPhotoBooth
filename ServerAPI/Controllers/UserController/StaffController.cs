@@ -31,6 +31,13 @@ namespace ServerAPI.Controllers.UserController
             if (staff == null) return NotFound();
             return Ok(staff);
         }
+        [HttpGet("location/{locationId}")]
+        public async Task<IActionResult> GetStaffByLocation(int locationId)
+        {
+            var staffList = await _userService.GetByLocation(locationId);
+            return Ok(staffList);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateStaff([FromBody] UserRequestDTO staffRequestDTO)

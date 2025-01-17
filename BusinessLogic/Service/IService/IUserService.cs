@@ -12,6 +12,7 @@ namespace BusinessLogic.Service.IService
     {
         Task<IEnumerable<UserResponseDTO>> GetAll(UserType userType);
         Task<UserResponseDTO> GetById(string id, UserType userType);
+        Task<IEnumerable<UserResponseDTO>> GetByLocation(int locationId);
         Task<string> Create(UserRequestDTO userRequestDTO, UserType userType);
         Task<UserResponseDTO> Update(string id, UserRequestDTO userRequestDTO);
         Task<bool> Delete(string id);
