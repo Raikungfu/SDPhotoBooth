@@ -16,5 +16,6 @@ namespace BusinessLogic.DTO.UserDTO
         public decimal? Balance { get; set; }
         public string? Avatar { get; set; }
         public string? Role { get; set; }
+        public int? LocationId { get; set; }
     }
 }

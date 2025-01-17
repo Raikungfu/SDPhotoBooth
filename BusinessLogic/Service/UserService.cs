@@ -5,6 +5,7 @@ using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace BusinessLogic.Service
 
         public async Task<IEnumerable<UserResponseDTO>> GetAll(UserType userType)
         {
-            var users = await _unitOfWork.User.GetAllAsync(u => !u.IsDeleted);
+            var users = await _unitOfWork.User.GetAllAsync(u => !u.IsDeleted, includeProperties: "Location");
             var userList = new List<UserResponseDTO>();
 
             foreach (var user in users)
@@ -49,7 +50,7 @@ namespace BusinessLogic.Service
 
         public async Task<UserResponseDTO> GetById(string id, UserType userType)
         {
-            var user = await _unitOfWork.User.GetFirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
+            var user = await _unitOfWork.User.GetFirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted, includeProperties: "Location");
             if (user == null) return null;
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -68,6 +69,21 @@ namespace BusinessLogic.Service
             var user = _mapper.Map<User>(userRequestDTO);
             user.CreatedAt = DateTime.UtcNow;
             user.UpdatedAt = DateTime.UtcNow;
+            if (userType == UserType.Staff)
+            {
+                if (!userRequestDTO.LocationId.HasValue)
+                {
+                    throw new ArgumentException("LocationId is required for Staff ");
+                }
+
+                var locationExists = await _unitOfWork.Location.GetFirstOrDefaultAsync(l => l.Id == userRequestDTO.LocationId.Value);
+                if (locationExists==null)
+                {
+                    throw new ArgumentException("Invalid LocationId.");
+                }
+
+                user.LocationId = userRequestDTO.LocationId.Value;
+            }
 
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)

@@ -1,4 +1,6 @@
-﻿using BussinessObject.Enums;
+﻿using BusinessLogic.DTO.LocationDTO;
+using BussinessObject.Enums;
+using BussinessObject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace BusinessLogic.DTO.UserDTO
         public decimal? Balance { get; set; }
         public string Avatar { get; set; }
         public string Role { get; set; }
+        public LocationResponseDTO Location { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
