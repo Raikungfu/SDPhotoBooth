@@ -22,6 +22,7 @@ namespace ServerAPI.Extensions
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddScoped<IBoothStyleService, BoothStyleService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

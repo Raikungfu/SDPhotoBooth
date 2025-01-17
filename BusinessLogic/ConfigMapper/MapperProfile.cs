@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.BoothStyleDTO;
 using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.UserDTO;
 using BussinessObject.Models;
 
 namespace BusinessLogic.ConfigMapper
@@ -13,6 +14,8 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<Location, LocationResponseDTO>();
             CreateMap<BoothStyleRequestDTO, BoothStyle>();
             CreateMap<BoothStyle, BoothStyleResponseDTO>();
+            CreateMap<User, UserResponseDTO>();
+            CreateMap<UserRequestDTO, User>();
         }
     }
 }
