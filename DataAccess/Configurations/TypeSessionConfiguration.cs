@@ -14,6 +14,8 @@ namespace DataAccess.Configurations
 
             builder.Property(ts => ts.isPrinting).IsRequired();
 
+            builder.Property(lm => lm.Price).HasPrecision(18, 2);
+
             builder.HasOne(b => b.CreatedBy)
               .WithMany(l => l.CreatedTypeSessions)
               .HasForeignKey(b => b.CreatedById);

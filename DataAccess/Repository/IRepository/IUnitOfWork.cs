@@ -4,9 +4,7 @@
     {
         IBoothRepository Booth { get; }
         ICouponRepository Coupon { get; }
-        ILevelMemberShipRepository LevelMemberShip { get; }
         ILocationRepository Location { get; }
-        IMembershipCardRepository MembershipCard { get; }
         IOrderRepository Order { get; }
         IPaymentMethodRepository Payment { get; }
         IPhotoHistoryRepository PhotoHistory { get; }
