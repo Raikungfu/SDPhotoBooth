@@ -15,6 +15,10 @@ namespace BussinessObject.Models
         [Range(0, int.MaxValue, ErrorMessage = "Duration must be a non-negative value.")]
         public int? Duration { get; set; }
 
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value.")]
+        public decimal Price { get; set; }
+
         public bool isPrinting { get; set; } = true;
 
         [Range(0, int.MaxValue, ErrorMessage = "AbleTakenNumber must be a non-negative value.")]

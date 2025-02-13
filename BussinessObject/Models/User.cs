@@ -31,8 +31,6 @@ namespace BussinessObject.Models
         [ForeignKey("LocationId")]
         public virtual Location Location { get; set; }
 
-        public virtual ICollection<MembershipCard> MembershipCards { get; set; }
-
         public virtual ICollection<PhotoHistory> PhotoHistories { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
@@ -60,17 +58,9 @@ namespace BussinessObject.Models
 
         public virtual ICollection<PaymentMethod> LastModifiedPaymentMethods { get; set; }
 
-        public virtual ICollection<LevelMemberShip> CreatedLevelMemberships { get; set; }
-
-        public virtual ICollection<LevelMemberShip> LastModifiedLevelMemberships { get; set; }
-
         public virtual ICollection<BoothStyle> CreatedBoothStyles { get; set; }
 
         public virtual ICollection<BoothStyle> LastModifiedBoothStyles { get; set; }
-
-        public virtual ICollection<MembershipCard> CreatedMembershipCards { get; set; }
-
-        public virtual ICollection<MembershipCard> LastModifiedMembershipCards { get; set; }
 
         public virtual ICollection<Order> CreatedOrders { get; set; }
 

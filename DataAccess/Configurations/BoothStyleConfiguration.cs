@@ -14,8 +14,7 @@ namespace DataAccess.Configurations
                 .HasMaxLength(100);
             builder.Property(bs => bs.Description)
                 .HasMaxLength(500);
-            builder.Property(bs => bs.Price)
-                .IsRequired();
+            builder.Property(lm => lm.Price).HasPrecision(18, 2);
             builder.HasOne(b => b.CreatedBy)
                 .WithMany(l => l.CreatedBoothStyles)
                 .HasForeignKey(b => b.CreatedById);

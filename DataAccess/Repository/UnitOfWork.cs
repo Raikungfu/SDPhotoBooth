@@ -11,9 +11,7 @@ namespace DataAccess.Repository
             _db = db;
             Booth = new BoothRepository(_db);
             Coupon = new CouponRepository(_db);
-            LevelMemberShip = new LevelMemberShipRepository(_db);
             Location = new LocationRepository(_db);
-            MembershipCard = new MembershipCardRepository(_db);
             Order = new OrderRepository(_db);
             Payment = new PaymentMethodRepository(_db);
             PhotoHistory = new PhotoHistoryRepository(_db);
@@ -27,9 +25,7 @@ namespace DataAccess.Repository
         }
         public IBoothRepository Booth { get; private set; }
         public ICouponRepository Coupon { get; private set; }
-        public ILevelMemberShipRepository LevelMemberShip { get; private set; }
         public ILocationRepository Location { get; private set; }
-        public IMembershipCardRepository MembershipCard { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IPaymentMethodRepository Payment { get; private set; }
         public IPhotoHistoryRepository PhotoHistory { get; private set; }

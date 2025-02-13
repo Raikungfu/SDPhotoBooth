@@ -19,8 +19,6 @@ namespace DataAccess.Data
         public DbSet<PaymentMethod> PaymentMethod { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Coupon> Coupon { get; set; }
-        public DbSet<MembershipCard> MembershipCard { get; set; }
-        public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
         public DbSet<BoothStyle> BoothStyle { get; set; }

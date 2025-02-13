@@ -92,18 +92,6 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] OFF");
 
-                // Seed data for LevelMemberShip
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [LevelMemberShip] ON");
-                if (!context.LevelMemberShip.Any())
-                {
-                    context.LevelMemberShip.AddRange(
-                        new LevelMemberShip { Id = 1, Name = BussinessObject.Enums.Level.Basic, Description = "Basic membership", Price = 10.00m, Duration = 30, Point = 100, IsActive = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new LevelMemberShip { Id = 2, Name = BussinessObject.Enums.Level.Platinum, Description = "Premium membership", Price = 50.00m, Duration = 90, Point = 500, IsActive = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [LevelMemberShip] OFF");
-
                 // Seed data for BoothStyle
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [BoothStyle] ON");
                 if (!context.BoothStyle.Any())
