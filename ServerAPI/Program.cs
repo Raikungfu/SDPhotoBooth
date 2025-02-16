@@ -25,6 +25,12 @@ var environment = builder.Environment.EnvironmentName;
 
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").GetChildren().FirstOrDefault(x => x.Key == environment)?.Value?.Split(',');
 
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    Console.WriteLine("⚠️ Warning: No CORS origins configured. Defaulting to all origins.");
+    allowedOrigins = new[] { "*" };
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
@@ -51,17 +57,40 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
 
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (error != null)
+        {
+            Console.WriteLine($"Exception: {error.Error}");
+            await context.Response.WriteAsJsonAsync(new { error = error.Error.ToString() });
+        }
+    });
+});
+
+
+app.UseCors("AllowSpecificOrigin");
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var dbContext = services.GetRequiredService<AIPhotoboothDbContext>();
-    //dbContext.Database.Migrate();
-    var userManager = services.GetRequiredService<UserManager<User>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    await SeedData.Seed(dbContext, userManager, roleManager);
+    try
+    {
+        var dbContext = services.GetRequiredService<AIPhotoboothDbContext>();
+        //dbContext.Database.Migrate();
+        var userManager = services.GetRequiredService<UserManager<User>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await SeedData.Seed(dbContext, userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error seeding data: {ex}");
+    }
 }
 
 app.UseSwagger();
@@ -69,7 +98,7 @@ app.UseSwaggerUI();
 
 app.UseRouting();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseSession();
