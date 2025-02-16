@@ -3,6 +3,7 @@ using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ServerAPI.Controllers
 {
@@ -19,12 +20,20 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var boothStyles = await _boothStyleService.GetAllBoothStyles();
-            if (boothStyles == null)
+            try
             {
-                return NotFound();
+                var boothStyles = await _boothStyleService.GetAllBoothStyles();
+                if (boothStyles == null)
+                {
+                    return NotFound();
+                }
+                return Ok(boothStyles);
             }
-            return Ok(boothStyles);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"🔥 Database Query Error: {ex}");
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

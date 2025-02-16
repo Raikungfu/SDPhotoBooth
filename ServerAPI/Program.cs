@@ -10,12 +10,6 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddLogging(logging =>
-{
-    logging.AddConsole();
-    logging.AddDebug();
-});
-
 builder.Services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -99,7 +93,6 @@ app.UseSwaggerUI();
 app.UseRouting();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseSession();
 

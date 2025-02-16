@@ -17,6 +17,10 @@ namespace ServerAPI.Extensions
             {
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DataAccess"));
+
+                options.LogTo(Console.WriteLine, LogLevel.Information)
+                       .EnableSensitiveDataLogging()
+                       .EnableDetailedErrors();
             });
 
             services.AddAutoMapper(typeof(MapperProfile));
