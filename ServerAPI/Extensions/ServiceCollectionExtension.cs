@@ -20,7 +20,6 @@ namespace ServerAPI.Extensions
             });
 
             services.AddAutoMapper(typeof(MapperProfile));
-            services.AddScoped<IBoothStyleService, BoothStyleService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

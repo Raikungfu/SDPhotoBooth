@@ -20,9 +20,6 @@ namespace DataAccess.Configurations
                 .WithMany(l => l.Booths)
                 .HasForeignKey(b => b.LocationId);
 
-            builder.HasOne(b => b.BoothStyle)
-                .WithMany(bs => bs.Booths)
-                .HasForeignKey(b => b.BoothStyleId);
 
             builder.HasOne(b => b.CreatedBy)
                 .WithMany(l => l.CreatedBooths)

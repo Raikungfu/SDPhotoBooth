@@ -15,13 +15,11 @@ namespace DataAccess.Data
         public DbSet<Booth> Booth { get; set; }
         public DbSet<Photo> Photo { get; set; }
         public DbSet<PhotoHistory> PhotoHistory { get; set; }
-        public DbSet<PhotoStyle> PhotoStyle { get; set; }
         public DbSet<PaymentMethod> PaymentMethod { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
-        public DbSet<BoothStyle> BoothStyle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,8 +11,6 @@ namespace BusinessLogic.ConfigMapper
         {
             CreateMap<LocationRequestDTO, Location>();
             CreateMap<Location, LocationResponseDTO>();
-            CreateMap<BoothStyleRequestDTO, BoothStyle>();
-            CreateMap<BoothStyle, BoothStyleResponseDTO>();
         }
     }
 }

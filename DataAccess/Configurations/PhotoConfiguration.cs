@@ -10,9 +10,7 @@ namespace DataAccess.Configurations
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Url).IsRequired();
-            builder.HasOne(p => p.PhotoStyle)
-                .WithMany(ps => ps.Photos)
-                .HasForeignKey(p => p.PhotoStyleId);
+            
 
             builder.HasOne(p => p.PhotoHistory)
                 .WithMany(ph => ph.Photos)
