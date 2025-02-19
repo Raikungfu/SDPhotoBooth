@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BussinessObject.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,11 +17,10 @@ namespace BussinessObject.Models
         [Required]
         public string Url { get; set; }
 
+        public Style Style { get; set; }
+
         [Required]
         public int PhotoStyleId { get; set; }
-
-        [ForeignKey("PhotoStyleId")]
-        public PhotoStyle PhotoStyle { get; set; }
 
         [ForeignKey("PhotoHistoryId")]
         public PhotoHistory PhotoHistory { get; set; }

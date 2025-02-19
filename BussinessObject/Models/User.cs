@@ -50,17 +50,9 @@ namespace BussinessObject.Models
 
         public virtual ICollection<Coupon> LastModifiedCoupons { get; set; }
 
-        public virtual ICollection<PhotoStyle> CreatedPhotoStyles { get; set; }
-
-        public virtual ICollection<PhotoStyle> LastModifiedPhotoStyles { get; set; }
-
         public virtual ICollection<PaymentMethod> CreatedPaymentMethods { get; set; }
 
         public virtual ICollection<PaymentMethod> LastModifiedPaymentMethods { get; set; }
-
-        public virtual ICollection<BoothStyle> CreatedBoothStyles { get; set; }
-
-        public virtual ICollection<BoothStyle> LastModifiedBoothStyles { get; set; }
 
         public virtual ICollection<Order> CreatedOrders { get; set; }
 

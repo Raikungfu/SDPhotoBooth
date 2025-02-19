@@ -16,11 +16,9 @@ namespace DataAccess.Repository
             Payment = new PaymentMethodRepository(_db);
             PhotoHistory = new PhotoHistoryRepository(_db);
             Photo = new PhotoRepository(_db);
-            PhotoStyle = new PhotoStyleRepository(_db);
             Session = new SessionRepository(_db);
             TypeSession = new TypeSessionRepository(_db);
             User = new UserRepository(_db);
-            BoothStyle = new BoothStyleRepository(_db);
 
         }
         public IBoothRepository Booth { get; private set; }
@@ -30,11 +28,9 @@ namespace DataAccess.Repository
         public IPaymentMethodRepository Payment { get; private set; }
         public IPhotoHistoryRepository PhotoHistory { get; private set; }
         public IPhotoRepository Photo { get; private set; }
-        public IPhotoStyleRepository PhotoStyle { get; private set; }
         public ISessionRepository Session { get; private set; }
         public ITypeSessionRepository TypeSession { get; private set; }
         public IUserRepository User { get; private set; }
-        public IBoothStyleRepository BoothStyle { get; private set; }
 
         public void Dispose()
         {

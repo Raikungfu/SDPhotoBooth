@@ -92,25 +92,15 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] OFF");
 
-                // Seed data for BoothStyle
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [BoothStyle] ON");
-                if (!context.BoothStyle.Any())
-                {
-                    context.BoothStyle.AddRange(
-                        new BoothStyle { Id = 1, StyleName = "Modern", Description = "Modern style",Price = 100000, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new BoothStyle { Id = 2, StyleName = "Classic", Description = "Classic style",Price = 200000, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [BoothStyle] OFF");
+               
 
                 // Seed data for Booth
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Booth] ON");
                 if (!context.Booth.Any())
                 {
                     context.Booth.AddRange(
-                        new Booth { Id = 1, LocationId = 1, BoothName = "Booth A", Description = "Main booth at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 1 },
-                        new Booth { Id = 2, LocationId = 2, BoothName = "Booth B", Description = "Branch booth", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 2}
+                        new Booth { Id = 1, LocationId = 1, BoothName = "Booth A", Description = "Main booth at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                        new Booth { Id = 2, LocationId = 2, BoothName = "Booth B", Description = "Branch booth", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id}
                     );
                 }
                 context.SaveChanges();
@@ -152,25 +142,14 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
 
-                // Seed data for PhotoStyle
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoStyle] ON");
-                if (!context.PhotoStyle.Any())
-                {
-                    context.PhotoStyle.AddRange(
-                        new PhotoStyle { Id = 1, Type = BussinessObject.Enums.Style.Portrait, Description = "Portrait photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 1 },
-                        new PhotoStyle { Id = 2, Type = BussinessObject.Enums.Style.Landscape, Description = "Landscape photography", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, BoothStyleId = 2 }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoStyle] OFF");
 
                 // Seed data for Photo
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
                 if (!context.Photo.Any())
                 {
                     context.Photo.AddRange(
-                        new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://example.com/photo1.jpg", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
-                        new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://example.com/photo2.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
+                        new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://example.com/photo1.jpg", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Abstract },
+                        new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://example.com/photo2.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Portrait }
                     );
                 }
                 context.SaveChanges();
