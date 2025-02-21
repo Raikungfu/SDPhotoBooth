@@ -13,7 +13,7 @@ namespace DataAccess.Repository
             Coupon = new CouponRepository(_db);
             Location = new LocationRepository(_db);
             Order = new OrderRepository(_db);
-            Payment = new PaymentMethodRepository(_db);
+            PaymentMethod = new PaymentMethodRepository(_db);
             PhotoHistory = new PhotoHistoryRepository(_db);
             Photo = new PhotoRepository(_db);
             Session = new SessionRepository(_db);
@@ -25,7 +25,7 @@ namespace DataAccess.Repository
         public ICouponRepository Coupon { get; private set; }
         public ILocationRepository Location { get; private set; }
         public IOrderRepository Order { get; private set; }
-        public IPaymentMethodRepository Payment { get; private set; }
+        public IPaymentMethodRepository PaymentMethod { get; private set; }
         public IPhotoHistoryRepository PhotoHistory { get; private set; }
         public IPhotoRepository Photo { get; private set; }
         public ISessionRepository Session { get; private set; }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BusinessLogic.DTO.BoothStyleDTO;
 using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.PaymentMethod;
 using BussinessObject.Models;
 
 namespace BusinessLogic.ConfigMapper
@@ -11,6 +11,9 @@ namespace BusinessLogic.ConfigMapper
         {
             CreateMap<LocationRequestDTO, Location>();
             CreateMap<Location, LocationResponseDTO>();
+
+            CreateMap<PaymentMethodRequestDTO, PaymentMethod>();
+            CreateMap<PaymentMethod, PaymentMethodResponseDTO>();
         }
     }
 }
