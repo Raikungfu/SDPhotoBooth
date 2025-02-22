@@ -6,7 +6,7 @@
         ICouponRepository Coupon { get; }
         ILocationRepository Location { get; }
         IOrderRepository Order { get; }
-        IPaymentMethodRepository Payment { get; }
+        IPaymentMethodRepository PaymentMethod { get; }
         IPhotoHistoryRepository PhotoHistory { get; }
         IPhotoRepository Photo { get; }
         ISessionRepository Session { get; }

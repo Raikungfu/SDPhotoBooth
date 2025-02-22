@@ -10,6 +10,5 @@ namespace BusinessLogic.Service.IService
         Task<LocationResponseDTO> GetLocation(int id);
         Task<LocationResponseDTO> GetLocation(string locationName);
         Task<IEnumerable<LocationResponseDTO>> GetAllLocations();
-
     }
 }
