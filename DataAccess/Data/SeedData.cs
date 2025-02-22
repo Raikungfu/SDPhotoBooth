@@ -15,6 +15,14 @@ public static class SeedData
         {
             await roleManager.CreateAsync(new IdentityRole("Customer"));
         }
+        if (!await roleManager.RoleExistsAsync("Staff"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Staff"));
+        }
+        if (!await roleManager.RoleExistsAsync("Manager"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Manager"));
+        }
 
         using var transaction = await context.Database.BeginTransactionAsync(); // Bắt đầu giao dịch bất đồng bộ
         try
