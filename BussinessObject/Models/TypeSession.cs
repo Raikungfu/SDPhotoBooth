@@ -13,7 +13,7 @@ namespace BussinessObject.Models
         public string? Description { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "Duration must be a non-negative value.")]
-        public int? Duration { get; set; }
+        public int Duration { get; set; }
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value.")]
@@ -22,7 +22,7 @@ namespace BussinessObject.Models
         public bool isPrinting { get; set; } = true;
 
         [Range(0, int.MaxValue, ErrorMessage = "AbleTakenNumber must be a non-negative value.")]
-        public int? AbleTakenNumber { get; set; }
+        public int AbleTakenNumber { get; set; }
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
 

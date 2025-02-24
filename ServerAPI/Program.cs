@@ -29,6 +29,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = redisConnectionString;
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
 

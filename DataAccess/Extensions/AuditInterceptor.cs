@@ -1,11 +1,19 @@
 ﻿using BussinessObject.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Security.Claims;
 
 namespace DataAccess.Extensions
 {
     public class AuditInterceptor : SaveChangesInterceptor
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AuditInterceptor(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             var context = eventData.Context;
@@ -29,6 +37,7 @@ namespace DataAccess.Extensions
         private void UpdateAuditFields(DbContext context)
         {
             var now = DateTime.UtcNow;
+            var userId = GetCurrentUserId();
 
             foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
             {
@@ -37,12 +46,16 @@ namespace DataAccess.Extensions
                     entry.Entity.CreatedAt = now;
                     entry.Entity.LastModified = now;
                     //Handle CreatedById and LastModifiedById
+                    entry.Entity.CreatedById = userId;
+                    entry.Entity.LastModifiedById = userId;
+
 
                 }
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModified = now;
                     //Handle LastModifiedById
+                    entry.Entity.LastModifiedById = userId;
                 }
                 if (entry.State == EntityState.Deleted)
                 {
@@ -50,6 +63,7 @@ namespace DataAccess.Extensions
                     entry.Entity.LastModified = now;
                     entry.State = EntityState.Modified; // Xóa mềm
                     //Handle LastModifiedById
+                    entry.Entity.LastModifiedById = userId;
                 }
             }
 
@@ -72,6 +86,12 @@ namespace DataAccess.Extensions
 
                 }
             }
+        }
+
+        private string? GetCurrentUserId()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+            return user?.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }
