@@ -1,4 +1,6 @@
-﻿using BussinessObject.Models;
+﻿using BusinessLogic.Service.IService;
+using BusinessLogic.Service;
+using BussinessObject.Models;
 using DataAccess.Data;
 using DataAccess.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +29,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = redisConnectionString;
 });
 
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")

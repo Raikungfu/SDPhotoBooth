@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.UserDTO;
+using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
 using BussinessObject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using ServerAPI.Helpers;
@@ -20,14 +22,17 @@ namespace ServerAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
+        private readonly IEmailService _emailService;
 
-        public IdentityController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper, IDistributedCache cache)
+        public IdentityController(UserManager<User> userManager, SignInManager<User> signInManager,
+            IConfiguration configuration, IMapper mapper, IDistributedCache cache, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _mapper = mapper;
             _cache = cache;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -162,21 +167,60 @@ namespace ServerAPI.Controllers
             return Ok(new { message = "Profile updated successfully" });
         }
 
-        //forgot password
-        //[HttpPost("forgot-password")]
-        //public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(model.Email);
-        //    if (user == null)
-        //    {
-        //        return NotFound(new { message = "User not found" });
-        //    }
-        //    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    var callbackUrl = Url.Action("ResetPassword", "Identity", new { token, email = user.Email }, Request.Scheme);
-        //    // Send email
-        //    // _emailService.SendEmail(user.Email, "Reset Password", $"Click <a href='{callbackUrl}'>here</a> to reset your password");
-        //    return Ok(new { message = "Reset password link has been sent to your email" });
-        //}
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDTO request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest("Email is required.");
+            }
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return BadRequest("User with this email does not exist.");
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = $"https://yourwebsite.com/reset-password?email={request.Email}&token={token}";
+            // Send email
+            await _emailService.SendResetPasswordEmail(user.Email, resetLink);
+            return Ok(new { message = "Reset password link has been sent to your email" });
+        }
+
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
+        {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Token) || string.IsNullOrEmpty(request.NewPassword))
+            {
+                return BadRequest("All fields are required.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return BadRequest("Invalid email.");
+            }
+
+            // Kiểm tra tính hợp lệ của token
+            var isValidToken = await _userManager.VerifyUserTokenAsync(user,
+                _userManager.Options.Tokens.PasswordResetTokenProvider,
+                "ResetPassword",
+                request.Token);
+
+            if (!isValidToken)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+
+            // Đặt lại mật khẩu
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            if (!resetPassResult.Succeeded)
+            {
+                return BadRequest(resetPassResult.Errors.Select(e => e.Description));
+            }
+
+            return Ok("Password has been reset successfully.");
+        }
 
 
         [HttpGet("access-denied")]
