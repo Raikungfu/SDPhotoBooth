@@ -64,11 +64,31 @@ public static class SeedData
 
                 if (!resultAdmin.Succeeded)
                 {
-                    // Xử lý lỗi nếu thêm admin không thành công
                     throw new Exception($"Failed to create admin user: {string.Join(", ", resultAdmin.Errors.Select(e => e.Description))}");
                 }
 
-                // Tạo người dùng user1
+                admin = new User
+                {
+                    UserName = "admin1",
+                    Email = "hienphannguyenxuan@gmail.com",
+                    PhoneNumber = "07774567890",
+                    Gender = BussinessObject.Enums.UserGender.Male,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    IsDeleted = false,
+                };
+                resultAdmin = await userManager.CreateAsync(admin, "Admin123");
+
+                if (resultAdmin.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+                }
+
+                if (!resultAdmin.Succeeded)
+                {
+                    throw new Exception($"Failed to create admin user: {string.Join(", ", resultAdmin.Errors.Select(e => e.Description))}");
+                }
+
                 var user1 = new User
                 {
                     UserName = "user1",

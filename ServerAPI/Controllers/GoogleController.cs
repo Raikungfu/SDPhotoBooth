@@ -57,7 +57,7 @@ namespace ServerAPI.Controllers
                         }
                         else
                         {
-                            return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Key:PrivateKey"]) });
+                            return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
                         }
                     }
                 }
@@ -68,7 +68,7 @@ namespace ServerAPI.Controllers
             }
             catch (Exception ex)
             {
-                return Unauthorized(new { message = "Decryption failed", error = ex.Message });
+                return BadRequest(new { message = "Decryption failed", error = ex.Message });
             }
         }
     }
