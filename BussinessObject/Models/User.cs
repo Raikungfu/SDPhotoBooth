@@ -1,12 +1,12 @@
 ﻿using BussinessObject.Enums;
 using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BussinessObject.Models
 {
     public class User : IdentityUser
     {
+        public string? FullName { get; set; }
         public UserGender Gender { get; set; }
 
         public DateTime? BirthDate { get; set; }
@@ -22,6 +22,8 @@ namespace BussinessObject.Models
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
+        
+        public bool IsBanned { get; set; } = false;
 
         public void UpdateTimestamp()
         {
@@ -29,7 +31,7 @@ namespace BussinessObject.Models
         }
 
         [ForeignKey("LocationId")]
-        public virtual Location Location { get; set; }
+        public virtual Location? Location { get; set; }
 
         public virtual ICollection<PhotoHistory> PhotoHistories { get; set; }
 

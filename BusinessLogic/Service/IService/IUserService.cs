@@ -1,0 +1,15 @@
+﻿using BusinessLogic.DTO.UserDTO;
+
+namespace BusinessLogic.Service.IService
+{
+    public interface IUserService
+    {
+        //Filter
+        Task<IEnumerable<UserResponseDTO>> Filter(UserFilterDTO filter);
+        Task<UserResponseDTO> CreateUser(UserRequestDTO userRequestDTO);
+        Task<UserResponseDTO> ResetPassword(string email, string newPassword);
+        Task<UserResponseDTO> BanUser(string email);
+        Task<UserResponseDTO> UnbanUser(string email);
+        Task<UserResponseDTO> UserDetail(string email);
+    }
+}

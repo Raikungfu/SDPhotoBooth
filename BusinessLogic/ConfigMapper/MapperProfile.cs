@@ -12,15 +12,28 @@ namespace BusinessLogic.ConfigMapper
         public MapperProfile()
         {
             CreateMap<LocationRequestDTO, Location>();
-            CreateMap<Location, LocationResponseDTO>();
+            CreateMap<Location, LocationResponseDTO>().ReverseMap();
 
             CreateMap<PaymentMethodRequestDTO, PaymentMethod>();
             CreateMap<PaymentMethod, PaymentMethodResponseDTO>();
 
-            CreateMap<User, UserResponseDTO>();
+            CreateMap<UserRequestDTO, User>();
+            CreateMap<User, UserResponseDTO>()
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location != null ? new LocationResponseDTO
+            {
+                Id = src.Location.Id,
+                LocationName = src.Location.LocationName,
+                Address = src.Location.Address,
+                CreatedAt = src.Location.CreatedAt,
+                LastModified = src.Location.LastModified,
+                IsDeleted = src.Location.IsDeleted,
+                CreatedById = src.Location.CreatedById,
+                LastModifiedById = src.Location.LastModifiedById
+            } : null)); 
 
             CreateMap<TypeSessionRequestDTO, TypeSession>();
             CreateMap<TypeSession, TypeSessionResponseDTO>();
+
         }
     }
 }

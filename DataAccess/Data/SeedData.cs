@@ -27,6 +27,19 @@ public static class SeedData
         using var transaction = await context.Database.BeginTransactionAsync(); // Bắt đầu giao dịch bất đồng bộ
         try
         {
+            //Gen location
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] ON");
+            if (!context.Location.Any())
+            {
+                context.Location.AddRange(
+                    new Location { Id = 1, LocationName = "Main Office", Address = "123 Main St", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                    new Location {Id = 2, LocationName = "Branch Office", Address = "456 Side St", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
+                );
+            }
+            context.SaveChanges();
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] OFF");
+
+
             if (!context.Users.Any())
             {
                 // Băm mật khẩu
@@ -67,6 +80,7 @@ public static class SeedData
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     IsDeleted = false,
+                    LocationId = 1
                 };
 
                 var resultUser1 = await userManager.CreateAsync(user1, "Cus123");
@@ -75,18 +89,6 @@ public static class SeedData
                     await userManager.AddToRoleAsync(user1, "Customer");
                 }
 
-
-
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] ON");
-                if (!context.Location.Any())
-                {
-                    context.Location.AddRange(
-                        new Location { Id = 1, LocationName = "Main Office", Address = "123 Main St", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new Location { Id = 2, LocationName = "Branch Office", Address = "456 Side St", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] OFF");
 
                 // Seed data for Payment
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] ON");
