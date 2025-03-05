@@ -39,10 +39,13 @@ namespace ServerAPI.Controllers
             return Ok(user);
         }
 
-        [HttpGet("ban")]
-        public async Task<IActionResult> BanUser([FromQuery] string email)
+        [HttpPost("update-ban-status")]
+        public async Task<IActionResult> UpdateBanStatus([FromQuery] string email, [FromQuery] bool isBanned)
         {
-            var user = await _userService.BanUser(email);
+            var user = isBanned
+                ? await _userService.BanUser(email)
+                : await _userService.UnbanUser(email);
+
             if (user == null)
             {
                 return NotFound();
@@ -50,16 +53,6 @@ namespace ServerAPI.Controllers
             return Ok(user);
         }
 
-        [HttpGet("unban")]
-        public async Task<IActionResult> UnbanUser([FromQuery] string email)
-        {
-            var user = await _userService.UnbanUser(email);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
-        }
 
         [HttpGet("detail")]
         public async Task<IActionResult> UserDetail([FromQuery] string email)
@@ -71,5 +64,8 @@ namespace ServerAPI.Controllers
             }
             return Ok(user);
         }
+
+        //uprole
+        //move location for staff
     }
 }

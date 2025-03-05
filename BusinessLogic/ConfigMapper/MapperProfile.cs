@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.DTO.TypeSessionDTO;
@@ -34,6 +35,19 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<TypeSessionRequestDTO, TypeSession>();
             CreateMap<TypeSession, TypeSessionResponseDTO>();
 
+            CreateMap<BoothRequestDTO, Booth>();
+            CreateMap<Booth, BoothResponseDTO>()
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location != null ? new LocationResponseDTO
+                {
+                    Id = src.Location.Id,
+                    LocationName = src.Location.LocationName,
+                    Address = src.Location.Address,
+                    CreatedAt = src.Location.CreatedAt,
+                    LastModified = src.Location.LastModified,
+                    IsDeleted = src.Location.IsDeleted,
+                    CreatedById = src.Location.CreatedById,
+                    LastModifiedById = src.Location.LastModifiedById
+                } : null));
         }
     }
 }

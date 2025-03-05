@@ -24,6 +24,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<IPaymentMethodService, PaymentMethodService>();
             services.AddScoped<ITypeSessionService, TypeSessionService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBoothService, BoothService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
