@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
+using BussinessObject.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -10,11 +11,13 @@ namespace ServerAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILocationService _locationService;
         private readonly IMapper _mapper;
-        public UserController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper, ILocationService locationService)
         {
             _userService = userService;
             _mapper = mapper;
+            _locationService = locationService;
         }
 
         [HttpPost("filter")]
@@ -65,7 +68,40 @@ namespace ServerAPI.Controllers
             return Ok(user);
         }
 
-        //uprole
+        //change-role
+        [HttpPost("change-role")]
+        public async Task<IActionResult> ChangeRole([FromQuery] string email, [FromQuery] UserType role)
+        {
+            var isExistUser = await _userService.UserDetail(email);
+            if (isExistUser == null)
+            {
+                return NotFound();
+            }
+            var result = await _userService.ChangeRole(email, role);
+            return Ok(result);
+        }
+
         //move location for staff
+        [HttpPost("staff/move-location")]
+        public async Task<IActionResult> MoveLocation([FromQuery] string email, [FromQuery] int locationId)
+        {
+            var isExistUser = await _userService.UserDetail(email);
+            if (isExistUser == null)
+            {
+                return NotFound();
+            }
+            if(isExistUser.Role != "Staff")
+            {
+                return BadRequest("User is not staff");
+            }
+            var isExistLocation = await _locationService.GetLocation(locationId);
+            if (isExistLocation == null)
+            {
+                return BadRequest("Location is not found");
+            }
+            var result = await _userService.MoveLocation(email, locationId);
+            return Ok(result);
+        }
+
     }
 }

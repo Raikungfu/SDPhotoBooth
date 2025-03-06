@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.BoothDTO;
+using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.DTO.TypeSessionDTO;
@@ -48,6 +49,9 @@ namespace BusinessLogic.ConfigMapper
                     CreatedById = src.Location.CreatedById,
                     LastModifiedById = src.Location.LastModifiedById
                 } : null));
+
+            CreateMap<CouponRequestDTO, Coupon>();
+            CreateMap<Coupon, CouponResponseDTO>();
         }
     }
 }

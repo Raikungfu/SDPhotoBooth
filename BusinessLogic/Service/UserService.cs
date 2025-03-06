@@ -198,5 +198,26 @@ namespace BusinessLogic.Service
             userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
             return userDTO;
         }
+
+        public async Task<bool> ChangeRole(string email, UserType role)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, role.ToString());
+            return true;
+        }
+
+        public async Task<bool> MoveLocation(string email, int locationId)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
+            user.LocationId = locationId;
+            await _userManager.UpdateAsync(user);
+            return true;
+        }
     }
 }

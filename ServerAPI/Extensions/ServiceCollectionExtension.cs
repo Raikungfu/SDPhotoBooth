@@ -25,6 +25,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<ITypeSessionService, TypeSessionService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBoothService, BoothService>();
+            services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

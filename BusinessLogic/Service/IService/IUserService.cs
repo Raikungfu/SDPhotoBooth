@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.UserDTO;
+using BussinessObject.Enums;
 
 namespace BusinessLogic.Service.IService
 {
@@ -11,5 +12,7 @@ namespace BusinessLogic.Service.IService
         Task<UserResponseDTO> BanUser(string email);
         Task<UserResponseDTO> UnbanUser(string email);
         Task<UserResponseDTO> UserDetail(string email);
+        Task<bool> ChangeRole(string email, UserType role);
+        Task<bool> MoveLocation(string email, int locationId);
     }
 }
