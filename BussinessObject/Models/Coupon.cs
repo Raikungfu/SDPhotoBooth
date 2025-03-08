@@ -26,8 +26,7 @@ namespace BussinessObject.Models
         [Range(1, int.MaxValue, ErrorMessage = "MaxUse must be at least 1.")]
         public int? MaxUse { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "MaxUsePerUser must be at least 1.")]
-        public int? MaxUsePerUser { get; set; }
+        public int? UsedAmount { get; set; } = 0;
 
         [Range(0, double.MaxValue, ErrorMessage = "MaxDiscount must be positive.")]
         public decimal? MaxDiscount { get; set; }
@@ -36,6 +35,8 @@ namespace BussinessObject.Models
         public decimal? MinOrder { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 
 }

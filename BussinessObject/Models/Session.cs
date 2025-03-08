@@ -25,7 +25,6 @@ namespace BussinessObject.Models
         [ForeignKey("TypeSessionId")]
         public TypeSession TypeSession { get; set; }
 
-
         [ForeignKey("BoothId")]
         public Booth Booth { get; set; }
 

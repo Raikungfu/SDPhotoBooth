@@ -1,15 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BussinessObject.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BussinessObject.Models
 {
     public class Order : BaseEntity
     {
-        
         public string? UserId { get; set; }
+
+        public long? OrderCode { get; set; } = new Random().Next(100000000, 999999999);
 
         [Required]
         public int PaymentId { get; set; }
+
+        public OrderStatus? Status { get; set; } = OrderStatus.Pending;
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
@@ -19,8 +23,16 @@ namespace BussinessObject.Models
 
         public string? Phone { get; set; }
 
+        public int? CouponId { get; set; }
+
+        [Required]
+        public int TypeSessionId { get; set; }
+
         [Required]
         public string SessionId { get; set; }
+
+        [ForeignKey("TypeSessionId")]
+        public virtual TypeSession TypeSession { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
@@ -30,5 +42,8 @@ namespace BussinessObject.Models
 
         [ForeignKey("PaymentId")]
         public virtual PaymentMethod PaymentMethod { get; set; }
+
+        [ForeignKey("CouponId")]
+        public virtual Coupon Coupon { get; set; }
     }
 }
