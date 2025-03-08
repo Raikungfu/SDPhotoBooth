@@ -71,11 +71,20 @@ namespace BusinessLogic.Service
 
         public async Task<bool> UpdateTypeSessionCodeAsync(int id, TypeSessionRequestDTO typeSessionCodeDTO)
         {
-            var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(filter: e => e.Id == id);
-           
+            if (typeSessionCodeDTO == null)
+            {
+                return false;
+            }
+
+            var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(e => e.Id == id);
+            if (typeSessionCode == null)
+            {
+                return false;
+            }
+
             if (!string.IsNullOrEmpty(typeSessionCodeDTO.Name))
             {
-                var isExist = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(filter: e => e.Name == typeSessionCodeDTO.Name);
+                var isExist = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(e => e.Name == typeSessionCodeDTO.Name && e.Id != id);
                 if (isExist != null)
                 {
                     return false;
@@ -85,13 +94,14 @@ namespace BusinessLogic.Service
 
             typeSessionCode.Description = typeSessionCodeDTO.Description ?? typeSessionCode.Description;
             typeSessionCode.Duration = typeSessionCodeDTO.Duration ?? typeSessionCode.Duration;
-            typeSessionCode.Price = typeSessionCodeDTO.Price > 0 ? typeSessionCodeDTO.Price : typeSessionCode.Price;
+            typeSessionCode.Price = typeSessionCodeDTO.Price >= 0 ? typeSessionCodeDTO.Price : typeSessionCode.Price;
             typeSessionCode.isPrinting = typeSessionCodeDTO.isPrinting;
-            typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber > 0 ? typeSessionCodeDTO.AbleTakenNumber : typeSessionCode.AbleTakenNumber;
+            typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber >= 0 ? typeSessionCodeDTO.AbleTakenNumber : typeSessionCode.AbleTakenNumber;
 
             _unitOfWork.TypeSession.Update(typeSessionCode);
             await _unitOfWork.SaveAsync();
             return true;
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace DataAccess.Repository
             objFromDb.StartDate = coupon.StartDate;
             objFromDb.EndDate = coupon.EndDate;
             objFromDb.MaxUse = coupon.MaxUse;
-            objFromDb.MaxUsePerUser = coupon.MaxUsePerUser;
+            objFromDb.UsedAmount = coupon.UsedAmount;
             objFromDb.MaxDiscount = coupon.MaxDiscount;
             objFromDb.MinOrder = coupon.MinOrder;
             objFromDb.IsActive = coupon.IsActive;
@@ -37,7 +37,7 @@ namespace DataAccess.Repository
             objFromDb.StartDate = coupon.StartDate;
             objFromDb.EndDate = coupon.EndDate;
             objFromDb.MaxUse = coupon.MaxUse;
-            objFromDb.MaxUsePerUser = coupon.MaxUsePerUser;
+            objFromDb.UsedAmount = coupon.UsedAmount;
             objFromDb.MaxDiscount = coupon.MaxDiscount;
             objFromDb.MinOrder = coupon.MinOrder;
             objFromDb.IsActive = coupon.IsActive;

@@ -58,9 +58,9 @@ namespace BusinessLogic.Service
             {
                 coupon = coupon.Where(c => c.MaxUse <= filter.MaxUse);
             }
-            if (filter.MaxUsePerUser != null)
+            if (filter.UsedAmount != null)
             {
-                coupon = coupon.Where(c => c.MaxUsePerUser <= filter.MaxUsePerUser);
+                coupon = coupon.Where(c => c.UsedAmount <= filter.UsedAmount);
             }
             if (filter.MaxDiscount != null)
             {
@@ -133,9 +133,9 @@ namespace BusinessLogic.Service
             {
                 existingCoupon.MaxUse = couponRequestDTO.MaxUse.Value;
             }
-            if (couponRequestDTO.MaxUsePerUser.HasValue)
+            if (couponRequestDTO.UsedAmount.HasValue)
             {
-                existingCoupon.MaxUsePerUser = couponRequestDTO.MaxUsePerUser.Value;
+                existingCoupon.UsedAmount = couponRequestDTO.UsedAmount.Value;
             }
             if (couponRequestDTO.MaxDiscount.HasValue)
             {
