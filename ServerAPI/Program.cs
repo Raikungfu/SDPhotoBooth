@@ -13,6 +13,7 @@ using ServerAPI.Extensions;
 using ServerAPI.Middleware;
 using ServerAPI.Middlewares;
 using StackExchange.Redis;
+using ServerAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<RabbitMqService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
 
@@ -125,5 +127,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var rabbitService = app.Services.GetRequiredService<RabbitMqService>();
+Task.Run(() => rabbitService.StartListeningAsync());
 
 app.Run();

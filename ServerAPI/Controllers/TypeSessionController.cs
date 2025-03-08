@@ -93,16 +93,13 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest("Invalid data provided.");
             }
-            if (typeSessionRequestDTO.Name != null)
+            var isExist = await _typeSessionService.GetTypeSessionCodeByIdAsync(id);
+            if (isExist != null)
             {
-                var isNameExist = await _typeSessionService.GetTypeSessionCodeByNameAsync(typeSessionRequestDTO.Name);
-                if (isNameExist != null)
-                {
-                    return BadRequest("TypeSession name already exists.");
-                }
+                var typeSession = await _typeSessionService.UpdateTypeSessionCodeAsync(id, typeSessionRequestDTO);
+                return Ok(typeSession);
             }
-            var typeSession = await _typeSessionService.UpdateTypeSessionCodeAsync(id, typeSessionRequestDTO);
-            return Ok(typeSession);
+            return BadRequest("TypeSession name already exists.");
         }
 
         [HttpDelete("{id}")]

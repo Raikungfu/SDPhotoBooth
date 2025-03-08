@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using BusinessLogic.ConfigMapper;
 
+
 namespace ServerAPI.Extensions
 {
     public static class ServiceCollectionExtension
