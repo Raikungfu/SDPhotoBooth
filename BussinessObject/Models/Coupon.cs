@@ -16,8 +16,12 @@ namespace BussinessObject.Models
         public string Code { get; set; }
 
         [Required]
-        [Range(0, 1)]
+        [Range(1, int.MaxValue, ErrorMessage = "DiscountPercent must be at least 1.")]
         public decimal Discount { get; set; }
+
+        [Required]
+        [Range(0, 1)]
+        public decimal DiscountPercent { get; set; }
 
         public DateTime? StartDate { get; set; }
 

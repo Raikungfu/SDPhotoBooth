@@ -141,8 +141,8 @@ public static class SeedData
                 if (!context.TypeSession.Any())
                 {
                     context.TypeSession.AddRange(
-                        new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, AbleTakenNumber = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = false },
-                        new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, AbleTakenNumber = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = true }
+                        new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Price = 100000, Duration = 60, AbleTakenNumber = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = false },
+                        new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Price = 60000, Duration = 120, AbleTakenNumber = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id, isPrinting = true }
                     );
                 }
                 context.SaveChanges();
@@ -185,17 +185,15 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
 
-                // Seed data for Order
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
+                
                 if (!context.Order.Any())
                 {
                     context.Order.AddRange(
-                        new Order { Id = 1, UserId = user1.Id, PaymentId = 1, Amount = 100.00m, SessionId = "SESSION1", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                        new Order { Id = 2, UserId = user1.Id, PaymentId = 2, Amount = 150.00m, SessionId = "SESSION2", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                        new Order { TypeSessionId = 1, UserId = user1.Id, PaymentMethodId = 1, Amount = 100000, Status = BussinessObject.Enums.OrderStatus.Pending, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                        new Order { TypeSessionId = 2, PaymentMethodId = 2, Amount = 60000, Status = BussinessObject.Enums.OrderStatus.Pending, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = admin.Id, LastModifiedById = admin.Id }
                     );
                 }
                 context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] OFF");
 
                 // Commit transaction nếu không có lỗi
                 await transaction.CommitAsync();

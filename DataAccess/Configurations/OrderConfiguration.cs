@@ -10,7 +10,6 @@ namespace DataAccess.Configurations
         {
             builder.HasKey(o => o.Id);
             builder.Property(o => o.Amount).IsRequired().HasPrecision(18, 2);
-            builder.Property(o => o.SessionId).IsRequired();
 
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Orders)
@@ -18,7 +17,12 @@ namespace DataAccess.Configurations
 
             builder.HasOne(o => o.PaymentMethod)
                 .WithMany(p => p.Orders)
-                .HasForeignKey(o => o.PaymentId);
+                .HasForeignKey(o => o.PaymentMethodId);
+
+            builder.HasOne(o => o.TypeSession)
+                .WithMany(p => p.Orders)
+                .HasForeignKey(o => o.TypeSessionId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(o => o.CreatedBy)
                 .WithMany(u => u.CreatedOrders)

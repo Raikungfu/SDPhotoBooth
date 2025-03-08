@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BussinessObject.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLogic.DTO.CouponDTO
 {
@@ -10,8 +11,10 @@ namespace BusinessLogic.DTO.CouponDTO
         public string? Description { get; set; }
         [StringLength(50)]
         public string? Code { get; set; }
-        [Range(0, 1)]
+        [Range(1, int.MaxValue, ErrorMessage = "DiscountPercent must be at least 1.")]
         public decimal? Discount { get; set; }
+        [Range(0, 1)]
+        public decimal? DiscountPercent { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "MaxUse must be at least 1.")]

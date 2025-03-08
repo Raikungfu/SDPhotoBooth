@@ -6,6 +6,7 @@ using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
+using BusinessLogic.Service;
 using BussinessObject.Models;
 
 namespace BusinessLogic.ConfigMapper
@@ -54,7 +55,9 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<CouponRequestDTO, Coupon>();
             CreateMap<Coupon, CouponResponseDTO>();
 
-            CreateMap<OrderRequestDTO, Order>();
+            CreateMap<OrderRequestDTO, Order>().ReverseMap();
+            CreateMap<OrderResponseDTO, Order>().ReverseMap();
+            CreateMap<OrderResponseDTO, OrderResponseDTO>().ReverseMap();
         }
     }
 }

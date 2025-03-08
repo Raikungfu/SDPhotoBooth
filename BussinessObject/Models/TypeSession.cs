@@ -26,5 +26,7 @@ namespace BussinessObject.Models
 
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
 
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+
     }
 }

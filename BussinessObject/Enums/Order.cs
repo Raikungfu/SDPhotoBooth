@@ -12,6 +12,7 @@ namespace BussinessObject.Enums
         Pending,
         Processing,
         Completed,
+        Failed,
         Cancelled
     }
 }

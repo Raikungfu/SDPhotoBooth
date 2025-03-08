@@ -16,6 +16,7 @@ namespace DataAccess.Repository
             var objFromDb = _context.Coupon.FirstOrDefault(s => s.Id == coupon.Id);
             objFromDb.Name = coupon.Name;
             objFromDb.Discount = coupon.Discount;
+            objFromDb.DiscountPercent = coupon.DiscountPercent;
             objFromDb.Description = coupon.Description;
             objFromDb.Code = coupon.Code;
             objFromDb.StartDate = coupon.StartDate;
@@ -32,6 +33,7 @@ namespace DataAccess.Repository
             var objFromDb = _context.Coupon.FirstOrDefault(s => s.Id == coupon.Id);
             objFromDb.Name = coupon.Name;
             objFromDb.Discount = coupon.Discount;
+            objFromDb.DiscountPercent = coupon.DiscountPercent;
             objFromDb.Description = coupon.Description;
             objFromDb.Code = coupon.Code;
             objFromDb.StartDate = coupon.StartDate;

@@ -13,7 +13,7 @@ namespace BussinessObject.Models
         public string? UserId { get; set; }
 
         [Required]
-        public int PaymentId { get; set; }
+        public int PaymentMethodId { get; set; }
 
         public OrderStatus? Status { get; set; } = OrderStatus.Pending;
 
@@ -30,8 +30,7 @@ namespace BussinessObject.Models
         [Required]
         public int TypeSessionId { get; set; }
 
-        [Required]
-        public string SessionId { get; set; }
+        public string? SessionId { get; set; }
 
         [ForeignKey("TypeSessionId")]
         public virtual TypeSession TypeSession { get; set; }

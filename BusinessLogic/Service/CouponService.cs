@@ -46,6 +46,10 @@ namespace BusinessLogic.Service
             {
                 coupon = coupon.Where(c => c.Discount <= filter.Discount);
             }
+            if (filter.DiscountPercent != null)
+            {
+                coupon = coupon.Where(c => c.DiscountPercent <= filter.DiscountPercent);
+            }
             if (filter.StartDate != null)
             {
                 coupon = coupon.Where(c => c.StartDate >= filter.StartDate);
@@ -120,6 +124,10 @@ namespace BusinessLogic.Service
             if (couponRequestDTO.Discount.HasValue)
             {
                 existingCoupon.Discount = couponRequestDTO.Discount.Value;
+            }
+            if (couponRequestDTO.DiscountPercent.HasValue)
+            {
+                existingCoupon.DiscountPercent = couponRequestDTO.DiscountPercent.Value;
             }
             if (couponRequestDTO.StartDate.HasValue)
             {

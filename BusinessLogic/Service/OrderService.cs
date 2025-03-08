@@ -4,15 +4,10 @@ using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    class OrderService : IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -29,7 +24,7 @@ namespace BusinessLogic.Service
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
-        public async Task<OrderResponseDTO> GetOrder(int id)
+        public async Task<OrderResponseDTO> GetOrder(long id)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == id);
             var orderResponseDTO = _mapper.Map<OrderResponseDTO>(order);
@@ -43,7 +38,7 @@ namespace BusinessLogic.Service
             return orderResponseDTOs;
         }
 
-        public async Task<int> DeleteOrder(int id)
+        public async Task<long> DeleteOrder(long id)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == id);
             _unitOfWork.Order.Remove(order);
@@ -51,7 +46,7 @@ namespace BusinessLogic.Service
             return id;
         }
 
-        public async Task<OrderResponseDTO> UpdateOrder(int id, OrderRequestDTO orderRequestDTO)
+        public async Task<OrderResponseDTO> UpdateOrder(long id, OrderRequestDTO orderRequestDTO)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == id);
             order = _mapper.Map(orderRequestDTO, order);

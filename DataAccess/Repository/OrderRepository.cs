@@ -15,7 +15,7 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Order.FirstOrDefault(s => s.Id == order.Id);
             objFromDb.UserId = order.UserId;
-            objFromDb.PaymentId = order.PaymentId;
+            objFromDb.PaymentMethodId = order.PaymentMethodId;
             objFromDb.Amount = order.Amount;
             objFromDb.SessionId = order.SessionId;
         }
@@ -24,7 +24,7 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Order.FirstOrDefault(s => s.Id == order.Id);
             objFromDb.UserId = order.UserId;
-            objFromDb.PaymentId = order.PaymentId;
+            objFromDb.PaymentMethodId = order.PaymentMethodId;
             objFromDb.Amount = order.Amount;
             objFromDb.SessionId = order.SessionId;
             return Task.CompletedTask;

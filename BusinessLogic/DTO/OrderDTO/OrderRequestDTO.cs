@@ -15,7 +15,7 @@ namespace BusinessLogic.DTO.OrderDTO
         public decimal Amount { get; set; }
         public string? CouponCode { get; set; }
         public int TypeSessionId { get; set; }
-        public int PaymentId { get; set; }
+        public int PaymentMethodId { get; set; }
 
         public string? UserId { get; set; }
         public int? CouponId { get; set; }

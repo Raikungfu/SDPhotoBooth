@@ -21,8 +21,11 @@ namespace DataAccess.Configurations
 
             builder.Property(c => c.Discount)
                 .IsRequired()
-                .HasPrecision(18, 2)
-                .HasDefaultValue(0);
+                .HasPrecision(18, 2);
+
+            builder.Property(c => c.DiscountPercent)
+                .IsRequired()
+                .HasPrecision(18, 2);
 
             builder.Property(c => c.MaxDiscount)
                .HasPrecision(18, 2);

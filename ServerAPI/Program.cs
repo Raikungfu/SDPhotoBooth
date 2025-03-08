@@ -31,9 +31,6 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<RabbitMqService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

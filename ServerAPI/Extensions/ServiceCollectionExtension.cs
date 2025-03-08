@@ -6,6 +6,8 @@ using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using BusinessLogic.ConfigMapper;
+using DataAccess.Extensions;
+using ServerAPI.Services;
 
 
 namespace ServerAPI.Extensions
@@ -27,7 +29,13 @@ namespace ServerAPI.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBoothService, BoothService>();
             services.AddScoped<ICouponService, CouponService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddSingleton<RabbitMqService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
+            services.AddScoped<IPayOSService, PayOSService>();
 
             return services;
         }
