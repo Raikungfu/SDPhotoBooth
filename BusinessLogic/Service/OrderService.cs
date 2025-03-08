@@ -21,12 +21,12 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<int> CreateOrder(OrderRequestDTO orderRequestDTO)
+        public async Task<OrderResponseDTO> CreateOrder(OrderRequestDTO orderRequestDTO)
         {
             var order = _mapper.Map<Order>(orderRequestDTO);
             _unitOfWork.Order.Add(order);
             await _unitOfWork.SaveAsync();
-            return order.Id;
+            return _mapper.Map<OrderResponseDTO>(order);
         }
 
         public async Task<OrderResponseDTO> GetOrder(int id)

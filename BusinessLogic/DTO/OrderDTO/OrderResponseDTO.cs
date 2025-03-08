@@ -6,9 +6,8 @@ namespace BusinessLogic.Service
 {
     public class OrderResponseDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string? UserId { get; set; }
-        public long? OrderCode { get; set; }
         public int PaymentId { get; set; }
         public string PaymentName { get; set; }
         public OrderStatus? Status { get; set; }

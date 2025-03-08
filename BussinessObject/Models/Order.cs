@@ -6,9 +6,11 @@ namespace BussinessObject.Models
 {
     public class Order : BaseEntity
     {
-        public string? UserId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public new int Id { get; set; } = new Random().Next(100000000, 999999999);
 
-        public long? OrderCode { get; set; } = new Random().Next(100000000, 999999999);
+        public string? UserId { get; set; }
 
         [Required]
         public int PaymentId { get; set; }
