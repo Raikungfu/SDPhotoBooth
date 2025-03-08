@@ -32,10 +32,6 @@ namespace DataAccess.Configurations
                 .WithMany(t => t.Orders)
                 .HasForeignKey(o => o.TypeSessionId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(o => o.Session)
-                .WithOne(s => s.Order)
-                .HasForeignKey<Order>(o => o.SessionId);
-
             builder.HasOne(o => o.CreatedBy)
                 .WithMany(u => u.CreatedOrders)
                 .HasForeignKey(o => o.CreatedById);
@@ -43,6 +39,10 @@ namespace DataAccess.Configurations
             builder.HasOne(o => o.LastModifiedBy)
                 .WithMany(u => u.LastModifiedOrders)
                 .HasForeignKey(o => o.LastModifiedById);
+
+            builder.HasOne(u => u.Session)
+              .WithOne(p => p.Order)
+              .HasForeignKey<Order>(s => s.SessionId);
         }
     }
 }

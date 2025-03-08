@@ -128,43 +128,6 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] OFF");
 
-                // Seed data for Session
-                //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] ON");
-                if (!context.Session.Any())
-                {
-                    context.Session.AddRange(
-                        new Session { Code = "SESSION1", IsActive = true, TypeSessionId = 1, BoothId = 1, CreatedAt = DateTime.UtcNow },
-                        new Session { Code = "SESSION2", IsActive = true, TypeSessionId = 2, BoothId = 2, CreatedAt = DateTime.UtcNow }
-                    );
-                }
-                context.SaveChanges();
-                //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] OFF");
-
-                // Seed data for PhotoHistory
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] ON");
-                if (!context.PhotoHistory.Any())
-                {
-                    context.PhotoHistory.AddRange(
-                        new PhotoHistory { Id = 1, BoothId = 1, CustomerId = user1.Id, LocationId = 1, Amount = 100.00m, SessionCode = "SESSION1", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
-                        new PhotoHistory { Id = 2, BoothId = 2, CustomerId = user1.Id, LocationId = 2, Amount = 150.00m, SessionCode = "SESSION2", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
-
-
-                // Seed data for Photo
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
-                if (!context.Photo.Any())
-                {
-                    context.Photo.AddRange(
-                        new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://example.com/photo1.jpg", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Abstract },
-                        new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://example.com/photo2.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Portrait }
-                    );
-                }
-                context.SaveChanges();
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
-
                 // Seed data for Coupon
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] ON");
                 if (!context.Coupon.Any())
@@ -235,8 +198,6 @@ public static class SeedData
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] OFF");
 
 
-                
-                
                 if (!context.Order.Any())
                 {
                     context.Order.AddRange(
@@ -246,8 +207,41 @@ public static class SeedData
                 }
                 context.SaveChanges();
 
-                // Commit transaction nếu không có lỗi
-                await transaction.CommitAsync();
+                if (!context.Session.Any())
+                {
+                    context.Session.AddRange(
+                        new Session { OrderId = context.Order.FirstOrDefault(o => o.TypeSessionId == 1).Id, Code = "SESSION1", IsActive = true, TypeSessionId = 1, BoothId = 1, CreatedAt = DateTime.UtcNow },
+                        new Session { OrderId = context.Order.FirstOrDefault(o => o.TypeSessionId == 2).Id, Code = "SESSION2", IsActive = true, TypeSessionId = 2, BoothId = 2, CreatedAt = DateTime.UtcNow }
+                    );
+                }
+                context.SaveChanges();
+
+            // Seed data for PhotoHistory
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] ON");
+            if (!context.PhotoHistory.Any())
+            {
+                context.PhotoHistory.AddRange(
+                    new PhotoHistory { Id = 1, BoothId = 1, CustomerId = user1.Id, LocationId = 1, Amount = 100.00m, SessionCode = "SESSION1", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new PhotoHistory { Id = 2, BoothId = 2, CustomerId = user1.Id, LocationId = 2, Amount = 150.00m, SessionCode = "SESSION2", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
+                );
+            }
+            context.SaveChanges();
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
+
+
+            // Seed data for Photo
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
+            if (!context.Photo.Any())
+            {
+                context.Photo.AddRange(
+                    new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://example.com/photo1.jpg", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Abstract },
+                    new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://example.com/photo2.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Portrait }
+                );
+            }
+            context.SaveChanges();
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
+
+            await transaction.CommitAsync();
             
         }
         catch (Exception ex)

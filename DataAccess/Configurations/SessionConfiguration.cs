@@ -22,10 +22,7 @@ namespace DataAccess.Configurations
 
             builder.HasOne(u => u.Order)
               .WithOne(p => p.Session)
-              .HasForeignKey<Order>(p => p.SessionId);
-
-
-
+              .HasForeignKey<Session>(s => s.OrderId);
         }
     }
 }
