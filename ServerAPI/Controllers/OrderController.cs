@@ -6,13 +6,8 @@ using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
-using BussinessObject.Models;
-using DataAccess.Repository;
-using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Net.payOS;
 using Net.payOS.Types;
 using ServerAPI.Services;
@@ -153,7 +148,7 @@ namespace ServerAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Put([FromBody] OrderStatusRequestDTO orderStatus)
         {
-            var order = orderService.GetOrder(orderStatus.OrderId);
+            var order = await orderService.GetOrder(orderStatus.OrderId);
             if (order == null)
             {
                 return BadRequest();
@@ -164,10 +159,9 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var order = orderService.GetOrder(id);
+            var order = await orderService.GetOrder(id);
             if (order == null)
             {
                 return NotFound();

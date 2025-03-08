@@ -55,7 +55,14 @@ namespace BusinessLogic.Service
         public async Task<LocationResponseDTO> UpdateLocation(int id, LocationRequestDTO locationRequestDTO)
         {
             var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: e => e.Id == id);
-            location = _mapper.Map(locationRequestDTO, location);
+            if (locationRequestDTO.LocationName != null)
+            {
+                location.LocationName = locationRequestDTO.LocationName;
+            }
+            if (locationRequestDTO.Address != null)
+            {
+                location.Address = locationRequestDTO.Address;
+            }
             _unitOfWork.Location.Update(location);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<LocationResponseDTO>(location);

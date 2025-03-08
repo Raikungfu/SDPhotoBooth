@@ -49,7 +49,10 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
-            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            if (typeof(T).GetProperty("IsDeleted") != null)
+            {
+                query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            }
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -73,7 +76,10 @@ namespace DataAccess.Repository
 
             if (asNoTracking) query = query.AsNoTracking();
 
-            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            if (typeof(T).GetProperty("IsDeleted") != null)
+            {
+                query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            }
 
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
@@ -98,7 +104,10 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
-            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            if (typeof(T).GetProperty("IsDeleted") != null)
+            {
+                query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            }
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -120,7 +129,10 @@ namespace DataAccess.Repository
             IQueryable<T> query = dbSet;
 
             if (asNoTracking) query = query.AsNoTracking();
-            query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            if (typeof(T).GetProperty("IsDeleted") != null)
+            {
+                query = query.Where(entity => !EF.Property<bool>(entity, "IsDeleted"));
+            }
             if (filter != null) query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {

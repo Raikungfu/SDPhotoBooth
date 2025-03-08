@@ -86,20 +86,5 @@ namespace ServerAPI.Controllers
             return Ok(deletedPaymentMethod);
         }
 
-        [HttpPut("{id}/disable")]
-        public async Task<IActionResult> Disable(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid data provided.");
-            }
-            var paymentMethod = await _paymentMethodService.GetPaymentMethod(id);
-            if (paymentMethod == null)
-            {
-                return NotFound();
-            }
-            var disabledPaymentMethod = await _paymentMethodService.DisablePaymentMethod(id);
-            return Ok(disabledPaymentMethod);
-        }
     }
 }

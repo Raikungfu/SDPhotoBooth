@@ -24,6 +24,18 @@ namespace DataAccess.Configurations
                 .HasForeignKey(o => o.TypeSessionId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasOne(o => o.Coupon)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CouponId);
+
+            builder.HasOne(o => o.TypeSession)
+                .WithMany(t => t.Orders)
+                .HasForeignKey(o => o.TypeSessionId).OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(o => o.Session)
+                .WithOne(s => s.Order)
+                .HasForeignKey<Order>(o => o.SessionId);
+
             builder.HasOne(o => o.CreatedBy)
                 .WithMany(u => u.CreatedOrders)
                 .HasForeignKey(o => o.CreatedById);

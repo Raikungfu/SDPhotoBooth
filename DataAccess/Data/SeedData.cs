@@ -42,76 +42,56 @@ public static class SeedData
 
             if (!context.Users.Any())
             {
-                // Băm mật khẩu
-                var passwordHasher = new PasswordHasher<User>();
+                var password = "User123";
 
-                // Tạo người dùng admin
-                var admin = new User
+                var users = new List<User>
                 {
-                    UserName = "admin",
-                    Email = "admin@example.com",
-                    PhoneNumber = "1234567890",
-                    Gender = BussinessObject.Enums.UserGender.Male,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    IsDeleted = false,
-                };
-                var resultAdmin = await userManager.CreateAsync(admin, "Admin123");
-                if (resultAdmin.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, "Admin");
-                }
-
-                if (!resultAdmin.Succeeded)
-                {
-                    throw new Exception($"Failed to create admin user: {string.Join(", ", resultAdmin.Errors.Select(e => e.Description))}");
-                }
-
-                admin = new User
-                {
-                    UserName = "admin1",
-                    Email = "hienphannguyenxuan@gmail.com",
-                    PhoneNumber = "07774567890",
-                    Gender = BussinessObject.Enums.UserGender.Male,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    IsDeleted = false,
-                };
-                resultAdmin = await userManager.CreateAsync(admin, "Admin123");
-
-                if (resultAdmin.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, "Admin");
-                }
-
-                if (!resultAdmin.Succeeded)
-                {
-                    throw new Exception($"Failed to create admin user: {string.Join(", ", resultAdmin.Errors.Select(e => e.Description))}");
-                }
-
-                var user1 = new User
-                {
-                    UserName = "user1",
-                    Email = "user1@example.com",
-                    PhoneNumber = "0987654321",
-                    Gender = BussinessObject.Enums.UserGender.Female,
-                    BirthDate = new DateTime(1990, 1, 1),
-                    Balance = 100.00m,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    IsDeleted = false,
-                    LocationId = 1
+                    new User { UserName = "admin1", Email = "hienphannguyenxuan@gmail.com", PhoneNumber = "07774567890", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "raikungfu", Email = "raikungfu@gmail.com", PhoneNumber = "07774567891", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "doannguyenhuyentrang", Email = "doannguyenhuyentrang9303@gmail.com", PhoneNumber = "07774567892", Gender = BussinessObject.Enums.UserGender.Female, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "raikungfu98", Email = "raikungfu98@gmail.com", PhoneNumber = "07774567891", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "sinhhoctebao0903", Email = "sinhhoctebao0903@gmail.com", PhoneNumber = "07774567892", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "vovannam641", Email = "vovannam641@gmail.com", PhoneNumber = "07774567893", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "phuongtbde160476", Email = "phuongtbde160476@fpt.edu.vn", PhoneNumber = "07774567894", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "trangdnhqe170154", Email = "trangdnhqe170154@fpt.edu.vn", PhoneNumber = "07774567895", Gender = BussinessObject.Enums.UserGender.Female, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "hienpnxqe170189", Email = "hienpnxqe170189@fpt.edu.vn", PhoneNumber = "07774567896", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "customer", Email = "customer@example.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
                 };
 
-                var resultUser1 = await userManager.CreateAsync(user1, "Cus123");
-                if (resultUser1.Succeeded)
+                var roles = new Dictionary<string, string>
                 {
-                    await userManager.AddToRoleAsync(user1, "Customer");
+                    { "admin1", "Admin" },
+                    { "raikungfu", "Admin" },
+                    { "doannguyenhuyentrang", "Admin" },
+                    { "raikungfu98", "Manager" },
+                    { "sinhhoctebao0903", "Manager" },
+                    { "vovannam641", "Manager" },
+                    { "phuongtbde160476", "Staff" },
+                    { "trangdnhqe170154", "Staff" },
+                    { "hienpnxqe170189", "Staff" },
+                    { "customer", "Customer" }
+                };
+
+                foreach (var user in users)
+                {
+                    var result = await userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, roles[user.UserName]);
+                    }
+                    else
+                    {
+                        throw new Exception($"Failed to create user {user.Email}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    }
                 }
+            }
 
-
-                // Seed data for Payment
-                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] ON");
+            var admin = await userManager.FindByNameAsync("admin1");
+            var manager = await userManager.FindByNameAsync("raikungfu98");
+            var staff = await userManager.FindByNameAsync("phuongtbde160476");
+            var user1 = await userManager.FindByNameAsync("customer");
+            // Seed data for Payment
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] ON");
                 if (!context.PaymentMethod.Any())
                 {
                     context.PaymentMethod.AddRange(
@@ -185,6 +165,77 @@ public static class SeedData
                 context.SaveChanges();
                 context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
 
+                // Seed data for Coupon
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] ON");
+                if (!context.Coupon.Any())
+                {
+                    context.Coupon.AddRange(
+                        new Coupon
+                        {
+                            Id = 1,
+                            Name = "Summer Sale",
+                            Description = "Get 20% off your next purchase!",
+                            Code = "SUMMER20",
+                            Discount = 0.20m,
+                            StartDate = DateTime.UtcNow.AddDays(-10),
+                            EndDate = DateTime.UtcNow.AddDays(30),
+                            MaxUse = 100,
+                            UsedAmount = 0,
+                            MaxDiscount = 50.00m,
+                            MinOrder = 10.00m,
+                            IsActive = true
+                        },
+                        new Coupon
+                        {
+                            Id = 2,
+                            Name = "Black Friday Deal",
+                            Description = "Get 50% off on selected items!",
+                            Code = "BLACKFRIDAY",
+                            Discount = 0.50m,
+                            StartDate = DateTime.UtcNow.AddDays(-5),
+                            EndDate = DateTime.UtcNow.AddDays(25),
+                            MaxUse = 200,
+                            UsedAmount = 0,
+                            MaxDiscount = 100.00m,
+                            MinOrder = 50.00m,
+                            IsActive = true
+                        }
+                    );
+                }
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] OFF");
+
+
+                // Seed data for TypeSession
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] ON");
+                if (!context.TypeSession.Any())
+                {
+                    context.TypeSession.AddRange(
+                        new TypeSession
+                        {
+                            Id = 1,
+                            Name = "Standard Session",
+                            Description = "A standard photo session.",
+                            Duration = 60,
+                            Price = 100.00m,
+                            AbleTakenNumber = 10
+                        },
+                        new TypeSession
+                        {
+                            Id = 2,
+                            Name = "VIP Session",
+                            Description = "A premium photo session with extra perks.",
+                            Duration = 90,
+                            Price = 200.00m,
+                            AbleTakenNumber = 5
+                        }
+                    );
+                }
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] OFF");
+
+
+                
                 
                 if (!context.Order.Any())
                 {
@@ -197,7 +248,7 @@ public static class SeedData
 
                 // Commit transaction nếu không có lỗi
                 await transaction.CommitAsync();
-            }
+            
         }
         catch (Exception ex)
         {

@@ -22,6 +22,9 @@ namespace BussinessObject.Models
         [Required]
         public int BoothId { get; set; }
 
+        [Required]
+        public long OrderId { get; set; }
+
         [ForeignKey("TypeSessionId")]
         public TypeSession TypeSession { get; set; }
 
@@ -30,7 +33,8 @@ namespace BussinessObject.Models
 
         public PhotoHistory PhotoHistory { get; set; }
 
-        public virtual Order Order { get; set; }
+        [ForeignKey("OrderId")]
+        public Order Order { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

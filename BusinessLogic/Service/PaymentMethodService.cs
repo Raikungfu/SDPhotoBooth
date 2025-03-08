@@ -31,15 +31,6 @@ namespace BusinessLogic.Service
             return id;
         }
 
-        public async Task<int> DisablePaymentMethod(int id)
-        {
-            var paymentMethod = await _unitOfWork.PaymentMethod.GetFirstOrDefaultAsync(filter: e => e.Id == id);
-            paymentMethod.IsActive = false;
-            _unitOfWork.PaymentMethod.Update(paymentMethod);
-            _unitOfWork.Save();
-            return id;
-        }
-
         public async Task<IEnumerable<PaymentMethodResponseDTO>> GetAllPaymentMethod()
         {
             var paymentMethods =await _unitOfWork.PaymentMethod.GetAllAsync();
@@ -64,7 +55,18 @@ namespace BusinessLogic.Service
         public async Task<PaymentMethodResponseDTO> UpdatePaymentMethod(int id, PaymentMethodRequestDTO paymentMethodRequestDTO)
         {
             var paymentMethod = await _unitOfWork.PaymentMethod.GetFirstOrDefaultAsync(filter: e => e.Id == id);
-            paymentMethod = _mapper.Map(paymentMethodRequestDTO, paymentMethod);
+            if (!string.IsNullOrEmpty(paymentMethodRequestDTO.MethodName))
+            {
+                paymentMethod.MethodName = paymentMethodRequestDTO.MethodName;
+            }
+            if (paymentMethodRequestDTO.IsActive.HasValue)
+            {
+                paymentMethod.IsActive = paymentMethodRequestDTO.IsActive.Value;
+            }
+            if (!string.IsNullOrEmpty(paymentMethodRequestDTO.Description))
+            {
+                paymentMethod.Description = paymentMethodRequestDTO.Description;
+            }
             _unitOfWork.PaymentMethod.Update(paymentMethod);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<PaymentMethodResponseDTO>(paymentMethod);

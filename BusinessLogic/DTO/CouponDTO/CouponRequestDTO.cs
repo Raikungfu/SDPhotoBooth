@@ -19,7 +19,8 @@ namespace BusinessLogic.DTO.CouponDTO
         public DateTime? EndDate { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "MaxUse must be at least 1.")]
         public int? MaxUse { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "MaxUsePerUser must be at least 1.")]
+
+        [Range(1, int.MaxValue, ErrorMessage = "UsedAmount must be at least 1.")]
         public int? UsedAmount { get; set; }
         [Range(0, double.MaxValue, ErrorMessage = "MaxDiscount must be positive.")]
         public decimal? MaxDiscount { get; set; }

@@ -24,7 +24,7 @@ namespace BusinessLogic.DTO.OrderDTO
     public class OrderStatusRequestDTO
     {
         [Required]
-        public int OrderId { get; set; }
+        public long OrderId { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
     }

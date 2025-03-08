@@ -10,6 +10,5 @@ namespace BusinessLogic.Service.IService
         Task<PaymentMethodResponseDTO> GetPaymentMethod(int id);
         Task<PaymentMethodResponseDTO> GetPaymentMethod(string paymentMethodName);
         Task<IEnumerable<PaymentMethodResponseDTO>> GetAllPaymentMethod();
-        Task<int> DisablePaymentMethod(int id);
     }
 }

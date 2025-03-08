@@ -68,7 +68,6 @@ namespace ServerAPI.Controllers
             return Ok(user);
         }
 
-        //change-role
         [HttpPost("change-role")]
         public async Task<IActionResult> ChangeRole([FromQuery] string email, [FromQuery] UserType role)
         {
@@ -81,7 +80,6 @@ namespace ServerAPI.Controllers
             return Ok(result);
         }
 
-        //move location for staff
         [HttpPost("staff/move-location")]
         public async Task<IActionResult> MoveLocation([FromQuery] string email, [FromQuery] int locationId)
         {

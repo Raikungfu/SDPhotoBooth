@@ -3,7 +3,6 @@ using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BusinessLogic.Service
 {

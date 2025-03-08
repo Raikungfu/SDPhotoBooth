@@ -30,6 +30,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<IBoothService, BoothService>();
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();

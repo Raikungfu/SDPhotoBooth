@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.Service.IService;
-using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 
@@ -26,14 +25,14 @@ namespace BusinessLogic.Service
 
         public async Task<OrderResponseDTO> GetOrder(long id)
         {
-            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(includeProperties: "TypeSession,User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location", filter: e => e.Id == id);
             var orderResponseDTO = _mapper.Map<OrderResponseDTO>(order);
             return orderResponseDTO;
         }
 
         public async Task<IEnumerable<OrderResponseDTO>> GetAllOrders()
         {
-            var orders = await _unitOfWork.Order.GetAllAsync();
+            var orders = await _unitOfWork.Order.GetAllAsync(includeProperties: "TypeSession,User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location");
             var orderResponseDTOs = _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
             return orderResponseDTOs;
         }
@@ -48,7 +47,7 @@ namespace BusinessLogic.Service
 
         public async Task<OrderResponseDTO> UpdateOrder(long id, OrderRequestDTO orderRequestDTO)
         {
-            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == id);
+            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(includeProperties: "TypeSession,User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location", filter: e => e.Id == id);
             order = _mapper.Map(orderRequestDTO, order);
             _unitOfWork.Order.Update(order);
             await _unitOfWork.SaveAsync();

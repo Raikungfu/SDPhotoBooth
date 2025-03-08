@@ -70,7 +70,6 @@ namespace ServerAPI.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            // Lấy token từ Header Authorization
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
             if (string.IsNullOrEmpty(token))
@@ -78,14 +77,12 @@ namespace ServerAPI.Controllers
                 return BadRequest(new { message = "Token không hợp lệ" });
             }
 
-            // Đưa token vào blacklist trong Redis
-            var expirationTime = DateTimeOffset.UtcNow.AddHours(5); // Token hết hạn sau 5 tiếng
+            var expirationTime = DateTimeOffset.UtcNow.AddHours(5); 
             await _cache.SetStringAsync($"blacklist:{token}", "expired", new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = expirationTime
             });
 
-            // Đăng xuất khỏi Identity
             await _signInManager.SignOutAsync();
 
             return Ok(new { message = "Đăng xuất thành công" });
@@ -124,7 +121,6 @@ namespace ServerAPI.Controllers
             return BadRequest(result.Errors);
         }
 
-        //update profile
         [HttpPatch("update-profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDTO model)
         {
@@ -179,8 +175,8 @@ namespace ServerAPI.Controllers
                 return BadRequest("User with this email does not exist.");
             }
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = $"https://yourwebsite.com/reset-password?email={request.Email}&token={token}";
-            // Send email
+            var feDomain = _configuration["ClientUrl:Production"];
+            var resetLink = $"{feDomain}/reset-password?email={request.Email}&token={token}";
             await _emailService.SendResetPasswordEmail(user.Email, resetLink);
             return Ok(new { message = "Reset password link has been sent to your email" });
         }
@@ -200,7 +196,6 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid email.");
             }
 
-            // Kiểm tra tính hợp lệ của token
             var isValidToken = await _userManager.VerifyUserTokenAsync(user,
                 _userManager.Options.Tokens.PasswordResetTokenProvider,
                 "ResetPassword",
@@ -211,7 +206,6 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid or expired token.");
             }
 
-            // Đặt lại mật khẩu
             var resetPassResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
             if (!resetPassResult.Succeeded)
             {

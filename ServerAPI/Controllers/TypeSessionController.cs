@@ -7,7 +7,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class TypeSessionController : ControllerBase
     {
         private readonly ITypeSessionService _typeSessionService;

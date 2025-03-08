@@ -21,10 +21,6 @@ namespace DataAccess.Configurations
                 .HasForeignKey(s => s.BoothId);
 
             builder.HasOne(u => u.Order)
-               .WithOne(p => p.Session)
-               .HasForeignKey<Order>(p => p.SessionId);
-
-            builder.HasOne(u => u.Order)
               .WithOne(p => p.Session)
               .HasForeignKey<Order>(p => p.SessionId);
 
