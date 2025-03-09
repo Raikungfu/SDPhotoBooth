@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using System.Net;
 using BusinessLogic.Service.IService;
+using BusinessLogic.DTO.SendEmailDTO;
 
 namespace BusinessLogic.Service
 {
@@ -37,5 +38,49 @@ namespace BusinessLogic.Service
 
             await smtpClient.SendMailAsync(mailMessage);
         }
+
+        public async Task<bool> SendEmailAsync(SendEmailRequestDto sendEmailRequestDto)
+        {
+            try
+            {
+                var smtpClient = new SmtpClient(_configuration["EmailSettings:SmtpServer"])
+                {
+                    Port = int.Parse(_configuration["EmailSettings:Port"]),
+                    Credentials = new NetworkCredential(
+                        _configuration["EmailSettings:Username"],
+                        _configuration["EmailSettings:Password"]
+                    ),
+                    EnableSsl = true
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(_configuration["EmailSettings:FromEmail"]),
+                    Subject = "Ảnh của bạn từ PhotoBooth",
+                    Body = $"Chào bạn, <br><br> Dưới đây là ảnh của bạn đính kèm. <br><br> Cảm ơn bạn vì đã sử dụng dịch vụ của chúng tôi. <br><br>Trân trọng!",
+                    IsBodyHtml = true
+                };
+
+                mailMessage.To.Add(sendEmailRequestDto.toEmail);
+
+                if (!string.IsNullOrEmpty(sendEmailRequestDto.photoUrl) && System.IO.File.Exists(sendEmailRequestDto.photoUrl))
+                {
+                    Attachment attachment = new Attachment(sendEmailRequestDto.photoUrl);
+                    mailMessage.Attachments.Add(attachment);
+                }
+                else
+                {
+                    mailMessage.Body += $"<br/><br/><a href='{sendEmailRequestDto.photoUrl}'>Click here to view the file</a>";
+                }
+
+                await smtpClient.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 }
