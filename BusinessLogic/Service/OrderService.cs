@@ -57,6 +57,10 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> UpdateOrderStatus(OrderStatusRequestDTO orderStatusRequestDTO)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Id == orderStatusRequestDTO.OrderId);
+            if(order == null)
+            {
+                return null;
+            }
             order.Status = orderStatusRequestDTO.Status;
             _unitOfWork.Order.Update(order);
             await _unitOfWork.SaveAsync();

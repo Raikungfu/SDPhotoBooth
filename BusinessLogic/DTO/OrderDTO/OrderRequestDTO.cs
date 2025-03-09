@@ -1,7 +1,9 @@
 ﻿using BussinessObject.Enums;
+using BussinessObject.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +18,13 @@ namespace BusinessLogic.DTO.OrderDTO
         public string? CouponCode { get; set; }
         public int TypeSessionId { get; set; }
         public int PaymentMethodId { get; set; }
+        public string? SessionId { get; set; }
 
         public string? UserId { get; set; }
         public int? CouponId { get; set; }
+        public OrderStatus? Status { get; set; } = OrderStatus.Pending;
     }
+
 
     public class OrderStatusRequestDTO
     {

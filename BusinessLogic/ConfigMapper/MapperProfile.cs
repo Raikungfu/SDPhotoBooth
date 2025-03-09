@@ -114,7 +114,6 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<OrderRequestDTO, Order>().ReverseMap();
             CreateMap<OrderResponseDTO, Order>().ReverseMap();
-            CreateMap<OrderResponseDTO, OrderResponseDTO>().ReverseMap();
 
             CreateMap<Order, OrderResponseDTO>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User != null ? new UserResponseDTO

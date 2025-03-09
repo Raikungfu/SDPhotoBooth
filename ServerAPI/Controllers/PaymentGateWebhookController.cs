@@ -40,19 +40,15 @@ namespace ServerAPI.Controllers
 
                 var orderCode = request.data.orderCode;
                 var amount = request.data.amount;
-                var success = request.success;
+                string code = request.data.code;
 
                 if (!payOSService.VerifyPaymentWebhookData(request))
                 {
                     return BadRequest(new { code = "20", desc = "Invalid Signature" });
                 }
 
-                var order = await orderService.GetOrder(orderCode);
-                if (order != null && order.Amount == amount)
-                {
-                    order.Status = success ? OrderStatus.Completed : OrderStatus.Failed;
-                    orderService.UpdateOrder(orderCode, mapper.Map<OrderRequestDTO>(order));
-                }
+                var status = code == "00" ? OrderStatus.Completed : OrderStatus.Failed;
+                var order = await orderService.UpdateOrderStatus(new OrderStatusRequestDTO { OrderId = orderCode, Status = status });
 
                 return Ok(new
                 {

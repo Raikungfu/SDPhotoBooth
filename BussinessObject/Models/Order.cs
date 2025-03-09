@@ -8,7 +8,7 @@ namespace BussinessObject.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public new long Id { get; set; } = new Random().Next(100000000, 999999999);
+        public new long Id { get; set; } = new Random().NextInt64(1000000000, 9999999999);
 
         public string? UserId { get; set; }
 

@@ -19,6 +19,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService orderService;
@@ -44,7 +45,6 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Get()
         {
             var orders = await orderService.GetAllOrders();
@@ -55,9 +55,8 @@ namespace ServerAPI.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("{id:int}")]
-        [Authorize]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> Get(long id)
         {
             var order = await orderService.GetOrder(id);
             if (order == null)
@@ -68,7 +67,6 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Post([FromBody] OrderRequestDTO order)
         {
             if (!ModelState.IsValid)
@@ -145,7 +143,6 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Put([FromBody] OrderStatusRequestDTO orderStatus)
         {
             var order = await orderService.GetOrder(orderStatus.OrderId);
@@ -169,12 +166,5 @@ namespace ServerAPI.Controllers
             await orderService.DeleteOrder(id);
             return Ok();
         }
-    }
-
-
-
-    public class WebhookRequest
-    {
-        public string WebhookUrl { get; set; } = string.Empty;
     }
 }
