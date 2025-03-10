@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.Service.IService;
+using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 
@@ -19,42 +20,49 @@ namespace BusinessLogic.Service
 
         public async Task<SessionResponseDTO> CreateSession(SessionRequestDTO sessionRequestDTO)
         {
-            var isTypeSessionExist = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(ts => ts.Id == sessionRequestDTO.TypeSessionId);
-            if (isTypeSessionExist == null)
+            if (await _unitOfWork.Booth.GetFirstOrDefaultAsync(b => b.Id == sessionRequestDTO.BoothId) == null ||
+                await _unitOfWork.Order.GetFirstOrDefaultAsync(o => o.Id == sessionRequestDTO.OrderId) == null)
             {
                 return null;
             }
 
-            var isBoothExist = await _unitOfWork.Booth.GetFirstOrDefaultAsync(b => b.Id == sessionRequestDTO.BoothId);
-            if (isBoothExist == null)
+            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(o => o.Id == sessionRequestDTO.OrderId);
+            if (order.Status != OrderStatus.Completed)
             {
                 return null;
             }
 
-            var isOrderExist = await _unitOfWork.Order.GetFirstOrDefaultAsync(o => o.Id == sessionRequestDTO.OrderId);
-            if (isOrderExist == null)
+            var existingSession = await _unitOfWork.Session.GetFirstOrDefaultAsync(
+                s => s.OrderId == sessionRequestDTO.OrderId,
+                includeProperties: "Order,Booth,Booth.Location");
+
+            if (existingSession != null)
             {
-                return null;
+                return _mapper.Map<SessionResponseDTO>(existingSession);
             }
 
-            var session = new Session();
-            session = _mapper.Map<Session>(sessionRequestDTO);
-            await _unitOfWork.Session.AddAsync(session);
+            var newSession = _mapper.Map<Session>(sessionRequestDTO);
+            newSession.TypeSessionId = order.TypeSessionId;
+            await _unitOfWork.Session.AddAsync(newSession);
             await _unitOfWork.SaveAsync();
 
-            var sessionForDTO = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == session.Code, includeProperties: "Order,TypeSession,Booth,Booth.Location");
-            return _mapper.Map<SessionResponseDTO>(sessionForDTO);
+            var sessionWithDetails = await _unitOfWork.Session.GetFirstOrDefaultAsync(
+                s => s.Code == newSession.Code,
+                includeProperties: "Order,Booth,Booth.Location"
+            );
+
+            return _mapper.Map<SessionResponseDTO>(sessionWithDetails);
         }
 
         public async Task<IEnumerable<SessionResponseDTO>> GetAllSessions()
         {
-            var allSession = await _unitOfWork.Session.GetAllAsync(includeProperties: "Order,TypeSession,Booth,Booth.Location");
+            var allSession = await _unitOfWork.Session.GetAllAsync(includeProperties: "Order,Booth,Booth.Location");
             return _mapper.Map<IEnumerable<SessionResponseDTO>>(allSession);
         }
 
         public async Task<SessionResponseDTO> GetSessionByCode(string code)
         {
-            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code, includeProperties: "Order,TypeSession,Booth,Booth.Location");
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code, includeProperties: "Order,Booth,Booth.Location");
             return _mapper.Map<SessionResponseDTO>(session);
         }
 

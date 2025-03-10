@@ -43,7 +43,7 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SessionRequestDTO sessionRequestDTO)
         {
-            if (!sessionRequestDTO.TypeSessionId.HasValue || !sessionRequestDTO.BoothId.HasValue || !sessionRequestDTO.OrderId.HasValue)
+            if (!sessionRequestDTO.BoothId.HasValue || !sessionRequestDTO.OrderId.HasValue)
             {
                 return BadRequest("Invalid data provided.");
             }
