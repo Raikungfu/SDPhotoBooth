@@ -8,6 +8,7 @@ using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace BusinessLogic.Service
 {
@@ -229,33 +230,35 @@ namespace BusinessLogic.Service
             var totalUserStatic = new TotalUserStaticResponseDTO();
 
             var today = DateTime.Today;
+            var usersInRole = await _userManager.GetUsersInRoleAsync("Customer");
+            var userIds = usersInRole.Select(u => u.Id).ToList();
 
             switch (staticType)
             {
                 case StaticType.Day:
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1));
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1) && userIds.Contains(s.Id));
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today && userIds.Contains(s.Id));
                     break;
 
                 case StaticType.Week:
                     var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
                     var startOfPrevWeek = startOfWeek.AddDays(-7);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfWeek);
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfWeek && userIds.Contains(s.Id));
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek && userIds.Contains(s.Id));
                     break;
 
                 case StaticType.Month:
                     var startOfMonth = new DateTime(today.Year, today.Month, 1);
                     var startOfPrevMonth = startOfMonth.AddMonths(-1);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfMonth);
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfMonth && userIds.Contains(s.Id));
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth && userIds.Contains(s.Id));
                     break;
 
                 case StaticType.Year:
                     var startOfYear = new DateTime(today.Year, 1, 1);
                     var startOfPrevYear = startOfYear.AddYears(-1);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfYear);
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfYear && userIds.Contains(s.Id));
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear && userIds.Contains(s.Id));
                     break;
             }
 
