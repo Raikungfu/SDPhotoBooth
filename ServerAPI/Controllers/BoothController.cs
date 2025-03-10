@@ -47,11 +47,6 @@ namespace ServerAPI.Controllers
             {
                 return NotFound();
             }
-            var isExistName = await _boothService.GetBooth(boothRequestDTO.BoothName);
-            if (isExistName != null)
-            {
-                return BadRequest("Booth name already exists");
-            }
             var booth = await _boothService.UpdateBooth(id, boothRequestDTO);
             if (booth == null)
             {
