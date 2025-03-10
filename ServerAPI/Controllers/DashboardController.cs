@@ -8,6 +8,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class DashboardController : ControllerBase
     {
         private readonly IOrderService orderService;
