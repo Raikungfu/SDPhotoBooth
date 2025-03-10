@@ -8,7 +8,7 @@ namespace BusinessLogic.Service.IService
         Task<CouponResponseDTO> GetCoupon(string code);
         Task<CouponResponseDTO> GetCouponById(int id);
         Task<CouponResponseDTO> CreateCoupon(CouponRequestDTO couponRequestDTO);
-        Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO);
+        Task<CouponResponseDTO> UpdateCoupon(string code, CouponRequestDTO couponRequestDTO);
         Task<bool> DeleteCoupon(string id);
 
     }

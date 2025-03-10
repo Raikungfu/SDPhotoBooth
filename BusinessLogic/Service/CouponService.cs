@@ -104,9 +104,9 @@ namespace BusinessLogic.Service
             return couponResponseDTO;
         }
 
-        public async Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO)
+        public async Task<CouponResponseDTO> UpdateCoupon(string code, CouponRequestDTO couponRequestDTO)
         {
-            var existingCoupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Id == id);
+            var existingCoupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code == code);
 
             if (!string.IsNullOrEmpty(couponRequestDTO.Name))
             {

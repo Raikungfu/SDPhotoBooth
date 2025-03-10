@@ -49,19 +49,19 @@ namespace ServerAPI.Controllers
             return Ok(coupon);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCoupon(int id, [FromBody] CouponRequestDTO couponRequestDTO)
+        [HttpPut("{code}")]
+        public async Task<IActionResult> UpdateCoupon(string code, [FromBody] CouponRequestDTO couponRequestDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var isExist = await _couponService.GetCouponById(id);
+            var isExist = await _couponService.GetCoupon(code);
             if (isExist == null)
             {
                 return NotFound();
             }
-            var coupon = await _couponService.UpdateCoupon(id, couponRequestDTO);
+            var coupon = await _couponService.UpdateCoupon(code, couponRequestDTO);
             return Ok(coupon);
         }
 
