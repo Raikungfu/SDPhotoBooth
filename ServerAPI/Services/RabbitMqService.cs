@@ -25,7 +25,7 @@ namespace ServerAPI.Services
             };
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, Option option, PersonalInfo personalInfo)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, FormData formData)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
@@ -41,8 +41,7 @@ namespace ServerAPI.Services
             {
                 ImageUrl = imageUrl,
                 CorrelationId = correlationId,
-                option,
-                personal_info = personalInfo
+                form_data = formData
             };
 
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));

@@ -1,10 +1,5 @@
-﻿using BusinessLogic.DTO.OrderDTO;
-using BussinessObject.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BusinessLogic.DTO.DashboardDTO;
+using BusinessLogic.DTO.OrderDTO;
 
 namespace BusinessLogic.Service.IService
 {
@@ -16,5 +11,7 @@ namespace BusinessLogic.Service.IService
         Task<OrderResponseDTO> UpdateOrderStatus(OrderStatusRequestDTO orderStatusRequestDTO);
         Task<OrderResponseDTO> GetOrder(long id);
         Task<IEnumerable<OrderResponseDTO>> GetAllOrders();
+        Task<TotalOrderStaticResponseDTO> StaticOrderCreated(StaticType staticType);
+        Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType);
     }
 }

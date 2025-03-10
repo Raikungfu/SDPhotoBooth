@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,12 +15,14 @@ namespace BusinessLogic.Service
     {
         private readonly UserManager<User> _userManager;
         private readonly ILocationService _locationService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService)
+        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _userManager = userManager;
             _locationService = locationService;
+            this._unitOfWork = unitOfWork;
         }
         public async Task<UserResponseDTO> BanUser(string email)
         {
@@ -219,5 +223,44 @@ namespace BusinessLogic.Service
             await _userManager.UpdateAsync(user);
             return true;
         }
+
+        public async Task<TotalUserStaticResponseDTO> StaticUserCreated(StaticType staticType)
+        {
+            var totalUserStatic = new TotalUserStaticResponseDTO();
+
+            var today = DateTime.Today;
+
+            switch (staticType)
+            {
+                case StaticType.Day:
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1));
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today);
+                    break;
+
+                case StaticType.Week:
+                    var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+                    var startOfPrevWeek = startOfWeek.AddDays(-7);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfWeek);
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek);
+                    break;
+
+                case StaticType.Month:
+                    var startOfMonth = new DateTime(today.Year, today.Month, 1);
+                    var startOfPrevMonth = startOfMonth.AddMonths(-1);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfMonth);
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth);
+                    break;
+
+                case StaticType.Year:
+                    var startOfYear = new DateTime(today.Year, 1, 1);
+                    var startOfPrevYear = startOfYear.AddYears(-1);
+                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfYear);
+                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear);
+                    break;
+            }
+
+            return totalUserStatic;
+        }
+
     }
 }

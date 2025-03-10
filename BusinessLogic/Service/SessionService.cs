@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
@@ -15,6 +16,7 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<SessionResponseDTO> CreateSession(SessionRequestDTO sessionRequestDTO)
         {
             var isTypeSessionExist = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(ts => ts.Id == sessionRequestDTO.TypeSessionId);

@@ -19,7 +19,7 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] ImageProcessingDTO request)
         {
-            await _rabbitService.SendMessageAsync(request.ImageUrl, Guid.NewGuid().ToString(), request.option, request.personalInfo);
+            await _rabbitService.SendMessageAsync(request.ImageUrl, Guid.NewGuid().ToString(), request.FormData);
             return Ok("Message sent!");
         }
 

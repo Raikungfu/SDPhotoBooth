@@ -38,6 +38,25 @@ namespace DataAccess.Repository
             await dbSet.AddRangeAsync(entities, cancellationToken);
         }
 
+        public int Count(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return query.Count();
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.CountAsync(cancellationToken);
+        }
 
         // Lấy tất cả thực thể (có điều kiện, sắp xếp, NoTracking)
         public IEnumerable<T> GetAll(
@@ -161,5 +180,7 @@ namespace DataAccess.Repository
         {
             dbSet.RemoveRange(entities);
         }
+
+
     }
 }

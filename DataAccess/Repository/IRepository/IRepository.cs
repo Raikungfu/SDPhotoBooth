@@ -38,5 +38,8 @@ namespace DataAccess.Repository.IRepository
         );
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default);
+        int Count(Expression<Func<T, bool>>? filter = null);
     }
 }

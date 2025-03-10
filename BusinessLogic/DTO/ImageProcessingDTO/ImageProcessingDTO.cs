@@ -10,8 +10,12 @@ namespace BusinessLogic.DTO.ImageProcessingDTO
     public class ImageProcessingDTO
     {
         public string ImageUrl { get; set; }
-        public Option option { get; set; }
-        public PersonalInfo personalInfo { get; set; }
+        public FormData FormData { get; set; }
+    }
+
+    public class FormData
+    {
+        public string PhotoStyle { get; set; } = "id_photo";
     }
 
     public class Option
