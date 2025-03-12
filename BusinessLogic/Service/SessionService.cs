@@ -63,5 +63,11 @@ namespace BusinessLogic.Service
             await _unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<bool> ValidateSession(string code)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code);
+            return session != null && session.IsActive;
+        }
+
     }
 }

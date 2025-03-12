@@ -8,5 +8,7 @@ namespace BusinessLogic.Service.IService
         Task<SessionResponseDTO> GetSessionByCode(string code);
         Task<IEnumerable<SessionResponseDTO>> GetAllSessions();
         Task<bool> UpdateStatusSession(string code, bool status);
+        Task<bool> ValidateSession(string code);
+
     }
 }

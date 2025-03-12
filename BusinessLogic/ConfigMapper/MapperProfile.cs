@@ -2,8 +2,11 @@
 using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.NewFolder;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentMethod;
+using BusinessLogic.DTO.PhotoDTO;
+using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
@@ -21,6 +24,13 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<PaymentMethodRequestDTO, PaymentMethod>();
             CreateMap<PaymentMethod, PaymentMethodResponseDTO>();
+
+            CreateMap<PhotoHistoryRequestDTO, PhotoHistory>();
+            CreateMap<Photo, PhotoResponseDTO>();
+            CreateMap<PhotoRequestDTO, Photo>();
+            CreateMap<PhotoHistory, PhotoHistoryResponseDTO>()
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos));
+
 
             CreateMap<UserRequestDTO, User>();
             CreateMap<User, UserResponseDTO>()

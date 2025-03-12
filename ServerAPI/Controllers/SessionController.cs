@@ -70,6 +70,16 @@ namespace ServerAPI.Controllers
             }
             return Ok();
         }
+        [HttpGet("CheckCode/{code}")]
+        public async Task<IActionResult> ValidateSession(string code)
+        {
+            var isValid = await _sessionService.ValidateSession(code);
+            if (isValid)
+            {
+                return Ok(new { message = "Session is valid" });
+            }
+            return BadRequest(new { message = "Session is either invalid" });
+        }
 
     }
 }
