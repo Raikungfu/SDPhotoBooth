@@ -10,7 +10,7 @@ namespace BusinessLogic.DTO.ImageProcessingDTO
     public class ImageProcessingDTO
     {
         public string ImageUrl { get; set; }
-        public FormData FormData { get; set; }
+        public string PhotoStyle { get; set; }
     }
 
     public class FormData

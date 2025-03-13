@@ -58,7 +58,6 @@ namespace DataAccess.Repository
             return await query.CountAsync(cancellationToken);
         }
 
-        // Lấy tất cả thực thể (có điều kiện, sắp xếp, NoTracking)
         public IEnumerable<T> GetAll(
             Expression<Func<T, bool>>? filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
@@ -114,7 +113,7 @@ namespace DataAccess.Repository
                 : await query.ToListAsync(cancellationToken);
         }
 
-        // Lấy thực thể đầu tiên hoặc mặc định
+
         public T GetFirstOrDefault(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null,
@@ -142,6 +141,7 @@ namespace DataAccess.Repository
         public async Task<T> GetFirstOrDefaultAsync(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             bool asNoTracking = false,
             CancellationToken cancellationToken = default)
         {
@@ -161,10 +161,14 @@ namespace DataAccess.Repository
                 }
             }
 
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
             return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
-        // Xóa thực thể
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

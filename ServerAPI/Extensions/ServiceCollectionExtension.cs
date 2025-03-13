@@ -37,6 +37,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
             services.AddScoped<IPayOSService, PayOSService>();
+            services.AddScoped<IPhotoHistoryService, PhotoHistoryService>();
 
             return services;
         }

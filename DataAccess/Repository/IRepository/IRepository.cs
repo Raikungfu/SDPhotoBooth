@@ -33,6 +33,7 @@ namespace DataAccess.Repository.IRepository
         Task<T> GetFirstOrDefaultAsync(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             bool asNoTracking = false,
             CancellationToken cancellationToken = default
         );

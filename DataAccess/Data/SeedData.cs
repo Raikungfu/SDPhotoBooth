@@ -221,8 +221,8 @@ public static class SeedData
             if (!context.PhotoHistory.Any())
             {
                 context.PhotoHistory.AddRange(
-                    new PhotoHistory { Id = 1, BoothId = 1, CustomerId = user1.Id, LocationId = 1, Amount = 100.00m, SessionCode = "SESSION1", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
-                    new PhotoHistory { Id = 2, BoothId = 2, CustomerId = user1.Id, LocationId = 2, Amount = 150.00m, SessionCode = "SESSION2", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
+                    new PhotoHistory { Id = 1, CustomerId = user1.Id, LocationId = 1, Amount = 100.00m, SessionCode = "SESSION1", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+                    new PhotoHistory { Id = 2, CustomerId = user1.Id, LocationId = 2, Amount = 150.00m, SessionCode = "SESSION2", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
                 );
             }
             context.SaveChanges();

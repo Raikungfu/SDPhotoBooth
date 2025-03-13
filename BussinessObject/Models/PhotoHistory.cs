@@ -10,8 +10,6 @@ namespace BussinessObject.Models
 {
     public class PhotoHistory : BaseEntityNoAudit
     {
-        public int? BoothId { get; set; }
-
         public string? CustomerId { get; set; }
 
         public int? LocationId { get; set; }
@@ -29,9 +27,6 @@ namespace BussinessObject.Models
 
         [ForeignKey("LocationId")]
         public Location Location { get; set; }
-
-        [ForeignKey("BoothId")]
-        public Booth Booth { get; set; }
 
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
     }

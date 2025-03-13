@@ -24,5 +24,8 @@ namespace BussinessObject.Models
 
         [ForeignKey("PhotoHistoryId")]
         public PhotoHistory PhotoHistory { get; set; }
+
+        [ForeignKey("PhotoStyleId")]
+        public PhotoStyle PhotoStyle { get; set; }
     }
 }

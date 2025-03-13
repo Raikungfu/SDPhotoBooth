@@ -116,34 +116,33 @@ namespace BusinessLogic.Service
             switch (staticType)
             {
                 case StaticType.Day:
-                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1) && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
-                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1) && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
                     break;
 
                 case StaticType.Week:
                     var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
                     var startOfPrevWeek = startOfWeek.AddDays(-7);
-                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfWeek && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
-                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfWeek && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
                     break;
 
                 case StaticType.Month:
                     var startOfMonth = new DateTime(today.Year, today.Month, 1);
                     var startOfPrevMonth = startOfMonth.AddMonths(-1);
-                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfMonth && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
-                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfMonth && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
                     break;
 
                 case StaticType.Year:
                     var startOfYear = new DateTime(today.Year, 1, 1);
                     var startOfPrevYear = startOfYear.AddYears(-1);
-                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfYear && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
-                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear && s.Status == OrderStatus.Completed, asNoTracking: false)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfYear && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
+                    totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear && s.Status == OrderStatus.Completed, asNoTracking: true)).Sum(o => o.Amount);
                     break;
             }
 
             return totalRevenueStatic;
         }
-
     }
 }

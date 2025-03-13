@@ -5,6 +5,7 @@ using ServerAPI.Helpers;
 using BussinessObject.ViewModels;
 using BussinessObject.Enums;
 using ServerAPI.Services;
+using Azure.Core;
 
 namespace ServerAPI.Controllers
 {
@@ -30,40 +31,35 @@ namespace ServerAPI.Controllers
         {
             try
             {
-                string decryptedAccessToken = EncryptionService.DecryptData(tokenRequest.Token, _configuration["ENCRYPTION:ENCRYPTION_KEY"], _configuration["ENCRYPTION:ENCRYPTION_IV"]);
-
-                TokenInfo tokenInfo = await GoogleTokenHelper.VerifyAccessTokenAsync(decryptedAccessToken, _configuration["Google:ClientId"]);
-
-                if (tokenInfo != null)
+                var payload = await GoogleTokenHelper.VerifyAccessTokenAsync(tokenRequest.Token, _configuration["GoogleOath2:WebClient"], _configuration["GoogleOath2:MobileClient"]);
+                if (payload == null)
                 {
-                    User user = _userManager.FindByEmailAsync(tokenInfo.Email).Result;
+                    return Unauthorized(new { message = "Invalid token" });
+                }
 
-                    if (user == null)
-                    {
-                        return Unauthorized(new { message = "User not found" });
-                    }
-                    else
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
+                User user = _userManager.FindByEmailAsync(payload.Email).Result;
 
-                        if (roles == null || !roles.Any())
-                        {
-                            return Unauthorized(new { message = "User has no roles assigned" });
-                        }
-
-                        if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff))
-                        {
-                            return Unauthorized(new { message = "You don't have permission to access!" });
-                        }
-                        else
-                        {
-                            return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
-                        }
-                    }
+                if (user == null)
+                {
+                    return Unauthorized(new { message = "User not found" });
                 }
                 else
                 {
-                    return Unauthorized(new { message = "Invalid token" + tokenRequest.Token });
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles == null || !roles.Any())
+                    {
+                        return Unauthorized(new { message = "User has no roles assigned" });
+                    }
+
+                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff))
+                    {
+                        return Unauthorized(new { message = "You don't have permission to access!" });
+                    }
+                    else
+                    {
+                        return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
+                    }
                 }
             }
             catch (Exception ex)

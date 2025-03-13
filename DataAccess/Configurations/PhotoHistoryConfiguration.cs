@@ -25,11 +25,6 @@ namespace DataAccess.Configurations
                 .WithMany(l => l.PhotoHistories)
                 .HasForeignKey(ph => ph.LocationId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(ph => ph.Booth)
-                .WithMany(b => b.PhotoHistories)
-                .HasForeignKey(ph => ph.BoothId)
-                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

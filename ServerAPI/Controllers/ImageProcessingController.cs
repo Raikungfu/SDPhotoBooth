@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BussinessObject.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
@@ -19,7 +20,7 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] ImageProcessingDTO request)
         {
-            await _rabbitService.SendMessageAsync(request.ImageUrl, Guid.NewGuid().ToString(), request.FormData);
+            await _rabbitService.SendMessageAsync(request.ImageUrl, Guid.NewGuid().ToString(), request.PhotoStyle);
             return Ok("Message sent!");
         }
 

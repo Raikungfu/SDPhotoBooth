@@ -14,6 +14,7 @@ using ServerAPI.Middleware;
 using ServerAPI.Middlewares;
 using StackExchange.Redis;
 using ServerAPI.Services;
+using ServerAPI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddSignalR(options =>
+{
+    options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+    options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+});
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
@@ -123,7 +130,12 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<TranferPhotoHub>("/tranferPhotoHub");
+});
 
 var rabbitService = app.Services.GetRequiredService<RabbitMqService>();
 Task.Run(() => rabbitService.StartListeningAsync());

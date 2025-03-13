@@ -21,8 +21,6 @@ namespace BussinessObject.Models
         [ForeignKey("LocationId")]
         public Location Location { get; set; }
 
-        public ICollection<PhotoHistory> PhotoHistories { get; set; } = new List<PhotoHistory>();
-
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
 }

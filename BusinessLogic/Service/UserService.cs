@@ -9,6 +9,7 @@ using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Numerics;
 
 namespace BusinessLogic.Service
 {
@@ -192,11 +193,26 @@ namespace BusinessLogic.Service
 
         public async Task<UserResponseDTO> UserDetail(string email)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return null;
             }
+            var userDTO = _mapper.Map<UserResponseDTO>(user);
+            var roleOfUser = await _userManager.GetRolesAsync(user);
+            userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
+            userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
+            return userDTO;
+        }
+
+        public async Task<UserResponseDTO> UserDetailByPhone(string phone)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phone);
+            if (user == null)
+            {
+                return null;
+            }
+
             var userDTO = _mapper.Map<UserResponseDTO>(user);
             var roleOfUser = await _userManager.GetRolesAsync(user);
             userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";

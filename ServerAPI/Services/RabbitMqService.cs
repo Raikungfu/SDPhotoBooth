@@ -1,8 +1,10 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ServerAPI.Hubs;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,16 +18,20 @@ namespace ServerAPI.Services
         private readonly ConnectionFactory _factory;
         private readonly IConnection _connection;
         private readonly IModel _channel;
+        private readonly IHubContext<TranferPhotoHub> _hubContext;
 
-        public RabbitMqService(IConfiguration configuration)
+
+        public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext)
         {
             _factory = new ConnectionFactory
             {
                 Uri = new Uri(configuration["RabbitMq:Uri"])
             };
+
+            _hubContext = hubContext;
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, FormData formData)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, string photoStyle)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
@@ -39,9 +45,9 @@ namespace ServerAPI.Services
 
             var message = new
             {
-                ImageUrl = imageUrl,
-                CorrelationId = correlationId,
-                form_data = formData
+                imageUrl,
+                correlationId,
+                photoStyle
             };
 
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
@@ -75,6 +81,8 @@ namespace ServerAPI.Services
                     string processedImageUrl = data.ProcessedImageUrl ?? "Processing failed";
 
                     Console.WriteLine($"Received message with correlation id: {correlationId}, Image: {processedImageUrl}");
+
+                    await _hubContext.Clients.Client(correlationId).SendAsync("ReceiveProcessedPhoto", processedImageUrl);
                 }
 
                 await Task.CompletedTask;

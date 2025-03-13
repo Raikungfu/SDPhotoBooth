@@ -14,7 +14,6 @@ namespace DataAccess.Repository
         public void Update(PhotoHistory photoHistory)
         {
             var objFromDb = _db.PhotoHistory.FirstOrDefault(s => s.Id == photoHistory.Id);
-            objFromDb.BoothId = photoHistory.BoothId;
             objFromDb.CustomerId = photoHistory.CustomerId;
             objFromDb.LocationId = photoHistory.LocationId;
             objFromDb.Amount = photoHistory.Amount;
@@ -24,7 +23,6 @@ namespace DataAccess.Repository
         public Task UpdateAsync(PhotoHistory photoHistory)
         {
             var objFromDb = _db.PhotoHistory.FirstOrDefault(s => s.Id == photoHistory.Id);
-            objFromDb.BoothId = photoHistory.BoothId;
             objFromDb.CustomerId = photoHistory.CustomerId;
             objFromDb.LocationId = photoHistory.LocationId;
             objFromDb.Amount = photoHistory.Amount;
