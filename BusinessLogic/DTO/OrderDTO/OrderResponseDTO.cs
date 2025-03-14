@@ -1,11 +1,4 @@
-﻿using BusinessLogic.DTO.CouponDTO;
-using BusinessLogic.DTO.PaymentMethod;
-using BusinessLogic.DTO.SessionCodeDTO;
-using BusinessLogic.DTO.TypeSessionDTO;
-using BusinessLogic.DTO.UserDTO;
-using BussinessObject.Enums;
-using BussinessObject.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using BussinessObject.Enums;
 
 namespace BusinessLogic.Service
 {
@@ -17,13 +10,18 @@ namespace BusinessLogic.Service
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime? LastModified { get; set; }
-        public bool IsDeleted { get; set; }
         public string? CreatedById { get; set; }
-        public string? LastModifiedById { get; set; }
-        public UserResponseDTO? User { get; set; }
-        public SessionResponseDTO? Session { get; set; }
-        public PaymentMethodResponseDTO? PaymentMethod { get; set; }
-        public CouponResponseDTO? Coupon { get; set; }
+        public string? SessionCode { get; set; }
+        public string? PaymentMethodName { get; set; }
+        public string? CouponCode { get; set; }
+        public UserResponseOnOrderDTO? User { get; set; }
     }
+
+    public class UserResponseOnOrderDTO
+    {
+        public string? Id { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+    }
+
 }

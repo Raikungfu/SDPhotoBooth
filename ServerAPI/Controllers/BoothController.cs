@@ -13,10 +13,10 @@ namespace ServerAPI.Controllers
         {
             _boothService = boothService;
         }
-        [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<BoothResponseDTO>>> Filter([FromQuery] int? locationId, [FromQuery] string? boothName, [FromQuery] bool? status)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<BoothResponseDTO>>> GetBooths()
         {
-            var booths = await _boothService.Filter(locationId, boothName, status);
+            var booths = await _boothService.GetBooths();
             return Ok(booths);
         }
         [HttpGet("{id}")]
@@ -29,6 +29,18 @@ namespace ServerAPI.Controllers
             }
             return Ok(booth);
         }
+
+        [HttpGet("by-name/{name}")]
+        public async Task<ActionResult<BoothResponseDTO>> GetBoothByName(string name)
+        {
+            var booth = await _boothService.GetBooth(name);
+            if (booth == null)
+            {
+                return NotFound();
+            }
+            return Ok(booth);
+        }
+
         [HttpPost]
         public async Task<ActionResult<BoothResponseDTO>> CreateBooth(BoothRequestDTO boothRequestDTO)
         {

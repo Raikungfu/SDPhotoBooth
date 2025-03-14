@@ -4,7 +4,7 @@ namespace BusinessLogic.Service.IService
 {
     public interface ICouponService
     {
-        Task<IEnumerable<CouponResponseDTO>> Filter(FilterCouponDTO filter);
+        Task<IEnumerable<CouponResponseDTO>> GetCoupons();
         Task<CouponResponseDTO> GetCoupon(string code);
         Task<CouponResponseDTO> GetCouponById(int id);
         Task<CouponResponseDTO> CreateCoupon(CouponRequestDTO couponRequestDTO);

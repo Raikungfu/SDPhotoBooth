@@ -33,50 +33,9 @@ namespace BusinessLogic.Service
             return true;
         }
 
-        public async Task<IEnumerable<CouponResponseDTO>> Filter(FilterCouponDTO filter)
+        public async Task<IEnumerable<CouponResponseDTO>> GetCoupons()
         {
             var coupon = await _unitOfWork.Coupon.GetAllAsync();
-            
-            if (filter.Code != null)
-            {
-                coupon = coupon.Where(c => c.Code.Contains(filter.Code));
-            }
-            if (filter.Discount != null)
-            {
-                coupon = coupon.Where(c => c.Discount <= filter.Discount);
-            }
-            if (filter.DiscountPercent != null)
-            {
-                coupon = coupon.Where(c => c.DiscountPercent <= filter.DiscountPercent);
-            }
-            if (filter.StartDate != null)
-            {
-                coupon = coupon.Where(c => c.StartDate >= filter.StartDate);
-            }
-            if (filter.EndDate != null)
-            {
-                coupon = coupon.Where(c => c.EndDate <= filter.EndDate);
-            }
-            if (filter.MaxUse != null)
-            {
-                coupon = coupon.Where(c => c.MaxUse <= filter.MaxUse);
-            }
-            if (filter.UsedAmount != null)
-            {
-                coupon = coupon.Where(c => c.UsedAmount <= filter.UsedAmount);
-            }
-            if (filter.MaxDiscount != null)
-            {
-                coupon = coupon.Where(c => c.MaxDiscount <= filter.MaxDiscount);
-            }
-            if (filter.MinOrder != null)
-            {
-                coupon = coupon.Where(c => c.MinOrder <= filter.MinOrder);
-            }
-            if (filter.IsActive != null)
-            {
-                coupon = coupon.Where(c => c.IsActive == filter.IsActive);
-            }
             var couponResponseDTO = _mapper.Map<IEnumerable<CouponResponseDTO>>(coupon);
             return couponResponseDTO;
 
