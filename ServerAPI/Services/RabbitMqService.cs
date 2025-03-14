@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BusinessLogic.DTO.RabbitMQDTO;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
@@ -73,12 +74,12 @@ namespace ServerAPI.Services
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                var data = JsonConvert.DeserializeObject<dynamic>(message);
+                var data = JsonConvert.DeserializeObject<ResponseRabbitMQDTO>(message);
 
                 if (data != null)
                 {
                     string correlationId = data.CorrelationId;
-                    string processedImageUrl = data.ProcessedImageUrl ?? "Processing failed";
+                    string[] processedImageUrl = data.ProcessedImageUrl ?? [];
 
                     Console.WriteLine($"Received message with correlation id: {correlationId}, Image: {processedImageUrl}");
 
