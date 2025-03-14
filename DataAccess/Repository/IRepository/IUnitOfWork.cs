@@ -11,6 +11,7 @@
         IPhotoRepository Photo { get; }
         ISessionRepository Session { get; }
         ITypeSessionRepository TypeSession { get; }
+        IPhotoStyleRepository PhotoStyle { get; }
         IUserRepository User { get; }
         void Save();
         Task SaveAsync();

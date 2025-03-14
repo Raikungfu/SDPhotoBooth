@@ -17,8 +17,6 @@ namespace BussinessObject.Models
         [Required]
         public string Url { get; set; }
 
-        public Style Style { get; set; }
-
         [Required]
         public int PhotoStyleId { get; set; }
 

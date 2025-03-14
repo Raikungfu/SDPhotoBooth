@@ -66,9 +66,9 @@ public static class SeedData
                     { "raikungfu98", "Manager" },
                     { "sinhhoctebao0903", "Manager" },
                     { "vovannam641", "Manager" },
-                    { "phuongtbde160476", "Staff" },
+                    { "phuongtbde160476", "Customer" },
                     { "trangdnhqe170154", "Staff" },
-                    { "hienpnxqe170189", "Staff" },
+                    { "hienpnxqe170189", "Customer" },
                     { "customer", "Customer" }
                 };
 
@@ -88,8 +88,8 @@ public static class SeedData
 
             var admin = await userManager.FindByNameAsync("admin1");
             var manager = await userManager.FindByNameAsync("raikungfu98");
-            var staff = await userManager.FindByNameAsync("phuongtbde160476");
-            var user1 = await userManager.FindByNameAsync("customer");
+            var staff = await userManager.FindByNameAsync("trangdnhqe170154");
+            var user1 = await userManager.FindByNameAsync("phuongtbde160476");
             // Seed data for Payment
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PaymentMethod] ON");
                 if (!context.PaymentMethod.Any())
@@ -228,14 +228,73 @@ public static class SeedData
             context.SaveChanges();
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
 
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoStyle] ON");
+            if (!context.PhotoStyle.Any())
+            {
+                context.PhotoStyle.AddRange(
+                     new PhotoStyle { Id = 1, Name = "anime", Description = "Anime-style photography", ImageUrl = "https://w0.peakpx.com/wallpaper/539/597/HD-wallpaper-anime-anime-boys-anime-girls-unjem-brunette-school-uniform-vertical-umbrella-rail.jpg" },
+                     new PhotoStyle { Id = 2, Name = "artistic_portrait", Description = "High artistic portraits", ImageUrl = "https://media.istockphoto.com/id/1329954764/vector/portrait-of-a-young-dreamy-girl-with-curly-brown-hair.jpg?s=612x612&w=0&k=20&c=_KN3rOKceycoPngD9g6XmwtMYek779BOyL6oybHZr9g=" },
+                     new PhotoStyle { Id = 3, Name = "cartoon", Description = "Cartoon-themed photography", ImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/034/210/204/small_2x/3d-cartoon-baby-genius-photo.jpg" },
+                     new PhotoStyle { Id = 4, Name = "fantasy", Description = "Fantasy-themed photography", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSynwqUs6fsgDDN5tl8UG5NhyLK9nQcC7WCYg&s" },
+                     new PhotoStyle { Id = 5, Name = "fashion_style", Description = "Fashion and stylish photos", ImageUrl = "https://voguesg.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/10/13223104/feature-mm-680x1020.jpg" },
+                     new PhotoStyle { Id = 6, Name = "id_photo", Description = "Professional ID photos", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOBM5AUXmvAUCExgL3m92AgtwrkFxNqwZFZQ&s" },
+                     new PhotoStyle { Id = 7, Name = "modern", Description = "Modern photography styles", ImageUrl = "https://i.pinimg.com/236x/55/4c/fe/554cfed5f91562bef454b3b028cb7d4c.jpg" },
+                     new PhotoStyle { Id = 8, Name = "nature", Description = "Nature-inspired photography", ImageUrl = "https://img.freepik.com/premium-photo/shot-young-man-experiencing-nature-created-with-generative-ai_762026-34726.jpg" },
+                     new PhotoStyle { Id = 9, Name = "vintage", Description = "Vintage and classic photography", ImageUrl = "https://media.greatbigphotographyworld.com/wp-content/uploads/2022/04/vintage-photography-featured-image.jpg" }
+                );
+            }
+            context.SaveChanges();
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoStyle] OFF");
 
             // Seed data for Photo
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
             if (!context.Photo.Any())
             {
                 context.Photo.AddRange(
-                    new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://example.com/photo1.jpg", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Abstract },
-                    new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://example.com/photo2.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false, Style = BussinessObject.Enums.Style.Portrait }
+        // Anime (PhotoStyleId = 1)
+        new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8QGWrb67YP9BEhYk0tLgAwcnc2Jk5227Z-w&s", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 2, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_5WBmBTUvRdRKxyisCsXqWMgWIwM1J2f1gA&s", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 3, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYaWlae56yEO5Ry7LWETaKyXxwy8CyyDi2Q&s", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Artistic Portrait (PhotoStyleId = 2)
+        new Photo { Id = 4, PhotoHistoryId = 1, Url = "https://imgcdn.stablediffusionweb.com/2024/4/2/c8816fe7-39bd-406e-af21-dbaabe2ada42.jpg", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 5, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwLld0c-HQJt-3qazUl19H9KnsO8xexKEKoQ&s", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 6, PhotoHistoryId = 1, Url = "https://cdn.prod.website-files.com/632ac1a36830f75c7e5b16f0/64f1152979367e06da5036bf_wq0VuZAd5uUoUnVvV0kT0etSNWrn1InRQkKeYi0KStM.webp", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Cartoon (PhotoStyleId = 3)
+        new Photo { Id = 7, PhotoHistoryId = 1, Url = "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/de560615-b093-4b7a-95b6-90c82e33e04f/anim=false,width=450/_-QD47iVAaYTQsj0JNCcf.jpeg", PhotoStyleId = 3, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 8, PhotoHistoryId = 2, Url = "https://cdn.pixeldojo.ai/cdn-cgi/image/f=auto,q=75,w=768/pixeldojo/generated-images/1722808137493-nncip1nwp.png", PhotoStyleId = 3, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 9, PhotoHistoryId = 1, Url = "https://i.pinimg.com/474x/3f/e7/70/3fe770fd1340843ce3bdd7194b3da993.jpg", PhotoStyleId = 3, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Fantasy (PhotoStyleId = 4)
+        new Photo { Id = 10, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-yOzUd64E_PQSxF3n-oOptUxI2oc739s84A&s", PhotoStyleId = 4, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 11, PhotoHistoryId = 2, Url = "https://img.goodfon.com/wallpaper/big/2/6e/fantasy-art-stable-diffusion-neuronet-girl-armor-1.webp", PhotoStyleId = 4, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 12, PhotoHistoryId = 1, Url = "https://i.pinimg.com/474x/8b/87/01/8b870164990240413ad38e084efbedb4.jpg", PhotoStyleId = 4, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Fashion Style (PhotoStyleId = 5)
+        new Photo { Id = 13, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSemyOiNH9PMQsYvOjUuiPq0OQO-yX_vX5Y7A&s", PhotoStyleId = 5, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 14, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN15MC5myA5r1ZrqXwQax3b9iGgKCsP2om_w&s", PhotoStyleId = 5, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 15, PhotoHistoryId = 1, Url = "https://assets.promptbase.com/DALLE_IMAGES%2FCzLMkNCNveZZpavk5TtibcvGQaH3%2Fresized%2F1678846934741_800x800.webp?alt=media&token=de5743c8-5716-4074-bd6d-65efb9147ff2", PhotoStyleId = 5, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // ID Photo (PhotoStyleId = 6)
+        new Photo { Id = 16, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt2NyaC5JGEuI4nQFhO-zI9hzVFHin5REBEA&s", PhotoStyleId = 6, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 17, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0JzbMJLCg8rfL_QYtbMT23p2Ak_T7OXOYlA&s", PhotoStyleId = 6, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 18, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOvHez3KJAh5PajcCWrGS0qKWxRM47HjzNEw&s", PhotoStyleId = 6, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Modern (PhotoStyleId = 7)
+        new Photo { Id = 19, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSczBLVKt2WrRPilS2a5ZgIncqKkp8hMRBPng&s", PhotoStyleId = 7, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 20, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyV-6Bfs5XWni5MUXFfP9zxz6zko9FGfXrMg&s", PhotoStyleId = 7, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 21, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAOBfcQyFHS7kl03MUBzIoui2-oFOi9yoQLQ&s", PhotoStyleId = 7, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Nature (PhotoStyleId = 8)
+        new Photo { Id = 22, PhotoHistoryId = 1, Url = "https://imgcdn.stablediffusionweb.com/2024/12/5/e5280722-30ac-4001-8f96-a335006daebb.jpg", PhotoStyleId = 8, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 23, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmZhb4EZu_m3WvtZkDumqH4tpWBHkvqT5t2A&s", PhotoStyleId = 8, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 24, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQznYZPScxnJpX5PTl4vHU78vUkGA_tH7LXxQ&s", PhotoStyleId = 8, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+
+        // Vintage (PhotoStyleId = 9)
+        new Photo { Id = 25, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvY8PLcsBAqdsI6ptQiysf2fshxWrToyPpog&s", PhotoStyleId = 9, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 26, PhotoHistoryId = 2, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFQjKHHu5gg_Sb0jsq8S9ddwgJwpnY3m8qHw&s", PhotoStyleId = 9, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false },
+        new Photo { Id = 27, PhotoHistoryId = 1, Url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4nDD6zHKKAe1OFYDOD1Xz2I48-XdseN1iKg&s", PhotoStyleId = 9, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, IsDeleted = false }
                 );
             }
             context.SaveChanges();

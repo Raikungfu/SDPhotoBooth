@@ -20,6 +20,7 @@ namespace DataAccess.Data
         public DbSet<Coupon> Coupon { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
+        public DbSet<PhotoStyle> PhotoStyle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

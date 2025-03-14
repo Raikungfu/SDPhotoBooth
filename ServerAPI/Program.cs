@@ -15,6 +15,7 @@ using ServerAPI.Middlewares;
 using StackExchange.Redis;
 using ServerAPI.Services;
 using ServerAPI.Hubs;
+using ServerAPI.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +67,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
+    options.OperationFilter<ResponseTimeOperationFilter>();
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -126,6 +127,7 @@ app.UseSession();
 
 app.UseMiddleware<BlacklistMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ResponseTimeMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

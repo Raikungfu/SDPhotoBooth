@@ -4,6 +4,7 @@ using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentMethod;
+using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
@@ -208,6 +209,9 @@ namespace BusinessLogic.ConfigMapper
                     CreatedById = src.Coupon.CreatedById,
                     LastModifiedById = src.Coupon.LastModifiedById
                 } : null));
+
+            CreateMap<PhotoStyle, PhotoStyleResponseDTO>();
+            CreateMap<PhotoStyleRequestDTO, PhotoStyle>();
         }
     }
 }

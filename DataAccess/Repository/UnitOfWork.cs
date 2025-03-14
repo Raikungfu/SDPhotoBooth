@@ -1,4 +1,5 @@
-﻿using DataAccess.Data;
+﻿using BussinessObject.Models;
+using DataAccess.Data;
 using DataAccess.Repository.IRepository;
 
 namespace DataAccess.Repository
@@ -19,6 +20,7 @@ namespace DataAccess.Repository
             Session = new SessionRepository(_db);
             TypeSession = new TypeSessionRepository(_db);
             User = new UserRepository(_db);
+            PhotoStyle = new PhotoStyleRepository(_db);
 
         }
         public IBoothRepository Booth { get; private set; }
@@ -31,6 +33,7 @@ namespace DataAccess.Repository
         public ISessionRepository Session { get; private set; }
         public ITypeSessionRepository TypeSession { get; private set; }
         public IUserRepository User { get; private set; }
+        public IPhotoStyleRepository PhotoStyle { get; private set; }
 
         public void Dispose()
         {
