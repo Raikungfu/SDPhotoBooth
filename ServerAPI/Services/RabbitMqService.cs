@@ -12,15 +12,16 @@ using System.Threading.Tasks;
 
 namespace ServerAPI.Services
 {
-    public class RabbitMqService
+
+
+    public class RabbitMqService : IHostedService
     {
+        private readonly ConnectionFactory _factory;
+        private IConnection? _connection;
+        private IChannel? _channel;
+        private readonly IHubContext<TranferPhotoHub> _hubContext;
         private readonly string _queueName = "image_processing_queue";
         private const string ReplyQueue = "image_response_queue";
-        private readonly ConnectionFactory _factory;
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
-        private readonly IHubContext<TranferPhotoHub> _hubContext;
-
 
         public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext)
         {
@@ -64,12 +65,12 @@ namespace ServerAPI.Services
 
         public async Task StartListeningAsync()
         {
-            await using var connection = await _factory.CreateConnectionAsync();
-            await using var channel = await connection.CreateChannelAsync();
+            _connection = await _factory.CreateConnectionAsync();
+            _channel = await _connection.CreateChannelAsync();
 
-            await channel.QueueDeclareAsync(queue: ReplyQueue, durable: false, exclusive: false, autoDelete: false);
+            await _channel.QueueDeclareAsync(queue: _queueName, durable: false, exclusive: false, autoDelete: false);
 
-            var consumer = new AsyncEventingBasicConsumer(channel);
+            var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
@@ -86,10 +87,21 @@ namespace ServerAPI.Services
                     await _hubContext.Clients.Client(correlationId).SendAsync("ReceiveProcessedPhoto", processedImageUrl);
                 }
 
-                await Task.CompletedTask;
+                await _channel.BasicAckAsync(ea.DeliveryTag, false);
             };
 
-            await channel.BasicConsumeAsync(queue: ReplyQueue, autoAck: true, consumer: consumer);
+            await _channel.BasicConsumeAsync(queue: ReplyQueue, autoAck: false, consumer: consumer);
+
+            await Task.Delay(Timeout.Infinite);
         }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await _channel?.CloseAsync()!;
+            await _connection?.CloseAsync()!;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken) => StartListeningAsync();
     }
+
 }

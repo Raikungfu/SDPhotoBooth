@@ -139,7 +139,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<TranferPhotoHub>("/tranferPhotoHub");
 });
 
-var rabbitService = app.Services.GetRequiredService<RabbitMqService>();
-Task.Run(() => rabbitService.StartListeningAsync());
+builder.Services.AddSingleton<RabbitMqService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<RabbitMqService>());
 
 app.Run();
