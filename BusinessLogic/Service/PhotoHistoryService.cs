@@ -17,9 +17,9 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<string[]> GetListNewestPhotos(string userId)
+        public async Task<string[]> GetListPhotos(string sesssionCode)
         {
-            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos", orderBy: o => o.OrderByDescending(o => o.CreatedAt), filter: o => o.CustomerId == userId);
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos", filter: o => o.SessionCode == sesssionCode);
             if (photoHistory == null)
             {
                 return null;

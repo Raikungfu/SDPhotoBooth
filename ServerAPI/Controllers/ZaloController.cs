@@ -13,35 +13,27 @@ namespace ServerAPI.Controllers
     public class ZaloController : ControllerBase
     {
         private readonly IPhotoHistoryService photoHistoryService;
-        private readonly IUserService _userService;
 
         public ZaloController(IPhotoHistoryService photoHistoryService, IUserService userService)
         {
             this.photoHistoryService = photoHistoryService;
-            _userService = userService;
         }
 
-        [HttpGet("send-photobooth-via-zalo/{PhoneNumber}")]
-        public async Task<IActionResult> SendPhotoBoothViaZalo([FromRoute] string PhoneNumber)
+        [HttpGet("send-photobooth-via-zalo")]
+        public async Task<IActionResult> SendPhotoBoothViaZalo([FromQuery] string phone, [FromQuery] string sessionCode, [FromQuery] string fullName)
         {
             try
             {
-                if (string.IsNullOrEmpty(PhoneNumber))
+                if (string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(sessionCode))
                 {
-                    return BadRequest(new { message = "Data invalid!" });
+                    return BadRequest("Phone and sessionCode are required.");
                 }
 
-                var user = await _userService.UserDetailByPhone(PhoneNumber);
-                if (user == null || user.Role != "Customer")
-                {
-                    return BadRequest(new { message = "User not found!" });
-                }
-
-                var photoUrls = await photoHistoryService.GetListNewestPhotos(user.Id);
+                var photoUrls = await photoHistoryService.GetListPhotos(sessionCode);
 
                 string photoUrlsString = string.Join("\n", photoUrls);
 
-                return Ok(new { photoUrls = photoUrlsString, customerName = user.FullName });
+                return Ok(new { photoUrls = photoUrlsString });
             }
             catch (Exception ex)
             {

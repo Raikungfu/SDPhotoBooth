@@ -8,6 +8,6 @@ namespace BusinessLogic.Service.IService
 {
     public interface IPhotoHistoryService
     {
-        Task<string[]> GetListNewestPhotos(string userId);
+        Task<string[]> GetListPhotos(string sesssionCode);
     }
 }
