@@ -47,28 +47,6 @@ namespace ServerAPI.Controllers
             }
             return Ok(typeSession);
         }
-
-        [HttpGet("filter")]
-        public async Task<IActionResult> Get([FromQuery] int? duration, [FromQuery] decimal? price, [FromQuery] bool? isPrinting, [FromQuery] int? ableTakenNumber)
-        {
-            try
-            {
-                var typeSessions = await _typeSessionService.FilterTypeSessionCode(duration, price, isPrinting, ableTakenNumber);
-
-                if (typeSessions == null || !typeSessions.Any())
-                {
-                    return NotFound(new { message = "No matching TypeSession found." });
-                }
-
-                return Ok(typeSessions);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
-            }
-        }
-
-
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TypeSessionRequestDTO typeSessionRequestDTO)
         {

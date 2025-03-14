@@ -26,10 +26,10 @@ namespace ServerAPI.Controllers
             return Ok(coupon);
         }
 
-        [HttpPost("filter")]
-        public async Task<IActionResult> Filter([FromBody] FilterCouponDTO filter)
+        [HttpGet]
+        public async Task<IActionResult> GetCoupons()
         {
-            var coupons = await _couponService.Filter(filter);
+            var coupons = await _couponService.GetCoupons();
             return Ok(coupons);
         }
 

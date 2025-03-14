@@ -36,18 +36,6 @@ namespace BusinessLogic.Service
             return true;
         }
 
-        public async Task<IEnumerable<TypeSessionResponseDTO>> FilterTypeSessionCode(int? duration, decimal? price, bool? isPrinting, int? ableTakenNumber)
-        {
-            var typeSessionCode = await _unitOfWork.TypeSession.GetAllAsync(filter: session =>
-            (!duration.HasValue || session.Duration <= duration) &&
-            (!price.HasValue || session.Price <= price) &&
-            (!isPrinting.HasValue || session.isPrinting == isPrinting) &&
-            (!ableTakenNumber.HasValue || session.AbleTakenNumber <= ableTakenNumber));
-
-            var typeSessionCodeDTO = _mapper.Map<IEnumerable<TypeSessionResponseDTO>>(typeSessionCode);
-            return typeSessionCodeDTO;
-        }
-
         public async Task<TypeSessionResponseDTO> GetTypeSessionCodeByIdAsync(int id)
         {
             var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(filter: e => e.Id == id);

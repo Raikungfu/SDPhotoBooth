@@ -7,7 +7,7 @@ namespace BusinessLogic.Service.IService
     public interface IUserService
     {
         //Filter
-        Task<IEnumerable<UserResponseDTO>> Filter(UserFilterDTO filter);
+        Task<IEnumerable<UserResponseDTO>> GetUsers();
         Task<UserResponseDTO> CreateUser(UserRequestDTO userRequestDTO);
         Task<UserResponseDTO> ResetPassword(string email, string newPassword);
         Task<UserResponseDTO> BanUser(string email);

@@ -20,10 +20,10 @@ namespace ServerAPI.Controllers
             _locationService = locationService;
         }
 
-        [HttpPost("filter")]
-        public async Task<IActionResult> Get([FromBody] UserFilterDTO filter)
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            var users = await _userService.Filter(filter);
+            var users = await _userService.GetUsers();
             if (users == null)
             {
                 return NotFound();

@@ -142,7 +142,7 @@ namespace ServerAPI.Controllers
             return Ok(new { newOrder, paymentLink });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] OrderStatusRequestDTO orderStatus)
         {
             var order = await orderService.GetOrder(orderStatus.OrderId);

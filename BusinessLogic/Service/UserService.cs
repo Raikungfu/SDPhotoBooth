@@ -79,7 +79,7 @@ namespace BusinessLogic.Service
             return userDTO;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> Filter(UserFilterDTO filter)
+        public async Task<IEnumerable<UserResponseDTO>> GetUsers()
         {
             var users = await _userManager.Users.ToListAsync();
             foreach (var user in users)
@@ -91,84 +91,14 @@ namespace BusinessLogic.Service
                 }
             }
 
-            var query = _userManager.Users.AsQueryable();
-
-            if (filter.Roles != null && filter.Roles.Any())
-            {
-                var selectedRoles = filter.Roles.ToHashSet();
-                var usersWithSelectedRoles = new List<string>();
-
-                foreach (var user in users)
-                {
-                    var roles = (await _userManager.GetRolesAsync(user))
-                                .Select(role => Enum.TryParse<UserType>(role, out var userType) ? userType : (UserType?)null)
-                                .Where(role => role.HasValue)
-                                .Select(role => role!.Value)
-                                .ToList();
-
-                    if (roles.Any(role => selectedRoles.Contains(role)))
-                    {
-                        usersWithSelectedRoles.Add(user.Id);
-                    }
-                }
-                query = query.Where(u => usersWithSelectedRoles.Contains(u.Id));
-            }
-
-            // Lọc theo Email
-            if (!string.IsNullOrEmpty(filter.Email))
-            {
-                query = query.Where(u => u.Email.Contains(filter.Email));
-            }
-
-            // Lọc theo Gender
-            if (filter.Gender.HasValue)
-            {
-                query = query.Where(u => u.Gender == filter.Gender.Value);
-            }
-
-            // Lọc theo ngày sinh
-            if (!string.IsNullOrEmpty(filter.Birth))
-            {
-                if (int.TryParse(filter.Birth, out int birthYear))
-                {
-                    query = query.Where(u => u.BirthDate.HasValue && u.BirthDate.Value.Year == birthYear);
-                }
-            }
-
-            // Lọc theo LocationName nếu user thuộc vai trò "Staff"
-            LocationResponseDTO? location = null;
-            if (!string.IsNullOrEmpty(filter.LocationName) && filter.Roles != null && filter.Roles.Contains(UserType.Staff))
-            {
-                location = await _locationService.GetLocation(filter.LocationName);
-            }
-            if (location != null)
-            {
-                query = query.Where(u => u.LocationId == location.Id);
-            }
-
-            // Lọc theo IsBanned
-            if (filter.IsBanned.HasValue)
-            {
-                query = query.Where(u => u.IsBanned == filter.IsBanned.Value);
-            }
-
-            if (!string.IsNullOrEmpty(filter.LocationName))
-            {
-                query = query.Where(u => u.Location.LocationName == filter.LocationName);
-            }
-
-            // Lấy danh sách Users sau khi đã lọc
-            var usersList = await query.ToListAsync();
-
-            // Lấy danh sách vai trò của Users
             var userRoles = new Dictionary<string, string?>();
-            foreach (var user in usersList)
+            foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 userRoles[user.Id] = roles.FirstOrDefault();
             }
-            // Map dữ liệu vào DTO
-            return usersList.Select(u => new UserResponseDTO
+
+            return users.Select(u => new UserResponseDTO
             {
                 Id = u.Id,
                 FullName = u.FullName,

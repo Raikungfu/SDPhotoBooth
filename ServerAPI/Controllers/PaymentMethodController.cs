@@ -37,7 +37,7 @@ namespace ServerAPI.Controllers
             return Ok(paymentMethod);
         }
 
-        [HttpGet("{paymentMethodName}")]
+        [HttpGet("by-name/{paymentMethodName}")]
         public async Task<IActionResult> Get(string paymentMethodName)
         {
             var paymentMethod = await _paymentMethodService.GetPaymentMethod(paymentMethodName);

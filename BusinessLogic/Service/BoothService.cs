@@ -40,21 +40,9 @@ namespace BusinessLogic.Service
             return true;
         }
 
-        public async Task<IEnumerable<BoothResponseDTO>> Filter(int? locationId, string? boothName, bool? status)
+        public async Task<IEnumerable<BoothResponseDTO>> GetBooths()
         {
             var booths = await _unitOfWork.Booth.GetAllAsync(includeProperties: "Location");
-            if (locationId != null)
-            {
-                booths = booths.Where(b => b.LocationId == locationId);
-            }
-            if (!string.IsNullOrEmpty(boothName))
-            {
-                booths = booths.Where(b => b.BoothName.Contains(boothName));
-            }
-            if (status != null)
-            {
-                booths = booths.Where(b => b.Status == status);
-            }
             var boothResponseDTOs = _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
             return boothResponseDTOs;
         }

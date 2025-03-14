@@ -4,7 +4,7 @@ namespace BusinessLogic.Service.IService
 {
     public interface IBoothService
     {
-        Task<IEnumerable<BoothResponseDTO>> Filter(int? locationId, string? boothName, bool? status);
+        Task<IEnumerable<BoothResponseDTO>> GetBooths();
         Task<BoothResponseDTO> GetBooth(int id);
         Task<BoothResponseDTO> GetBooth(string boothName);
         Task<BoothResponseDTO> CreateBooth(BoothRequestDTO boothRequestDTO);
