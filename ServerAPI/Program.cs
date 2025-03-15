@@ -100,6 +100,9 @@ builder.Services.AddSignalR(options =>
     options.KeepAliveInterval = TimeSpan.FromSeconds(10);
 });
 
+builder.Services.AddSingleton<FirebaseService>();
+
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
