@@ -52,7 +52,7 @@ namespace ServerAPI.Controllers
                         return Unauthorized(new { message = "User has no roles assigned" });
                     }
 
-                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff))
+                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff && UserType.Customer != userRole))
                     {
                         return Unauthorized(new { message = "You don't have permission to access!" });
                     }

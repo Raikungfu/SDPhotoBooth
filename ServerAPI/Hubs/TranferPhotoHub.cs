@@ -21,7 +21,7 @@ namespace ServerAPI.Hubs
         }
 
 
-        public async Task SendPhoto(ImageProcessingDTO request)
+        public async Task SendPhoto(String base64Image, String photoStyle)
         {
             string connectionId = Context.ConnectionId;
             await _rabbitService.SendMessageAsync(request.ImageUrl, connectionId, request.PhotoStyle);

@@ -4,6 +4,8 @@ using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentMethod;
+using BusinessLogic.DTO.PhotoDTO;
+using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
@@ -82,6 +84,12 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<PhotoStyle, PhotoStyleResponseDTO>();
             CreateMap<PhotoStyleRequestDTO, PhotoStyle>();
+            CreateMap<PhotoHistory, PhotoHistoryResponseDTO>()
+                 .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => new PhotoResponseDTO
+                 {
+                     Url = p.Url,
+                     PhotoStyleName = p.PhotoStyle.Name
+                 }).ToArray()));
         }
     }
 }
