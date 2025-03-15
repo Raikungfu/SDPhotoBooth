@@ -100,20 +100,23 @@ builder.Services.AddSignalR(options =>
     options.KeepAliveInterval = TimeSpan.FromSeconds(10);
 });
 
+builder.Services.AddSingleton<FirebaseService>();
+
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var dbContext = services.GetRequiredService<AIPhotoboothDbContext>();
-    //dbContext.Database.Migrate();
-    var userManager = services.GetRequiredService<UserManager<User>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    await SeedData.Seed(dbContext, userManager, roleManager);
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var dbContext = services.GetRequiredService<AIPhotoboothDbContext>();
+//    //dbContext.Database.Migrate();
+//    var userManager = services.GetRequiredService<UserManager<User>>();
+//    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+//    await SeedData.Seed(dbContext, userManager, roleManager);
+//}
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -1,16 +1,17 @@
-﻿using Azure.Core;
-using BusinessLogic.DTO.ImageProcessingDTO;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using ServerAPI.Services;
+using BusinessLogic.DTO.ImageProcessingDTO;
 
 namespace ServerAPI.Hubs
 {
     public class TranferPhotoHub : Hub
     {
+        private readonly FirebaseService _firebaseService;
         private readonly RabbitMqService _rabbitService;
 
-        public TranferPhotoHub(RabbitMqService rabbitService)
+        public TranferPhotoHub(FirebaseService firebaseService, RabbitMqService rabbitService)
         {
+            _firebaseService = firebaseService;
             _rabbitService = rabbitService;
         }
 
@@ -20,16 +21,14 @@ namespace ServerAPI.Hubs
             await base.OnConnectedAsync();
         }
 
-
-        public async Task SendPhoto(String base64Image, String photoStyle)
+        public async Task<string> GetConnectionId()
         {
-            string connectionId = Context.ConnectionId;
-            await _rabbitService.SendMessageAsync(request.ImageUrl, connectionId, request.PhotoStyle);
+            return Context.ConnectionId;
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            Console.WriteLine("Client disconnected");
+            Console.WriteLine("Client disconnected" + Context.ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
     }
