@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 
 public class FirebaseService
@@ -29,18 +30,13 @@ public class FirebaseService
         _bucketName = firebaseConfig["project_id"] + ".appspot.com";
     }
 
-    public async Task<string> UploadImageAsync(byte[] imageBytes)
+    public async Task<string> UploadImageAsync(Stream imageStream, string fileName, string contentType)
     {
-        using (var stream = new MemoryStream(imageBytes))
-        {
-            string fileName = $"{Guid.NewGuid()}.jpg"; 
-            var objectName = $"uploads/{fileName}";
+        await _storageClient.UploadObjectAsync(
+            _bucketName, fileName, contentType, imageStream
+        );
 
-            var storageObject = await _storageClient.UploadObjectAsync(_bucketName, objectName, "image/jpeg", stream);
-
-            return $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/{Uri.EscapeDataString(objectName)}?alt=media";
-        }
+        return $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
     }
-
 
 }

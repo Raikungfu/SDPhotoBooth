@@ -28,20 +28,15 @@ namespace ServerAPI.Controllers
                 return BadRequest("No image uploaded.");
             }
 
-            byte[] imageBytes;
-            using (var memoryStream = new MemoryStream())
+            string firebaseUrl;
+            using (var stream = image.OpenReadStream())
             {
-                await image.CopyToAsync(memoryStream);
-                imageBytes = memoryStream.ToArray();
+                firebaseUrl = await _firebaseService.UploadImageAsync(stream, image.FileName, image.ContentType);
             }
-
-            string firebaseUrl = await _firebaseService.UploadImageAsync(imageBytes);
-            Console.WriteLine($"Image uploaded to Firebase: {firebaseUrl}");
 
             await _rabbitService.SendMessageAsync(firebaseUrl, connectionId, photoStyle);
 
             return Ok(new { Message = "Image sent for processing", ImageUrl = firebaseUrl });
         }
-
     }
 }
