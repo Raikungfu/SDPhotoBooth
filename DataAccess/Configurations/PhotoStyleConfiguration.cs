@@ -8,16 +8,16 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PhotoStyle> builder)
         {
-            builder.HasKey(ps => ps.Id);
-
             builder.Property(ps => ps.Name)
                 .IsRequired();
 
             builder.Property(ps => ps.Description)
                 .HasMaxLength(500);
 
-            builder.Property(ps => ps.ImageUrl)
-                .HasMaxLength(500);
+            builder.HasMany(ps => ps.Photos)
+                .WithOne(p => p.PhotoStyle)
+                .HasForeignKey(p => p.PhotoStyleId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

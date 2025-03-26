@@ -8,9 +8,12 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PaymentMethod> builder)
         {
-            builder.HasKey(p => p.Id);
             builder.Property(p => p.MethodName).IsRequired().HasMaxLength(100);
             builder.Property(p => p.Description).HasMaxLength(500);
+
+            builder.HasMany(p => p.Transactions)
+                .WithOne(t => t.PaymentMethod)
+                .HasForeignKey(t => t.PaymentMethodId);
 
             builder.HasOne(b => b.CreatedBy)
                .WithMany(l => l.CreatedPaymentMethods)

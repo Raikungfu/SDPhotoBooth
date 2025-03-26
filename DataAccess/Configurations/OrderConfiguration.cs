@@ -8,16 +8,14 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.HasKey(o => o.Id);
+            builder.HasIndex(o => o.Code)
+                .IsUnique();
+
             builder.Property(o => o.Amount).IsRequired().HasPrecision(18, 2);
 
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId);
-
-            builder.HasOne(o => o.PaymentMethod)
-                .WithMany(p => p.Orders)
-                .HasForeignKey(o => o.PaymentMethodId);
 
             builder.HasOne(o => o.TypeSession)
                 .WithMany(p => p.Orders)
@@ -28,9 +26,13 @@ namespace DataAccess.Configurations
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CouponId);
 
-            builder.HasOne(o => o.TypeSession)
-                .WithMany(t => t.Orders)
-                .HasForeignKey(o => o.TypeSessionId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(o => o.Transaction)
+                .WithOne(t => t.Order)
+                .HasForeignKey<Order>(o => o.TransactionId);
+
+            builder.HasOne(o => o.Session)
+                .WithOne(s => s.Order)
+                .HasForeignKey<Order>(o => o.SessionId);
 
             builder.HasOne(o => o.CreatedBy)
                 .WithMany(u => u.CreatedOrders)
@@ -39,10 +41,6 @@ namespace DataAccess.Configurations
             builder.HasOne(o => o.LastModifiedBy)
                 .WithMany(u => u.LastModifiedOrders)
                 .HasForeignKey(o => o.LastModifiedById);
-
-            builder.HasOne(u => u.Session)
-              .WithOne(p => p.Order)
-              .HasForeignKey<Order>(s => s.SessionId);
         }
     }
 }

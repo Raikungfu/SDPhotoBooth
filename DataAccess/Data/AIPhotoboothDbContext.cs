@@ -21,6 +21,8 @@ namespace DataAccess.Data
         public DbSet<Session> Session { get; set; }
         public DbSet<TypeSession> TypeSession { get; set; }
         public DbSet<PhotoStyle> PhotoStyle { get; set; }
+        public DbSet<MembershipCard> MembershipCard { get; set; }
+        public DbSet<LevelMemberShip> LevelMemberShip { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

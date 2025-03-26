@@ -8,10 +8,10 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Location> builder)
         {
-            builder.HasKey(l => l.Id);
             builder.Property(l => l.LocationName)
                 .IsRequired()
                 .HasMaxLength(100);
+
             builder.Property(l => l.Address)
                 .IsRequired()
                 .HasMaxLength(200);

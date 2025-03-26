@@ -1,43 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace BussinessObject.Models
 {
-    public class Session
+    public class Session : BaseEntityNoAudit
     {
-        [Key]
-        [Required]
-        [StringLength(10, ErrorMessage = "Code cannot exceed 10 characters.")]
         public string Code { get; set; } = GenerateCode(10);
-
         public DateTime? Expired { get; private set; } = DateTime.Now.AddMinutes(60);
-
         public bool IsActive { get; set; } = true;
-
-        [Required]
-        public int TypeSessionId { get; set; }
-
-        [Required]
-        public int BoothId { get; set; }
-
-        [Required]
-        public long OrderId { get; set; }
-
-        [ForeignKey("TypeSessionId")]
-        public TypeSession TypeSession { get; set; }
-
-        [ForeignKey("BoothId")]
-        public Booth Booth { get; set; }
-
-        public PhotoHistory PhotoHistory { get; set; }
-
-        [ForeignKey("OrderId")]
-        public Order Order { get; set; }
-
+        public int OrderId { get; set; }
+        public int PhotoHistoryId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        public PhotoHistory PhotoHistory { get; set; }
+        public Order Order { get; set; }
 
         private static string GenerateCode(int length)
         {

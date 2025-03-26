@@ -8,7 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PhotoHistory> builder)
         {
-            builder.HasKey(ph => ph.Id);
             builder.Property(ph => ph.Amount).HasDefaultValue(0).HasPrecision(18, 2);
 
             builder.HasOne(ph => ph.Session)
@@ -21,10 +20,15 @@ namespace DataAccess.Configurations
                 .HasForeignKey(ph => ph.CustomerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(ph => ph.Location)
-                .WithMany(l => l.PhotoHistories)
-                .HasForeignKey(ph => ph.LocationId)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(p => p.Booth)
+            .WithMany(l => l.PhotoHistories)  
+            .HasForeignKey(p => p.LocationId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+            builder.HasMany(p => p.Photos)
+           .WithOne(ph => ph.PhotoHistory) 
+           .HasForeignKey(ph => ph.PhotoHistoryId);
         }
     }
 }

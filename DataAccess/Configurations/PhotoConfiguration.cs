@@ -8,7 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
-            builder.HasKey(p => p.Id);
             builder.Property(p => p.Url).IsRequired();
 
             builder.HasOne(p => p.PhotoHistory)

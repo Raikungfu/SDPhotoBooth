@@ -1,15 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BussinessObject.Models
+﻿namespace BussinessObject.Models
 {
-    public class PhotoStyle : BaseEntityNoAudit
+    public class PhotoStyle : BaseEntity
     {
-        [Required]
         public string Name { get; set; }
-
         public string? Description { get; set; }
-
-        public string? ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
     }
