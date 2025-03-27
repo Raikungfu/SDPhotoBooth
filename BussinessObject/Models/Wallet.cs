@@ -4,8 +4,8 @@
     {
         public string? UserId { get; set; }
         public decimal Balance { get; set; } = 0;
-        public virtual User User { get; set; }
-        public virtual ICollection<Deposit> Deposits { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public User User { get; set; }
+        public ICollection<Deposit> Deposits { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }

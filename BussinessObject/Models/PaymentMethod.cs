@@ -6,7 +6,7 @@
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public virtual ICollection<Transaction> Transactions { get; set; } 
+        public ICollection<Transaction> Transactions { get; set; } 
 
     }
 }
