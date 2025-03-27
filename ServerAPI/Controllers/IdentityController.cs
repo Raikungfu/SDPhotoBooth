@@ -152,6 +152,7 @@ namespace ServerAPI.Controllers
             if (model.Gender.HasValue) user.Gender = model.Gender.Value;
             if (model.BirthDate.HasValue) user.BirthDate = model.BirthDate.Value;
             if (!string.IsNullOrEmpty(model.Avatar)) user.Avatar = model.Avatar;
+            if(!string.IsNullOrEmpty(model.FullName)) user.FullName = model.FullName;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
