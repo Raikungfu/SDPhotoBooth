@@ -51,7 +51,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetAllOrders()
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location",
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Location",
                 asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);

@@ -29,10 +29,11 @@ namespace DataAccess.Data
         public DbSet<MembershipCard> MembershipCard { get; set; }
         public DbSet<LevelMembership> LevelMembership { get; set; }
 
-        public DbSet<Frame> Frames { get; set; }
-        public DbSet<Coordinate> Coordinates { get; set; }
-        public DbSet<StickerStyle> StickerStyles { get; set; }
-        public DbSet<Sticker> Stickers { get; set; }
+        public DbSet<Frame> Frame { get; set; }
+        public DbSet<FrameStyle> FrameStyle { get; set; }
+        public DbSet<Coordinate> Coordinate { get; set; }
+        public DbSet<StickerStyle> StickerStyle { get; set; }
+        public DbSet<Sticker> Sticker { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

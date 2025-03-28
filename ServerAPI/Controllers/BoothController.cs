@@ -41,6 +41,13 @@ namespace ServerAPI.Controllers
             return Ok(booth);
         }
 
+        [HttpGet("by-location/{locationId}")]
+        public async Task<ActionResult<IEnumerable<BoothResponseDTO>>> GetBoothByLocation(int locationId)
+        {
+            var booths = await _boothService.GetBoothByLocation(locationId);
+            return Ok(booths);
+        }
+
         [HttpPost]
         public async Task<ActionResult<BoothResponseDTO>> CreateBooth(BoothRequestDTO boothRequestDTO)
         {

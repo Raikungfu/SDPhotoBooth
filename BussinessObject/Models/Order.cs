@@ -25,17 +25,22 @@ namespace BussinessObject.Models
         [Required]
         public int TypeSessionId { get; set; }
 
+        public int? TransactionId { get; set; }
+
+        public virtual Session Session { get; set; }
+
+        public virtual Payment Payment { get; set; }
+
         [ForeignKey("TypeSessionId")]
         public virtual TypeSession TypeSession { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
 
-        public virtual Session Session { get; set; }
-
-        public virtual Payment Payment { get; set; }
-
         [ForeignKey("CouponId")]
         public virtual Coupon Coupon { get; set; }
+
+        [ForeignKey("TransactionId")]
+        public virtual Transaction Transaction { get; set; }
     }
 }

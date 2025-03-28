@@ -40,7 +40,7 @@ namespace ServerAPI.Helpers
 
         public static async Task<GooglePurchaseResponse> VerifyPurchaseAsync(long orderCode, string typeSessionId, string purchaseToken)
         {
-            string url = $"https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.example.sd_photobooth_app/purchases/products/{typeSessionId}/tokens/{purchaseToken}";
+            string url = $"https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.techx.sd_photobooth_app/purchases/products/{typeSessionId}/tokens/{purchaseToken}";
 
             string accessToken = await GoogleTokenHelper.GetGoogleAccessToken();
             using HttpClient client = new HttpClient();

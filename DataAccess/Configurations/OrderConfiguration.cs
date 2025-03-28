@@ -57,6 +57,10 @@ namespace DataAccess.Configurations
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId);
+
+            builder.HasOne(o => o.Transaction)
+                .WithOne(t => t.Order)
+                .HasForeignKey<Order>(t => t.TransactionId);
         }
     }
 }

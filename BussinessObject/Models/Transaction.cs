@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BussinessObject.Models
 {
@@ -21,5 +16,7 @@ namespace BussinessObject.Models
 
         [ForeignKey("WalletId")]
         public virtual Wallet Wallet { get; set; }
+
+        public virtual Order? Order { get; set; }
     }
 }
