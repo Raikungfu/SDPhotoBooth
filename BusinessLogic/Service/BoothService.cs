@@ -98,5 +98,12 @@ namespace BusinessLogic.Service
             var boothResponseDTO = _mapper.Map<BoothResponseDTO>(booth);
             return boothResponseDTO;
         }
+
+        public async Task<IEnumerable<BoothResponseDTO>> GetBoothByLocation(int locationId)
+        {
+            var booths = await _unitOfWork.Booth.GetAllAsync(b => b.LocationId == locationId);
+            var boothResponseDTOs = _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
+            return boothResponseDTOs;
+        }
     }
 }
