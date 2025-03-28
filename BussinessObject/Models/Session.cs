@@ -5,9 +5,8 @@ using System.Text;
 
 namespace BussinessObject.Models
 {
-    public class Session
+    public class Session : BaseEntityNoAudit
     {
-        [Key]
         [Required]
         [StringLength(10, ErrorMessage = "Code cannot exceed 10 characters.")]
         public string Code { get; set; } = GenerateCode(10);
@@ -17,27 +16,12 @@ namespace BussinessObject.Models
         public bool IsActive { get; set; } = true;
 
         [Required]
-        public int TypeSessionId { get; set; }
+        public int OrderId { get; set; }
 
-        [Required]
-        public int BoothId { get; set; }
-
-        [Required]
-        public long OrderId { get; set; }
-
-        [ForeignKey("TypeSessionId")]
-        public TypeSession TypeSession { get; set; }
-
-        [ForeignKey("BoothId")]
-        public Booth Booth { get; set; }
-
-        public PhotoHistory PhotoHistory { get; set; }
+        public virtual PhotoHistory PhotoHistory { get; set; }
 
         [ForeignKey("OrderId")]
-        public Order Order { get; set; }
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        public virtual Order Order { get; set; }
 
         private static string GenerateCode(int length)
         {

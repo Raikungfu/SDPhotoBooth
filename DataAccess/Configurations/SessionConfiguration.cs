@@ -8,21 +8,22 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
-            builder.HasKey(s => s.Code);
+            builder.HasIndex(o => o.Code)
+                .IsUnique();
+
             builder.Property(s => s.IsActive).HasDefaultValue(true);
+
             builder.Property(s => s.Expired).HasDefaultValueSql("GETDATE()");
 
-            builder.HasOne(s => s.TypeSession)
-                .WithMany(ts => ts.Sessions)
-                .HasForeignKey(s => s.TypeSessionId);
+            builder.HasOne(o => o.Order)
+                .WithOne(o => o.Session)
+                .HasForeignKey<Session>(o => o.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(s => s.Booth)
-                .WithMany(b => b.Sessions)
-                .HasForeignKey(s => s.BoothId);
-
-            builder.HasOne(u => u.Order)
-              .WithOne(p => p.Session)
-              .HasForeignKey<Session>(s => s.OrderId);
+            builder.HasOne(ph => ph.PhotoHistory)
+                .WithOne(s => s.Session)
+                .HasForeignKey<PhotoHistory>(ph => ph.SessionId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

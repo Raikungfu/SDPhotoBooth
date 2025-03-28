@@ -3,6 +3,7 @@ using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
 using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
@@ -108,7 +109,6 @@ namespace BusinessLogic.Service
                 Gender = u.Gender,
                 BirthDate = u.BirthDate,
                 Avatar = u.Avatar,
-                Balance = u.Balance,
                 Role = userRoles.ContainsKey(u.Id) ? userRoles[u.Id] : null,
                 IsBanned = u.IsBanned,
                 Location = _mapper.Map<LocationResponseDTO>(u.Location)
@@ -171,45 +171,17 @@ namespace BusinessLogic.Service
             return true;
         }
 
+
+
         public async Task<TotalUserStaticResponseDTO> StaticUserCreated(StaticType staticType)
         {
             var totalUserStatic = new TotalUserStaticResponseDTO();
+            (DateTime start, DateTime startPrev) = TimeRangeHelper.GetTimeRange(staticType);
 
-            var today = DateTime.Today;
-            var usersInRole = await _userManager.GetUsersInRoleAsync("Customer");
-            var userIds = usersInRole.Select(u => u.Id).ToList();
-
-            switch (staticType)
-            {
-                case StaticType.Day:
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today && s.CreatedAt < today.AddDays(1) && userIds.Contains(s.Id));
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= today.AddDays(-1) && s.CreatedAt < today && userIds.Contains(s.Id));
-                    break;
-
-                case StaticType.Week:
-                    var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
-                    var startOfPrevWeek = startOfWeek.AddDays(-7);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfWeek && userIds.Contains(s.Id));
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevWeek && s.CreatedAt < startOfWeek && userIds.Contains(s.Id));
-                    break;
-
-                case StaticType.Month:
-                    var startOfMonth = new DateTime(today.Year, today.Month, 1);
-                    var startOfPrevMonth = startOfMonth.AddMonths(-1);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfMonth && userIds.Contains(s.Id));
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < startOfMonth && userIds.Contains(s.Id));
-                    break;
-
-                case StaticType.Year:
-                    var startOfYear = new DateTime(today.Year, 1, 1);
-                    var startOfPrevYear = startOfYear.AddYears(-1);
-                    totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfYear && userIds.Contains(s.Id));
-                    totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startOfPrevYear && s.CreatedAt < startOfYear && userIds.Contains(s.Id));
-                    break;
-            }
+            totalUserStatic.TotalUser = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= start && s.CreatedAt < start.Add(TimeRangeHelper.GetStepSize(staticType)) && !s.IsBanned && !s.IsDeleted);
+            totalUserStatic.TotalUserPrev = await _unitOfWork.User.CountAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start && !s.IsBanned && !s.IsDeleted);
 
             return totalUserStatic;
         }
-
     }
 }

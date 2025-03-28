@@ -79,7 +79,7 @@ namespace BusinessLogic.Service
             photoStyleObj.Name = photoStyle.Name;
             photoStyleObj.Description = photoStyle.Description;
             photoStyleObj.ImageUrl = photoStyle.ImageUrl;
-            photoStyleObj.UpdatedAt = DateTime.Now;
+            photoStyleObj.LastModified = DateTime.Now;
             try
             {
                 _unitOfWork.PhotoStyle.Update(photoStyleObj);

@@ -8,12 +8,21 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PhotoHistory> builder)
         {
-            builder.HasKey(ph => ph.Id);
             builder.Property(ph => ph.Amount).HasDefaultValue(0).HasPrecision(18, 2);
 
-            builder.HasOne(ph => ph.Session)
-                .WithOne(s => s.PhotoHistory)
-                .HasForeignKey<PhotoHistory>(ph => ph.SessionCode)
+            builder.HasOne(ph => ph.Location)
+                .WithMany(o => o.PhotoHistories)
+                .HasForeignKey(o => o.LocationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(ph => ph.Booth)
+                .WithMany(o => o.PhotoHistories)
+                .HasForeignKey(o => o.BoothId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(ph => ph.Photos)
+                .WithOne(p => p.PhotoHistory)
+                .HasForeignKey(p => p.PhotoHistoryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(ph => ph.Customer)
@@ -21,9 +30,9 @@ namespace DataAccess.Configurations
                 .HasForeignKey(ph => ph.CustomerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(ph => ph.Location)
-                .WithMany(l => l.PhotoHistories)
-                .HasForeignKey(ph => ph.LocationId)
+            builder.HasOne(o => o.Session)
+                .WithOne(o => o.PhotoHistory)
+                .HasForeignKey<PhotoHistory>(o => o.SessionId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

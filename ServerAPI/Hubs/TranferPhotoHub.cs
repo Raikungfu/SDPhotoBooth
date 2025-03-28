@@ -6,13 +6,8 @@ namespace ServerAPI.Hubs
 {
     public class TranferPhotoHub : Hub
     {
-        private readonly FirebaseService _firebaseService;
-        private readonly RabbitMqService _rabbitService;
-
-        public TranferPhotoHub(FirebaseService firebaseService, RabbitMqService rabbitService)
+        public TranferPhotoHub()
         {
-            _firebaseService = firebaseService;
-            _rabbitService = rabbitService;
         }
 
         public override async Task OnConnectedAsync()

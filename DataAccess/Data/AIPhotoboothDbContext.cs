@@ -22,6 +22,18 @@ namespace DataAccess.Data
         public DbSet<TypeSession> TypeSession { get; set; }
         public DbSet<PhotoStyle> PhotoStyle { get; set; }
 
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Wallet> Wallet { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+
+        public DbSet<MembershipCard> MembershipCard { get; set; }
+        public DbSet<LevelMembership> LevelMembership { get; set; }
+
+        public DbSet<Frame> Frames { get; set; }
+        public DbSet<Coordinate> Coordinates { get; set; }
+        public DbSet<StickerStyle> StickerStyles { get; set; }
+        public DbSet<Sticker> Stickers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

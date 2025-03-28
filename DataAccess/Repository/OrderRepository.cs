@@ -15,18 +15,14 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Order.FirstOrDefault(s => s.Id == order.Id);
             objFromDb.UserId = order.UserId;
-            objFromDb.PaymentMethodId = order.PaymentMethodId;
             objFromDb.Amount = order.Amount;
-            objFromDb.SessionId = order.SessionId;
         }
 
         public Task UpdateAsync(Order order)
         {
             var objFromDb = _db.Order.FirstOrDefault(s => s.Id == order.Id);
             objFromDb.UserId = order.UserId;
-            objFromDb.PaymentMethodId = order.PaymentMethodId;
             objFromDb.Amount = order.Amount;
-            objFromDb.SessionId = order.SessionId;
             return Task.CompletedTask;
         }
     }

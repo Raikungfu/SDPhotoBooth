@@ -8,7 +8,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
     public class DashboardController : ControllerBase
     {
         private readonly IOrderService orderService;
@@ -20,19 +19,28 @@ namespace ServerAPI.Controllers
             this.userService = userService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Get([FromBody] StaticType staticType)
+        [HttpPost("statictis-order")]
+        public async Task<IActionResult> GetStaticOrder([FromBody] StaticType staticType)
         {
             var totalOrderStatic = await orderService.StaticOrderCreated(staticType);
+
+            return Ok(totalOrderStatic);
+        }
+
+        [HttpPost("statictis-user")]
+        public async Task<IActionResult> GetStaticUser([FromBody] StaticType staticType)
+        {
             var totalUserStatic = await userService.StaticUserCreated(staticType);
+
+            return Ok(totalUserStatic);
+        }
+
+        [HttpPost("statictis-revenue")]
+        public async Task<IActionResult> GetStaticRevenue([FromBody] StaticType staticType)
+        {
             var totalRevenueStatic = await orderService.StaticRevenue(staticType);
 
-            return Ok(new
-            {
-                totalOrderStatic,
-                totalUserStatic,
-                totalRevenueStatic
-            });
+            return Ok(totalRevenueStatic);
         }
     }
 }

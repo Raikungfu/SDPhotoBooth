@@ -8,16 +8,14 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.HasKey(o => o.Id);
+            builder.HasIndex(o => o.Code)
+                .IsUnique();
+
             builder.Property(o => o.Amount).IsRequired().HasPrecision(18, 2);
 
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId);
-
-            builder.HasOne(o => o.PaymentMethod)
-                .WithMany(p => p.Orders)
-                .HasForeignKey(o => o.PaymentMethodId);
 
             builder.HasOne(o => o.TypeSession)
                 .WithMany(p => p.Orders)
@@ -42,7 +40,23 @@ namespace DataAccess.Configurations
 
             builder.HasOne(u => u.Session)
               .WithOne(p => p.Order)
-              .HasForeignKey<Order>(s => s.SessionId);
+              .HasForeignKey<Session>(s => s.OrderId);
+
+            builder.HasOne(o => o.Payment)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Payment>(o => o.OrderId);
+
+            builder.HasOne(o => o.TypeSession)
+                .WithMany(w => w.Orders)
+                .HasForeignKey(o => o.TypeSessionId);
+
+            builder.HasOne(o => o.Coupon)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CouponId);
+
+            builder.HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
         }
     }
 }

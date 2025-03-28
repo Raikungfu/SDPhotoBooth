@@ -8,7 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Booth> builder)
         {
-            builder.HasKey(b => b.Id);
             builder.Property(b => b.LocationId).IsRequired();
             builder.Property(b => b.BoothName)
                 .IsRequired()
@@ -16,10 +15,13 @@ namespace DataAccess.Configurations
             builder.Property(b => b.Description).HasMaxLength(500);
             builder.Property(b => b.Status).HasDefaultValue(true);
 
+            builder.HasMany(b => b.PhotoHistories)
+                .WithOne(o => o.Booth)
+                .HasForeignKey(o => o.BoothId);
+
             builder.HasOne(b => b.Location)
                 .WithMany(l => l.Booths)
                 .HasForeignKey(b => b.LocationId);
-
 
             builder.HasOne(b => b.CreatedBy)
                 .WithMany(l => l.CreatedBooths)

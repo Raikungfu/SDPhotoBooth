@@ -25,9 +25,21 @@ namespace BusinessLogic.Service
             _mapper = mapper;
         }
 
-        public async Task<string[]> GetListPhotos(string sesssionCode)
+        public async Task<string[]> GetListPhotos(int sessionId)
         {
-            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos", filter: o => o.SessionCode == sesssionCode);
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos", filter: o => o.SessionId == sessionId);
+            if (photoHistory == null)
+            {
+                return null;
+            }
+
+            return photoHistory.Photos.Select(p => p.Url).ToArray();
+        }
+
+        public async Task<string[]> GetListPhotosFromSessionCode(string sessionCode)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(filter: o => o.Code == sessionCode);
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos", filter: o => o.SessionId == session.Id);
             if (photoHistory == null)
             {
                 return null;
@@ -55,9 +67,8 @@ namespace BusinessLogic.Service
             {
                 Id = photoHistory.Id,
                 CreatedAt = photoHistory.CreatedAt,
-                UpdatedAt = photoHistory.UpdatedAt,
+                UpdatedAt = photoHistory.LastModified,
                 Amount = photoHistory.Amount,
-                SessionCode = photoHistory.SessionCode
             });
         }
     }

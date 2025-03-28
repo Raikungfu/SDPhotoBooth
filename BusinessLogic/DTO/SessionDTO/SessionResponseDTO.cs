@@ -14,10 +14,6 @@ namespace BusinessLogic.DTO.SessionCodeDTO
 
         public DateTime CreatedAt { get; set; }
 
-        public string? TypeSessionName { get; set; }
-
-        public string? BoothName { get; set; }
-
         public long? OrderId { get; set; }
 
     }

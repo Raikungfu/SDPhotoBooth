@@ -72,16 +72,16 @@ namespace DataAccess.Extensions
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = now;
-                    entry.Entity.UpdatedAt = now;
+                    entry.Entity.LastModified = now;
                 }
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.UpdatedAt = now;
+                    entry.Entity.LastModified = now;
                 }
                 if (entry.State == EntityState.Deleted)
                 {
                     entry.Entity.IsDeleted = true;
-                    entry.Entity.UpdatedAt = now;
+                    entry.Entity.LastModified = now;
                     entry.State = EntityState.Modified; // Xóa mềm
 
                 }

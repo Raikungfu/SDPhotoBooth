@@ -14,11 +14,8 @@ namespace ServerAPI.Services
 {
     public class RabbitMqService
     {
-        private readonly string _queueName = "image_processing_queue";
         private const string ReplyQueue = "image_response_queue";
         private readonly ConnectionFactory _factory;
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
         private readonly IHubContext<TranferPhotoHub> _hubContext;
 
 
@@ -32,7 +29,7 @@ namespace ServerAPI.Services
             _hubContext = hubContext;
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, string photoStyle)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, string photoStyle, string _queueName)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();

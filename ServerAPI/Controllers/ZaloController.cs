@@ -29,7 +29,7 @@ namespace ServerAPI.Controllers
                     return BadRequest("Phone and sessionCode are required.");
                 }
 
-                var photoUrls = await photoHistoryService.GetListPhotos(sessionCode);
+                var photoUrls = await photoHistoryService.GetListPhotosFromSessionCode(sessionCode);
 
                 string photoUrlsString = string.Join("\n", photoUrls);
 

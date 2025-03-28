@@ -17,7 +17,7 @@ namespace DataAccess.Repository
             objFromDb.CustomerId = photoHistory.CustomerId;
             objFromDb.LocationId = photoHistory.LocationId;
             objFromDb.Amount = photoHistory.Amount;
-            objFromDb.SessionCode = photoHistory.SessionCode;
+            objFromDb.SessionId = photoHistory.SessionId;
         }
 
         public Task UpdateAsync(PhotoHistory photoHistory)
@@ -26,7 +26,7 @@ namespace DataAccess.Repository
             objFromDb.CustomerId = photoHistory.CustomerId;
             objFromDb.LocationId = photoHistory.LocationId;
             objFromDb.Amount = photoHistory.Amount;
-            objFromDb.SessionCode = photoHistory.SessionCode;
+            objFromDb.SessionId = photoHistory.SessionId;
             return Task.CompletedTask;
         }
     }

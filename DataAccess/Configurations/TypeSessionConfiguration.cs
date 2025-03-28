@@ -8,13 +8,19 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<TypeSession> builder)
         {
-            builder.HasKey(ts => ts.Id);
             builder.Property(ts => ts.Name).IsRequired().HasMaxLength(100);
+
             builder.Property(ts => ts.Description).HasMaxLength(500);
 
-            builder.Property(ts => ts.isPrinting).IsRequired();
+            builder.Property(ts => ts.isPrinting).IsRequired().HasDefaultValue(true);
 
             builder.Property(lm => lm.Price).HasPrecision(18, 2);
+
+            builder.Property(lm => lm.AbleTakenNumber).IsRequired();
+
+            builder.HasMany(ts => ts.Orders)
+                .WithOne(o => o.TypeSession)
+                .HasForeignKey(o => o.TypeSessionId);
 
             builder.HasOne(b => b.CreatedBy)
               .WithMany(l => l.CreatedTypeSessions)

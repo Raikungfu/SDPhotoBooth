@@ -8,7 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
-            builder.HasKey(p => p.Id);
             builder.Property(p => p.Url).IsRequired();
 
             builder.HasOne(p => p.PhotoHistory)
@@ -18,7 +17,6 @@ namespace DataAccess.Configurations
             builder.HasOne(p => p.PhotoStyle)
                 .WithMany(ph => ph.Photos)
                 .HasForeignKey(p => p.PhotoStyleId);
-
         }
     }
 }

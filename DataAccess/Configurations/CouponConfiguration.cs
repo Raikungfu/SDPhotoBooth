@@ -35,6 +35,10 @@ namespace DataAccess.Configurations
 
             builder.Property(c => c.IsActive).HasDefaultValue(true);
 
+            builder.HasMany(c => c.Orders)
+                .WithOne(o => o.Coupon)
+                .HasForeignKey(o => o.CouponId);
+
             builder.HasOne(b => b.CreatedBy)
               .WithMany(l => l.CreatedCoupons)
               .HasForeignKey(b => b.CreatedById);

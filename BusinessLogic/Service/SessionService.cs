@@ -42,7 +42,6 @@ namespace BusinessLogic.Service
             }
 
             var newSession = _mapper.Map<Session>(sessionRequestDTO);
-            newSession.TypeSessionId = order.TypeSessionId;
             await _unitOfWork.Session.AddAsync(newSession);
             await _unitOfWork.SaveAsync();
 

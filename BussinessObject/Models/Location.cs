@@ -13,11 +13,10 @@ namespace BussinessObject.Models
         [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters.")]
         public string Address { get; set; }
 
-        public ICollection<Booth> Booths { get; set; } = new List<Booth>();
+        public virtual ICollection<PhotoHistory> PhotoHistories { get; set; } = new List<PhotoHistory>();
 
-        public ICollection<User> Staffs { get; set; } = new List<User>();
+        public virtual ICollection<Booth> Booths { get; set; } = new List<Booth>();
 
-        public ICollection<PhotoHistory> PhotoHistories { get; set; } = new List<PhotoHistory>();
+        public virtual ICollection<User> Staffs { get; set; } = new List<User>();
     }
-
 }

@@ -19,7 +19,5 @@ namespace BusinessLogic.DTO.PhotoHistoryDTO
 
         public PhotoResponseDTO[] Photos { get; set; }
         public decimal Amount { get; set; }
-
-        public string SessionCode { get; set; }
     }
 }

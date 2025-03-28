@@ -19,8 +19,8 @@ namespace BussinessObject.Models
         public bool Status { get; set; } = true;
 
         [ForeignKey("LocationId")]
-        public Location Location { get; set; }
+        public virtual Location Location { get; set; }
 
-        public ICollection<Session> Sessions { get; set; } = new List<Session>();
+        public virtual ICollection<PhotoHistory> PhotoHistories { get; set; } = new List<PhotoHistory>();
     }
 }

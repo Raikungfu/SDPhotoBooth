@@ -24,9 +24,7 @@ namespace BussinessObject.Models
         [Range(0, int.MaxValue, ErrorMessage = "AbleTakenNumber must be a non-negative value.")]
         public int AbleTakenNumber { get; set; }
 
-        public ICollection<Session> Sessions { get; set; } = new List<Session>();
-
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     }
 }

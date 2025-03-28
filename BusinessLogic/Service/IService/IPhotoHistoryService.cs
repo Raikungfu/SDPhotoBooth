@@ -9,7 +9,8 @@ namespace BusinessLogic.Service.IService
 {
     public interface IPhotoHistoryService
     {
-        Task<string[]> GetListPhotos(string sesssionCode);
+        Task<string[]> GetListPhotos(int sessionId);
+        Task<string[]> GetListPhotosFromSessionCode(string sessionCode);
         Task<IEnumerable<PhotoHistoryResponseDTO>> GetListPhotoHistoryAsync(string userId);
         Task<PhotoHistoryResponseDTO> GetPhotoHistoryAsync(int id, string userId);
     }

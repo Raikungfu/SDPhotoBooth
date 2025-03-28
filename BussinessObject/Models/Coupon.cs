@@ -40,7 +40,7 @@ namespace BussinessObject.Models
 
         public bool IsActive { get; set; } = true;
 
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 
 }

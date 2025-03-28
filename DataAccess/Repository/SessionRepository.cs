@@ -15,8 +15,6 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Session.FirstOrDefault(s => s.Code == session.Code);
             objFromDb.IsActive = session.IsActive;
-            objFromDb.TypeSessionId = session.TypeSessionId;
-            objFromDb.BoothId = session.BoothId;
 
         }
 
@@ -24,8 +22,6 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Session.FirstOrDefault(s => s.Code == session.Code);
             objFromDb.IsActive = session.IsActive;
-            objFromDb.TypeSessionId = session.TypeSessionId;
-            objFromDb.BoothId = session.BoothId;
             return Task.CompletedTask;
         }
     }

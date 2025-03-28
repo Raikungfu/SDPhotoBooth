@@ -21,9 +21,9 @@ namespace BussinessObject.Models
         public int PhotoStyleId { get; set; }
 
         [ForeignKey("PhotoHistoryId")]
-        public PhotoHistory PhotoHistory { get; set; }
+        public virtual PhotoHistory PhotoHistory { get; set; }
 
         [ForeignKey("PhotoStyleId")]
-        public PhotoStyle PhotoStyle { get; set; }
+        public virtual PhotoStyle PhotoStyle { get; set; }
     }
 }

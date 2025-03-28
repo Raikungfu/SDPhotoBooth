@@ -33,9 +33,9 @@ namespace ServerAPI.Services
         public async Task<string> CreatePaymentLink(decimal amount, string paymentMethod, OrderResponseDTO order, TypeSessionResponseDTO typeSession, UserResponseDTO user, string clientUrl)
         {
             var paymentData = new PaymentData(
-                orderCode: order.Id,
+                orderCode: order.Code,
                 amount: (int)Math.Round(amount),
-                description: $"TECH X ORDER {order.Id}",
+                description: $"TECH X ORDER {order.Code}",
                 items: new List<ItemData>
                 {
                     new ItemData(

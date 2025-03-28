@@ -1,25 +1,15 @@
-﻿using AutoMapper;
-using BusinessLogic.DTO.OrderDTO;
-using BusinessLogic.DTO.PaymentGateDTO;
-using BusinessLogic.DTO.TypeSessionDTO;
-using BusinessLogic.DTO.UserDTO;
-using BusinessLogic.Service;
+﻿using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Net.payOS;
-using Net.payOS.Types;
 using ServerAPI.Services;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService orderService;
@@ -30,7 +20,6 @@ namespace ServerAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _env;
         private readonly IPayOSService payOSService;
-
 
         public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService)
         {
@@ -55,10 +44,81 @@ namespace ServerAPI.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("{id:long}")]
-        public async Task<IActionResult> Get(long id)
+        [HttpGet("customer")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetOrderCreated()
         {
-            var order = await orderService.GetOrder(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var orders = await orderService.GetOrdersForCurrentUser(userId);
+            if (orders == null)
+            {
+                return NotFound();
+            }
+            return Ok(orders);
+        }
+
+        [HttpGet("orders-customer/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderByCusId([FromRoute] string? id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Order ID is required.");
+            }
+
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            if (!Enum.TryParse(role, out UserType userType))
+            {
+                return Unauthorized();
+            }
+
+            if(userType == UserType.Customer && id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                return Unauthorized();
+            }
+
+            switch (userType)
+            {
+                case UserType.Manager:
+                case UserType.Staff:
+                    var order = await orderService.GetOrdersByCusId(id);
+                    return order != null ? Ok(order) : NotFound("Order not found.");
+
+                case UserType.Customer:
+                    var customerOrder = await orderService.GetOrdersByCusId(id);
+                    return customerOrder != null ? Ok(customerOrder) : NotFound("No orders found for this customer.");
+
+                default:
+                    return Unauthorized();
+            }
+        }
+
+        [HttpGet("{id:long}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int id)
+        {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            if (!Enum.TryParse(role, out UserType userType))
+            {
+                return Unauthorized();
+            }
+
+            var order = new OrderResponseDTO();
+
+            switch (userType)
+            {
+                case UserType.Manager:
+                case UserType.Staff:
+                    order = await orderService.GetOrder(id, null);
+                    break;
+                case UserType.Customer:
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    order = await orderService.GetOrder(id, userId);
+                    return Ok(order);
+                default:
+                    return Unauthorized();
+            }
+
             if (order == null)
             {
                 return NotFound();
@@ -84,7 +144,7 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest("Invalid type session.");
             }
-
+            
             var payment = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
             if (payment == null)
             {
@@ -138,14 +198,68 @@ namespace ServerAPI.Controllers
                 clientUrl = _configuration["ClientUrl:Development"];
             }
 
-            var paymentLink = await payOSService.CreatePaymentLink(order.Amount, payment.MethodName, newOrder, typeSession, customer, clientUrl);
+            var paymentLink = await payOSService.CreatePaymentLink(newOrder.Amount, payment.MethodName, newOrder, typeSession, customer, clientUrl);
             return Ok(new { newOrder, paymentLink });
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] OrderStatusRequestDTO orderStatus)
+        [HttpPost("customer")]
+        [Authorize]
+        public async Task<IActionResult> CustomerOrder([FromBody] OrderRequestDTO order)
         {
-            var order = await orderService.GetOrder(orderStatus.OrderId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+            order.UserId = userId;
+
+            var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+            if (typeSession == null)
+            {
+                return BadRequest("Invalid type session.");
+            }
+
+            if (!string.IsNullOrEmpty(order.CouponCode))
+            {
+                var coupon = await couponService.GetCoupon(order.CouponCode);
+                if (coupon != null && (coupon.StartDate == null || coupon.StartDate <= DateTime.Now)
+                    && (coupon.EndDate == null || coupon.EndDate >= DateTime.Now)
+                    && (coupon.MaxUse == null || coupon.MaxUse > coupon.UsedAmount)
+                    && (coupon.MinOrder == null || coupon.MinOrder <= typeSession.Price)
+                    && coupon.IsActive && !coupon.IsDeleted)
+                {
+                    order.CouponId = coupon.Id;
+                    var discount = Math.Max(0m, coupon.Discount.GetValueOrDefault() + (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
+                    order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
+                        ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
+                        : Math.Max(0, typeSession.Price - discount);
+                }
+                else
+                {
+                    return BadRequest("Invalid coupon code.");
+                }
+            }
+            else
+            {
+                order.Amount = typeSession.Price;
+            }
+
+            var newOrder = await orderService.CreateOrder(order);
+
+            return Ok(newOrder);
+        }
+
+
+        [HttpPatch]
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<IActionResult> Patch([FromBody] OrderStatusRequestDTO orderStatus)
+        {
+            var order = await orderService.GetOrder(orderStatus.OrderId, null);
             if (order == null)
             {
                 return BadRequest();
@@ -156,9 +270,10 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var order = await orderService.GetOrder(id);
+            var order = await orderService.GetOrder(id, null);
             if (order == null)
             {
                 return NotFound();

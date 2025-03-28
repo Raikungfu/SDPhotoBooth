@@ -19,7 +19,7 @@ namespace ServerAPI.Controllers
         [HttpGet("{sessionCode}")]
         public async Task<IActionResult> Get(string sessionCode)
         {
-            var photos = await _photoHistoryService.GetListPhotos(sessionCode);
+            var photos = await _photoHistoryService.GetListPhotosFromSessionCode(sessionCode);
             if (photos == null)
             {
                 return NotFound();

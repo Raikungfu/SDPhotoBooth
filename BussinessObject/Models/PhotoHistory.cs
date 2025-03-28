@@ -14,12 +14,15 @@ namespace BussinessObject.Models
 
         public int? LocationId { get; set; }
 
+        public int? BoothId { get; set; }
+
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public decimal Amount { get; set; }
 
-        public string SessionCode { get; set; }
+        [Required]
+        public int SessionId { get; set; }
 
-        [ForeignKey(nameof(SessionCode))]
+        [ForeignKey("SessionId")]
         public Session Session { get; set; }
 
         [ForeignKey("CustomerId")]
@@ -28,6 +31,9 @@ namespace BussinessObject.Models
         [ForeignKey("LocationId")]
         public Location Location { get; set; }
 
-        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+        [ForeignKey("BoothId")]
+        public Booth Booth { get; set; }
+
+        public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
     }
 }

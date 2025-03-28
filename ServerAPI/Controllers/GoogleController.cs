@@ -52,7 +52,7 @@ namespace ServerAPI.Controllers
                         return Unauthorized(new { message = "User has no roles assigned" });
                     }
 
-                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff && UserType.Customer != userRole))
+                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff))
                     {
                         return Unauthorized(new { message = "You don't have permission to access!" });
                     }
@@ -60,6 +60,58 @@ namespace ServerAPI.Controllers
                     {
                         return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Decryption failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost("google/sign-in")]
+        public async Task<IActionResult> GoogleSignIn([FromBody] TokenRequest tokenRequest)
+        {
+            try
+            {
+                var payload = await GoogleTokenHelper.VerifyAccessTokenAsync(tokenRequest.Token, _configuration["GoogleOath2:WebClient"], _configuration["GoogleOath2:MobileClient"]);
+                if (payload == null)
+                {
+                    return Unauthorized(new { message = "Invalid token" });
+                }
+
+                User user = _userManager.FindByEmailAsync(payload.Email).Result;
+
+                if (user == null)
+                {
+                    var newUser = new User
+                    {
+                        UserName = payload.Email,
+                        Email = payload.Email,
+                        FullName = payload.Name,
+                        Avatar = payload.Picture
+                    };
+
+                    var createResult = await _userManager.CreateAsync(newUser);
+                    if (!createResult.Succeeded)
+                    {
+                        return BadRequest(new { message = "Failed to create user", errors = createResult.Errors });
+                    }
+
+                    await _userManager.AddToRoleAsync(newUser, UserType.Customer.ToString());
+
+                    return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(newUser.Id, newUser.UserName, UserType.Customer, _configuration["Jwt:PrivateKey"]) });
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var tf = Enum.TryParse<UserType>(roles[0], out var userRole);
+
+                if (!tf || userRole != UserType.Customer)
+                {
+                    return Unauthorized(new { message = "You don't have permission to access! Please using another email" });
+                }
+                else
+                {
+                    return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
                 }
             }
             catch (Exception ex)
