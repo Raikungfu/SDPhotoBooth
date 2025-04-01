@@ -43,7 +43,14 @@ namespace BusinessLogic.Service
             return typeSessionCodeDTO;
         }
 
-        public async Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodeByNameAsync(string name)
+        public async Task<TypeSessionResponseDTO> GetTypeSessionCodeByNameAsync(string name)
+        {
+            var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(filter: e => e.Name == name);
+            var typeSessionCodeDTO = _mapper.Map<TypeSessionResponseDTO>(typeSessionCode);
+            return typeSessionCodeDTO;
+        }
+
+        public async Task<IEnumerable<TypeSessionResponseDTO>> SearchTypeSessionCodeByNameAsync(string name)
         {
             var typeSessionCode = await _unitOfWork.TypeSession.GetAllAsync(filter: e => e.Name.ToLower().Contains(name.ToLower()));
             var typeSessionCodeDTO = _mapper.Map<IEnumerable<TypeSessionResponseDTO>>(typeSessionCode);
@@ -59,16 +66,7 @@ namespace BusinessLogic.Service
 
         public async Task<bool> UpdateTypeSessionCodeAsync(int id, TypeSessionRequestDTO typeSessionCodeDTO)
         {
-            if (typeSessionCodeDTO == null)
-            {
-                return false;
-            }
-
             var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(e => e.Id == id);
-            if (typeSessionCode == null)
-            {
-                return false;
-            }
 
             if (!string.IsNullOrEmpty(typeSessionCodeDTO.Name))
             {

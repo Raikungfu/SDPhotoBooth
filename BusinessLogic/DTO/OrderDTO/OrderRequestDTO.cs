@@ -10,14 +10,6 @@ namespace BusinessLogic.DTO.OrderDTO
         public string? CouponCode { get; set; }
         public int TypeSessionId { get; set; }
         public int PaymentMethodId { get; set; }
-    }
-
-    public class OrderCreateRequestDTO
-    {
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public int TypeSessionId { get; set; }
-        public int PaymentMethodId { get; set; }
         public decimal? Amount { get; set; }
         public string? SessionId { get; set; }
         public string? UserId { get; set; }

@@ -4,7 +4,7 @@ namespace BusinessLogic.Service.IService
 {
     public interface ILocationService
     {
-        Task<int> CreateLocation(LocationRequestDTO locationRequestDTO);
+        Task<LocationResponseDTO> CreateLocation(LocationRequestDTO locationRequestDTO);
         Task<LocationResponseDTO> UpdateLocation(int id, LocationRequestDTO locationRequestDTO);
         Task<int> DeleteLocation(int id);
         Task<LocationResponseDTO> GetLocation(int id);

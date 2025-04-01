@@ -35,7 +35,7 @@ namespace BusinessLogic.Service
 
         public async Task<CouponResponseDTO> GetCoupon(string code)
         {
-            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code.ToLower().Contains(code.ToLower()));
+            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code == code);
             var couponResponseDTO = _mapper.Map<CouponResponseDTO>(coupon);
             return couponResponseDTO;
         }

@@ -57,7 +57,7 @@ namespace BusinessLogic.Service
             return _mapper.Map<IEnumerable<SessionResponseDTO>>(allSession);
         }
 
-        public async Task<IEnumerable<SessionResponseDTO>> GetSessionByCode(string code)
+        public async Task<IEnumerable<SessionResponseDTO>> SearchSessionByCode(string code)
         {
             var session = await _unitOfWork.Session.GetAllAsync(s => s.Code.ToLower().Contains(code.ToLower()));
             return _mapper.Map<IEnumerable<SessionResponseDTO>>(session);
@@ -66,6 +66,12 @@ namespace BusinessLogic.Service
         public async Task<SessionResponseDTO> GetSessionById(int Id)
         {
             var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Id == Id);
+            return _mapper.Map<SessionResponseDTO>(session);
+        }
+
+        public async Task<SessionResponseDTO> GetSessionByCode(string code)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code);
             return _mapper.Map<SessionResponseDTO>(session);
         }
 

@@ -32,7 +32,7 @@ namespace ServerAPI.Controllers
         [HttpGet("by-code/{code}")]
         public async Task<IActionResult> Get(string code)
         {
-            var session = await _sessionService.GetSessionByCode(code);
+            var session = await _sessionService.SearchSessionByCode(code);
             if (session == null)
             {
                 return NotFound();

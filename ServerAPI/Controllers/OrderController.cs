@@ -136,7 +136,11 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+            if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
+            {
+                return BadRequest("Type session or payment method is invalid.");
+            }
+
             var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
             if (typeSession == null)
             {
@@ -174,6 +178,10 @@ namespace ServerAPI.Controllers
                 {
                     return BadRequest("Invalid coupon code.");
                 }
+            }
+            else
+            {
+                order.Amount = typeSession.Price;
             }
 
             var newOrder = await orderService.CreateOrder(order);

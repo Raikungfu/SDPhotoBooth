@@ -14,13 +14,13 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<int> CreateLocation(LocationRequestDTO locationRequestDTO)
+        public async Task<LocationResponseDTO> CreateLocation(LocationRequestDTO locationRequestDTO)
         {
 
             var location = _mapper.Map<Location>(locationRequestDTO);
             _unitOfWork.Location.Add(location);
             await _unitOfWork.SaveAsync();
-            return location.Id;
+            return _mapper.Map<LocationResponseDTO>(location);
         }
 
         public async Task<int> DeleteLocation(int id)

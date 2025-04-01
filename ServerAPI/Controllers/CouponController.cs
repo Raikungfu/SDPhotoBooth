@@ -23,8 +23,8 @@ namespace ServerAPI.Controllers
             return Ok(coupon);
         }
 
-        [HttpGet("search/{code}/")]
-        public async Task<IActionResult> GetCoupons(string code)
+        [HttpGet("search/{code}")]
+        public async Task<IActionResult> SearchCoupon(string code)
         {
             var coupons = await _couponService.GetCoupons(code);
             if (coupons == null) return NotFound();

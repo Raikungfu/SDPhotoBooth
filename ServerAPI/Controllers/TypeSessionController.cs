@@ -37,10 +37,10 @@ namespace ServerAPI.Controllers
             return Ok(typeSession);
         }
 
-        [HttpGet("{typeSessionName}")]
+        [HttpGet("by-name/{typeSessionName}")]
         public async Task<IActionResult> Get(string typeSessionName)
         {
-            var typeSession = await _typeSessionService.GetTypeSessionCodeByNameAsync(typeSessionName);
+            var typeSession = await _typeSessionService.SearchTypeSessionCodeByNameAsync(typeSessionName);
             if (typeSession == null)
             {
                 return NotFound();
