@@ -13,6 +13,9 @@
         ITypeSessionRepository TypeSession { get; }
         IPhotoStyleRepository PhotoStyle { get; }
         IUserRepository User { get; }
+        IStickerRepository Sticker { get; }
+
+        IStickerStyleRepository StickerStyle { get; }
         void Save();
         Task SaveAsync();
     }

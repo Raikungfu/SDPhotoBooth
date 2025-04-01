@@ -3,14 +3,6 @@ using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
@@ -69,6 +61,42 @@ namespace BusinessLogic.Service
                 CreatedAt = photoHistory.CreatedAt,
                 UpdatedAt = photoHistory.LastModified
             });
+        }
+        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetAllPhotoHistory()
+        {
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle");
+            var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
+            return photoHistoriesResponseDTO;
+        }
+
+        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByCustomerIdAsync(string customerId)
+        {
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle", filter: o => o.CustomerId == customerId);
+            var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
+            return photoHistoriesResponseDTO;
+        }
+        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByBoothIdAsync(int boothId)
+        {
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle", filter: o => o.BoothId == boothId);
+            var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
+            return photoHistoriesResponseDTO;
+        }
+        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByLocationIdAsync(int locationId)
+        {
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle,Booth,Booth.Location", filter: o => o.Booth.LocationId == locationId);
+            var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
+            return photoHistoriesResponseDTO;
+        }
+
+        public async Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode)
+        {
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos,Photos.PhotoStyle,Session", filter: o => o.Session.Code == sessionCode);
+            if (photoHistory == null)
+            {
+                return null;
+            }
+            var photoHistoryResponseDTO = _mapper.Map<PhotoHistoryResponseDTO>(photoHistory);
+            return photoHistoryResponseDTO;
         }
     }
 }

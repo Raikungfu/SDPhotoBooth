@@ -1,9 +1,4 @@
 ﻿using BusinessLogic.DTO.PhotoHistoryDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Service.IService
 {
@@ -13,5 +8,12 @@ namespace BusinessLogic.Service.IService
         Task<string[]> GetListPhotosFromSessionCode(string sessionCode);
         Task<IEnumerable<PhotoHistoryResponseDTO>> GetListPhotoHistoryAsync(string userId);
         Task<PhotoHistoryResponseDTO> GetPhotoHistoryAsync(int id, string userId);
+
+        //Managing in Web
+        Task<IEnumerable<PhotoHistoryResponseDTO>> GetAllPhotoHistory();
+        Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByCustomerIdAsync(string customerId);
+        Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByBoothIdAsync(int boothId);
+        Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByLocationIdAsync(int locationId);
+        Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode);
     }
 }

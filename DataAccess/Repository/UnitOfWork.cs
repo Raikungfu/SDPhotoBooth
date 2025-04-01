@@ -21,6 +21,8 @@ namespace DataAccess.Repository
             TypeSession = new TypeSessionRepository(_db);
             User = new UserRepository(_db);
             PhotoStyle = new PhotoStyleRepository(_db);
+            Sticker = new StickerRepository(_db);
+            StickerStyle = new StickerStyleRepository(_db);
 
         }
         public IBoothRepository Booth { get; private set; }
@@ -34,6 +36,8 @@ namespace DataAccess.Repository
         public ITypeSessionRepository TypeSession { get; private set; }
         public IUserRepository User { get; private set; }
         public IPhotoStyleRepository PhotoStyle { get; private set; }
+        public IStickerRepository Sticker { get; private set; }
+        public IStickerStyleRepository StickerStyle { get; private set; }
 
         public void Dispose()
         {

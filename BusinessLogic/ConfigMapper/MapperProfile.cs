@@ -8,6 +8,8 @@ using BusinessLogic.DTO.PhotoDTO;
 using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
+using BusinessLogic.DTO.StickerDTO;
+using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
 using BussinessObject.Models;
@@ -90,6 +92,19 @@ namespace BusinessLogic.ConfigMapper
                      Url = p.Url,
                      PhotoStyleName = p.PhotoStyle.Name
                  }).ToArray()));
+
+            CreateMap<StickerRequestDTO, Sticker>();
+            CreateMap<Sticker, StickerResponseDTO>()
+                .ForMember(dest => dest.StickerStyleName, opt => opt.MapFrom(src => src.StickerStyle != null ? src.StickerStyle.StickerStyleName : null));
+
+            CreateMap<StickerStyleRequestDTO, StickerStyle>();
+            CreateMap<StickerStyle, StickerStyleResponseDTO>()
+                .ForMember(dest => dest.Stickers, opt => opt.MapFrom(src => src.Stickers.Select(s => new StickerOnStickerStyleResponseDTO
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    StickerUrl = s.StickerUrl
+                })));
         }
     }
 }

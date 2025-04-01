@@ -32,6 +32,8 @@ namespace ServerAPI.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IPhotoStyleService, PhotoStyleService>();
+            services.AddScoped<IStickerService, StickerService>();
+            services.AddScoped<IStickerStyleService, StickerStyleService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();
