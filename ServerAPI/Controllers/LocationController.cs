@@ -26,7 +26,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var location = await _locationService.GetLocation(id);
             if (location == null)
@@ -36,8 +36,8 @@ namespace ServerAPI.Controllers
             return Ok(location);
         }
 
-        [HttpGet("{locationName}")]
-        public async Task<IActionResult> Get(string locationName)
+        [HttpGet("by-location/{locationName}")]
+        public async Task<IActionResult> GetByName(string locationName)
         {
             var location = await _locationService.GetLocation(locationName);
             if (location == null)
@@ -46,6 +46,7 @@ namespace ServerAPI.Controllers
             }
             return Ok(location);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] LocationRequestDTO locationRequestDTO)

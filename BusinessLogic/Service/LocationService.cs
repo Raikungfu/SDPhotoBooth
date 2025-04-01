@@ -45,10 +45,10 @@ namespace BusinessLogic.Service
             return locationResponseDTO;
         }
 
-        public async Task<LocationResponseDTO> GetLocation(string locationName)
+        public async Task<IEnumerable<LocationResponseDTO>> GetLocation(string locationName)
         {
-            var location = await _unitOfWork.Location.GetFirstOrDefaultAsync(filter: l => l.LocationName == locationName);
-            var locationResponseDTO = _mapper.Map<LocationResponseDTO>(location);
+            var locations = await _unitOfWork.Location.GetAllAsync(l => l.LocationName.ToLower().Contains(locationName.ToLower()));
+            var locationResponseDTO = _mapper.Map<IEnumerable<LocationResponseDTO>>(locations);
             return locationResponseDTO;
         }
 

@@ -2,9 +2,7 @@
 {
     public class SessionRequestDTO
     {
-
+        public string Code { get; set; }
         public int? BoothId { get; set; }
-
-        public long? OrderId { get; set; }
     }
 }

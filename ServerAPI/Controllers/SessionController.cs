@@ -29,7 +29,7 @@ namespace ServerAPI.Controllers
             return Ok(sessions);
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("by-code/{code}")]
         public async Task<IActionResult> Get(string code)
         {
             var session = await _sessionService.GetSessionByCode(code);
@@ -40,36 +40,43 @@ namespace ServerAPI.Controllers
             return Ok(session);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SessionRequestDTO sessionRequestDTO)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> Get(int Id)
         {
-            if (!sessionRequestDTO.BoothId.HasValue || !sessionRequestDTO.OrderId.HasValue)
-            {
-                return BadRequest("Invalid data provided.");
-            }
-            var session = await _sessionService.CreateSession(sessionRequestDTO);
+            var session = await _sessionService.GetSessionById(Id);
             if (session == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create session.");
+                return NotFound();
             }
             return Ok(session);
         }
 
-        [HttpPatch("{code}/update-status")]
-        public async Task<IActionResult> UpdateStatus(string code, bool status)
+        [HttpPost("{orderCode}")]
+        public async Task<IActionResult> Post(long orderCode)
         {
-            var isExist = await _sessionService.GetSessionByCode(code);
-            if (isExist == null)
+            var session = await _sessionService.CreateSession(orderCode);
+            if (session == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create session.");
+            }
+            return Ok(session); 
+        }
+
+
+        [HttpPost("use-session")]
+        public async Task<IActionResult> UseSession([FromBody] SessionRequestDTO request)
+        {
+            var session = await _sessionService.GetSessionByCode(request.Code);
+            if (session == null)
             {
                 return NotFound();
             }
-            var result = await _sessionService.UpdateStatusSession(code, status);
-            if (!result)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update status.");
-            }
-            return Ok();
+
+            var result = await _sessionService.UseSession(request.Code, request.BoothId);
+
+            return Ok(result); 
         }
+
 
     }
 }

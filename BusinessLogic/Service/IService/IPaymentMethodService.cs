@@ -8,7 +8,7 @@ namespace BusinessLogic.Service.IService
         Task<PaymentMethodResponseDTO> UpdatePaymentMethod(int id, PaymentMethodRequestDTO paymentMethodRequestDTO);
         Task<int> DeletePaymentMethod(int id);
         Task<PaymentMethodResponseDTO> GetPaymentMethod(int id);
-        Task<PaymentMethodResponseDTO> GetPaymentMethod(string paymentMethodName);
+        Task<IEnumerable<PaymentMethodResponseDTO>> GetPaymentMethod(string paymentMethodName);
         Task<IEnumerable<PaymentMethodResponseDTO>> GetAllPaymentMethod();
     }
 }

@@ -43,10 +43,10 @@ namespace BusinessLogic.Service
             return typeSessionCodeDTO;
         }
 
-        public async Task<TypeSessionResponseDTO> GetTypeSessionCodeByNameAsync(string name)
+        public async Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodeByNameAsync(string name)
         {
-            var typeSessionCode = await _unitOfWork.TypeSession.GetFirstOrDefaultAsync(filter: e => e.Name == name);
-            var typeSessionCodeDTO = _mapper.Map<TypeSessionResponseDTO>(typeSessionCode);
+            var typeSessionCode = await _unitOfWork.TypeSession.GetAllAsync(filter: e => e.Name.ToLower().Contains(name.ToLower()));
+            var typeSessionCodeDTO = _mapper.Map<IEnumerable<TypeSessionResponseDTO>>(typeSessionCode);
             return typeSessionCodeDTO;
         }
 

@@ -59,8 +59,7 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<Coupon, CouponResponseDTO>();
 
             CreateMap<SessionRequestDTO, Session>();
-            CreateMap<Session, SessionResponseDTO>()
-                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.Id));
+            CreateMap<Session, SessionResponseDTO>();
 
 
 
@@ -76,11 +75,15 @@ namespace BusinessLogic.ConfigMapper
                     PhoneNumber = src.User.PhoneNumber
                 } : null))
                 .ForMember(dest => dest.SessionCode, opt => opt.MapFrom(src => src.Session != null ? src.Session.Code : null))
+                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null ? src.Payment.PaymentMethod.MethodName : null))
+                .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Session != null ? src.Session.PhotoHistory.Booth.Location.LocationName : null))
+                .ForMember(dest => dest.BoothName, opt => opt.MapFrom(src => src.Session != null ? src.Session.PhotoHistory.Booth.BoothName : null))
                 .ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.Coupon != null ? src.Coupon.Code : null))
                 .ForMember(dest => dest.TypeSessionName, opt => opt.MapFrom(src => src.TypeSession.Name != null ? src.TypeSession.Name : null));
             
             CreateMap<PhotoStyle, PhotoStyleResponseDTO>();
             CreateMap<PhotoStyleRequestDTO, PhotoStyle>();
+
             CreateMap<PhotoHistory, PhotoHistoryResponseDTO>()
                  .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => new PhotoResponseDTO
                  {

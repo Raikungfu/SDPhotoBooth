@@ -25,12 +25,19 @@ namespace BusinessLogic.Service
             return couponResponseDTO;
         }
 
-        public async Task<bool> DeleteCoupon(string code)
+        public async Task<bool> DeleteCoupon(int id)
         {
-            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code == code);
+            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Id == id);
             _unitOfWork.Coupon.Remove(coupon);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+
+        public async Task<CouponResponseDTO> GetCoupon(string code)
+        {
+            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code.ToLower().Contains(code.ToLower()));
+            var couponResponseDTO = _mapper.Map<CouponResponseDTO>(coupon);
+            return couponResponseDTO;
         }
 
         public async Task<IEnumerable<CouponResponseDTO>> GetCoupons()
@@ -41,16 +48,14 @@ namespace BusinessLogic.Service
 
         }
 
-        public async Task<CouponResponseDTO> GetCoupon(string code)
+        public async Task<IEnumerable<CouponResponseDTO>?> GetCoupons(string code)
         {
-            var coupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code == code);
-            if (coupon == null)
-            {
-                return null;
-            }
-            var couponResponseDTO = _mapper.Map<CouponResponseDTO>(coupon);
-            return couponResponseDTO;
+            var coupons = await _unitOfWork.Coupon.GetAllAsync(c => c.Code.ToLower().Contains(code.ToLower()));
+            if (!coupons.Any()) return null;
+
+            return _mapper.Map<IEnumerable<CouponResponseDTO>>(coupons);
         }
+
 
         public async Task<CouponResponseDTO> GetCouponById(int id)
         {
@@ -63,9 +68,9 @@ namespace BusinessLogic.Service
             return couponResponseDTO;
         }
 
-        public async Task<CouponResponseDTO> UpdateCoupon(string code, CouponRequestDTO couponRequestDTO)
+        public async Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO)
         {
-            var existingCoupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Code == code);
+            var existingCoupon = await _unitOfWork.Coupon.GetFirstOrDefaultAsync(c => c.Id == id);
 
             if (!string.IsNullOrEmpty(couponRequestDTO.Name))
             {

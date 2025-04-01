@@ -11,9 +11,9 @@ namespace BussinessObject.Models
         [StringLength(10, ErrorMessage = "Code cannot exceed 10 characters.")]
         public string Code { get; set; } = GenerateCode(10);
 
-        public DateTime? Expired { get; private set; } = DateTime.Now.AddMinutes(60);
+        public DateTime? Expired { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
 
         [Required]
         public int OrderId { get; set; }

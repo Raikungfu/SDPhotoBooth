@@ -3,6 +3,7 @@ using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
+using System.Linq;
 
 namespace BusinessLogic.Service
 {
@@ -58,14 +59,14 @@ namespace BusinessLogic.Service
             return boothResponseDTO;
         }
 
-        public async Task<BoothResponseDTO> GetBooth(string boothName)
+        public async Task<IEnumerable<BoothResponseDTO>> GetBooth(string boothName)
         {
-            var booth = await _unitOfWork.Booth.GetFirstOrDefaultAsync(b => b.BoothName == boothName, includeProperties: "Location");
-            if (booth == null)
+            var booths = await _unitOfWork.Booth.GetAllAsync(b => b.BoothName.ToLower().Contains(boothName.ToLower()), includeProperties: "Location");
+            if (booths == null)
             {
                 return null;
             }
-            var boothResponseDTO = _mapper.Map<BoothResponseDTO>(booth);
+            var boothResponseDTO = _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
             return boothResponseDTO;
         }
 

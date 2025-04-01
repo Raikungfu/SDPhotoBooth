@@ -8,13 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PhotoHistory> builder)
         {
-            builder.Property(ph => ph.Amount).HasDefaultValue(0).HasPrecision(18, 2);
-
-            builder.HasOne(ph => ph.Location)
-                .WithMany(o => o.PhotoHistories)
-                .HasForeignKey(o => o.LocationId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             builder.HasOne(ph => ph.Booth)
                 .WithMany(o => o.PhotoHistories)
                 .HasForeignKey(o => o.BoothId)

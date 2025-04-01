@@ -7,12 +7,7 @@ namespace BussinessObject.Models
     {
         public string? CustomerId { get; set; }
 
-        public int? LocationId { get; set; }
-
         public int? BoothId { get; set; }
-
-        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
-        public decimal Amount { get; set; }
 
         [Required]
         public int SessionId { get; set; }
@@ -22,9 +17,6 @@ namespace BussinessObject.Models
 
         [ForeignKey("CustomerId")]
         public User Customer { get; set; }
-
-        [ForeignKey("LocationId")]
-        public Location Location { get; set; }
 
         [ForeignKey("BoothId")]
         public Booth Booth { get; set; }

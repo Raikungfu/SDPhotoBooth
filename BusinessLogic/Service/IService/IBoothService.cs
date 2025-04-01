@@ -6,7 +6,7 @@ namespace BusinessLogic.Service.IService
     {
         Task<IEnumerable<BoothResponseDTO>> GetBooths();
         Task<BoothResponseDTO> GetBooth(int id);
-        Task<BoothResponseDTO> GetBooth(string boothName);
+        Task<IEnumerable<BoothResponseDTO>> GetBooth(string boothName);
         Task<BoothResponseDTO> CreateBooth(BoothRequestDTO boothRequestDTO);
         Task<BoothResponseDTO> UpdateBooth(int id, BoothRequestDTO boothRequestDTO);
         Task<bool> DeleteBooth(int id);

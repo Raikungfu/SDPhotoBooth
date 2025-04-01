@@ -67,8 +67,7 @@ namespace BusinessLogic.Service
             {
                 Id = photoHistory.Id,
                 CreatedAt = photoHistory.CreatedAt,
-                UpdatedAt = photoHistory.LastModified,
-                Amount = photoHistory.Amount,
+                UpdatedAt = photoHistory.LastModified
             });
         }
     }

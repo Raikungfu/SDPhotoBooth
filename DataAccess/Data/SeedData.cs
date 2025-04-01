@@ -224,16 +224,306 @@ public static class SeedData
             if (!context.PhotoStyle.Any())
             {
                 context.PhotoStyle.AddRange(
-                    new PhotoStyle { Id = 1, Name = "anime", Description = "Anime-style photography", ImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/033/662/051/small/cartoon-lofi-young-manga-style-girl-while-listening-to-music-in-the-rain-ai-generative-photo.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:04:20.5382419"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 2, Name = "artistic_portrait", Description = "High artistic portraits", ImageUrl = "https://images5.alphacoders.com/135/thumb-1920-1352020.png", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:06:34.262168"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 3, Name = "cartoon", Description = "Cartoon-themed photography", ImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/046/238/401/small/a-3d-character-illustration-for-a-childrens-book-photo.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:10:24.5847326"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 4, Name = "fantasy", Description = "Fantasy-themed photography", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSynwqUs6fsgDDN5tl8UG5NhyLK9nQcC7WCYg&s", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-14T05:45:36.871683"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 5, Name = "fashion_style", Description = "Fashion and stylish photos", ImageUrl = "https://www.pixelstalk.net/wp-content/uploads/2016/06/Nature-girl-winter-fashion-wallpaper-1920x1080.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:16:22.4802536"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 6, Name = "id_photo", Description = "Professional ID photos", ImageUrl = "https://cdn.tgdd.vn/Files/2023/07/10/1537629/cachkhacphucloitaianh4x6lenhochieuonline-130723-145414-800-resize.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:18:44.2862617"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 7, Name = "modern", Description = "Modern photography styles", ImageUrl = "https://img.freepik.com/premium-photo/modern-woman-portrait-hd-8k-wallpaper-stock-photographic-image_890746-53098.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:27:24.4834447"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 8, Name = "nature", Description = "Nature-inspired photography", ImageUrl = "https://wallpapercave.com/wp/wp7118266.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:29:05.8312544"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PhotoStyle { Id = 9, Name = "vintage", Description = "Vintage and classic photography", ImageUrl = "https://images7.alphacoders.com/573/573462.jpg", Prompt = "", NegativePrompt = "", CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"), LastModified = DateTime.Parse("2025-03-27T08:34:08.9543789"), CreatedById = admin.Id, LastModifiedById = admin.Id }
-                );
+                    new PhotoStyle
+                    {
+                        Id = 1,
+                        Name = "ID Photo",
+                        Description = "Professional ID photo with studio lighting and sharp focus.",
+                        ImageUrl = "https://cdn.tgdd.vn/Files/2023/07/10/1537629/cachkhacphucloitaianh4x6lenhochieuonline-130723-145414-800-resize.jpg",
+                        Prompt = "Super Portrait, professional ID photo, studio lighting, sharp focus, neutral background, ultra-high resolution, natural skin texture, neutral expression.",
+                        NegativePrompt = "blur, distortion, extra hair, heavy makeup, artificial skin smoothing, exaggerated features, harsh shadows, unrealistic retouching.",
+                        Controlnets = null,
+                        Mode = InpaintMode.KeepFace,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 20,
+                        GuidanceScale = 4.0,
+                        Strength = 0.3,
+                        FaceImage = true,
+                        BackgroundRemover = true,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:04:20.5382419"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 2,
+                        Name = "ID Photo (ControlNet)",
+                        Description = "Professional ID photo with enhanced details using ControlNet.",
+                        ImageUrl = "https://cdn.tgdd.vn/Files/2023/07/10/1537629/cachkhacphucloitaianh4x6lenhochieuonline-130723-145414-800-resize.jpg",
+                        Prompt = "Super Portrait, professional ID photo, studio lighting, sharp focus, neutral background, ultra-high resolution, natural skin texture, neutral expression.",
+                        NegativePrompt = "blur, distortion, extra hair, heavy makeup, artificial skin smoothing, exaggerated features, harsh shadows, unrealistic retouching.",
+                        Controlnets = "softedge, depth",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 30,
+                        GuidanceScale = 7.5,
+                        Strength = 0.8,
+                        FaceImage = true,
+                        BackgroundRemover = true,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:06:00.0000000"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 3,
+                        Name = "Fashion Style",
+                        Description = "Editorial fashion portrait with high-definition details and elegant outfit.",
+                        ImageUrl = "https://www.pixelstalk.net/wp-content/uploads/2016/06/Nature-girl-winter-fashion-wallpaper-1920x1080.jpg",
+                        Prompt = "Editorial fashion portrait, striking pose, high-definition details, elegant outfit, perfect fit, confident expression, soft studio lighting. The background is clean and minimalistic, enhancing the subject.",
+                        NegativePrompt = "bad lighting, ill-fitting clothes, low-quality textures, unnatural expression, distorted proportions, cluttered background.",
+                        Controlnets = "canny, depth, pose",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 26,
+                        GuidanceScale = 6.5,
+                        Strength = 0.7,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:16:22.4802536"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 4,
+                        Name = "Cartoon",
+                        Description = "Vibrant cartoon character with smooth shading and bold outlines.",
+                        ImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/046/238/401/small/a-3d-character-illustration-for-a-childrens-book-photo.jpg",
+                        Prompt = "Vibrant cartoon character, smooth shading, expressive eyes, bold outlines, dynamic pose. The background is colorful and playful, enhancing the lively personality.",
+                        NegativePrompt = "blurred lines, dull colors, photorealistic details, excessive shading, missing body parts, distorted proportions.",
+                        Controlnets = "canny, scribble",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 32,
+                        GuidanceScale = 8,
+                        Strength = 0.85,
+                        FaceImage = false,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:10:24.5847326"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 5,
+                        Name = "Artistic",
+                        Description = "Fine art portrait with soft lighting and warm color harmony.",
+                        ImageUrl = "https://images5.alphacoders.com/135/thumb-1920-1352020.png",
+                        Prompt = "Fine art portrait, soft and balanced lighting, rich textures, warm color harmony. The subject exudes elegance and emotion, resembling classical masterpieces.",
+                        NegativePrompt = "oversaturated, artificial blur, harsh contrast, distorted proportions, lifeless expression, missing elements.",
+                        Controlnets = "scribble, depth",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 28,
+                        GuidanceScale = 7.0,
+                        Strength = 0.75,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:06:34.262168"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 6,
+                        Name = "Vintage",
+                        Description = "Classic vintage portrait with warm sepia tones and subtle grain texture.",
+                        ImageUrl = "https://images7.alphacoders.com/573/573462.jpg",
+                        Prompt = "Classic vintage portrait, warm sepia tones, soft film-like contrast, subtle grain texture. The subject appears timeless with natural lighting and elegant styling.",
+                        NegativePrompt = "modern sharpness, digital artifacts, unnatural lighting, reflections, artificial blur, excessive grain.",
+                        Controlnets = "softedge, scribble",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 25,
+                        GuidanceScale = 7.0,
+                        Strength = 0.8,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:34:08.9543789"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 7,
+                        Name = "Fantasy",
+                        Description = "Ethereal fantasy portrait with glowing atmosphere and magical details.",
+                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSynwqUs6fsgDDN5tl8UG5NhyLK9nQcC7WCYg&s",
+                        Prompt = "Ethereal fantasy portrait, glowing atmosphere, intricate costume details, vibrant magical background. The subject radiates an enchanting aura with a dreamlike aesthetic.",
+                        NegativePrompt = "lifeless expression, dull tones, distorted anatomy, harsh shadows, CGI artifacts, unnatural blur.",
+                        Controlnets = "softedge, depth",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 35,
+                        GuidanceScale = 7.8,
+                        Strength = 0.8,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 8,
+                        Name = "Modern",
+                        Description = "Sleek modern portrait with high-definition textures and stylish composition.",
+                        ImageUrl = "https://img.freepik.com/premium-photo/modern-woman-portrait-hd-8k-wallpaper-stock-photographic-image_890746-53098.jpg",
+                        Prompt = "Sleek modern portrait, sharp lighting, high-definition textures, dynamic composition, stylish outfit. The background is minimalistic with a futuristic touch.",
+                        NegativePrompt = "low resolution, washed-out colors, bad lighting, asymmetry, distorted shapes, excessive blur.",
+                        Controlnets = "canny, depth, softedge",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 25,
+                        GuidanceScale = 6.8,
+                        Strength = 0.7,
+                        FaceImage = false,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:27:24.4834447"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 9,
+                        Name = "Nature",
+                        Description = "Natural outdoor portrait with warm sunlight and scenic backgrounds.",
+                        ImageUrl = "https://wallpapercave.com/wp/wp7118266.jpg",
+                        Prompt = "Natural outdoor portrait, warm sunlight, soft breeze, fresh atmosphere, glowing skin. The background features lush greenery or scenic landscapes, complementing the subject.",
+                        NegativePrompt = "harsh lighting, artificial colors, dull tones, cluttered background, distortion, missing details.",
+                        Controlnets = "softedge, depth",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 30,
+                        GuidanceScale = 7.2,
+                        Strength = 0.75,
+                        FaceImage = false,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:29:05.8312544"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 10,
+                        Name = "Cyberpunk",
+                        Description = "Futuristic cyberpunk aesthetic with neon lights and high-tech details.",
+                        ImageUrl = "https://techwearstorm.com/cdn/shop/files/cyberpunk-techwearstorm-14.webp",
+                        Prompt = "Futuristic cyberpunk aesthetic, neon lights, high-tech details, glowing cityscape, cybernetic enhancements.",
+                        NegativePrompt = "low contrast, dull colors, historical elements, medieval designs, washed-out lighting.",
+                        Controlnets = "depth, canny",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 30,
+                        GuidanceScale = 7.5,
+                        Strength = 0.78,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:38:00.0000000"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 11,
+                        Name = "Watercolor Painting",
+                        Description = "Soft and elegant watercolor painting with delicate brush strokes.",
+                        ImageUrl = "https://images.stockcake.com/public/2/7/8/278d43d3-77ec-4aa3-b4ea-6ae292a706fb_large/dancing-through-mist-stockcake.jpg",
+                        Prompt = "Soft and elegant watercolor painting, delicate brush strokes, smooth color blending, artistic expression.",
+                        NegativePrompt = "pixelated edges, harsh shadows, digital artifacts, rigid outlines, unrealistic proportions.",
+                        Controlnets = "softedge, scribble",
+                        Mode = null,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 25,
+                        GuidanceScale = 6.8,
+                        Strength = 0.72,
+                        FaceImage = false,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:39:00.0000000"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 12,
+                        Name = "Black & White Classic",
+                        Description = "Timeless black and white portrait with deep contrast and classic lighting.",
+                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_3py34SENuvKrCNTcP7Gn8ss7MyUXGYF9fA&s",
+                        Prompt = "Timeless black and white portrait, deep contrast, classic lighting, elegant composition.",
+                        NegativePrompt = "grainy texture, washed-out details, weak contrast, digital noise, unbalanced lighting.",
+                        Controlnets = "depth, canny",
+                        Mode = InpaintMode.KeepStructure,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 22,
+                        GuidanceScale = 6.2,
+                        Strength = 0.65,
+                        FaceImage = true,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:40:00.0000000"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new PhotoStyle
+                    {
+                        Id = 13,
+                        Name = "Oil Painting",
+                        Description = "Rich and textured oil painting style with thick brush strokes.",
+                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTROHzxiGPY3o4Uv7OxGSSzbmWEF9jrRbgS0Q&s",
+                        Prompt = "Rich and textured oil painting style, thick brush strokes, deep color saturation, artistic rendering.",
+                        NegativePrompt = "flat colors, digital sharpness, pixelation, unrealistic lighting, blurred edges.",
+                        Controlnets = "scribble, softedge",
+                        Mode = null,
+                        NumImagesPerGen = 6,
+                        Height = null,
+                        Width = null,
+                        NumInferenceSteps = 27,
+                        GuidanceScale = 7.3,
+                        Strength = 0.76,
+                        FaceImage = false,
+                        BackgroundRemover = false,
+                        CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
+                        LastModified = DateTime.Parse("2025-03-27T08:41:00.0000000"),
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    }
+            );
 
                 context.SaveChanges();
             }
@@ -376,6 +666,25 @@ public static class SeedData
             }
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] OFF");
+
+            #endregion
+
+            #region Seed data for Transaction
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
+
+            if (!context.Transaction.Any())
+            {
+                context.Transaction.AddRange(
+                    new Transaction { Id = 1, IsSuccess = true, Amount = 50000, WalletId = 1 },
+                    new Transaction { Id = 2, IsSuccess = false, Amount = 100000, WalletId = 2 },
+                    new Transaction { Id = 3, IsSuccess = true, Amount = 200000, WalletId = 3 },
+                    new Transaction { Id = 4, IsSuccess = true, Amount = 150000, WalletId = 4 }
+                );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
 
             #endregion
 
@@ -552,8 +861,8 @@ public static class SeedData
                     new Session { Id = 7, IsActive = true, OrderId = 7 },
                     new Session { Id = 8, IsActive = true, OrderId = 8 },
                     new Session { Id = 9, IsActive = true, OrderId = 9 },
-                    new Session { Id = 10, IsActive = true, OrderId = 10 }
-                    
+                    new Session { Id = 10,Code = "SESSION",Expired = DateTime.Now.AddDays(60), IsActive = true, OrderId = 10 }
+
                 );
 
                 context.SaveChanges();
@@ -569,16 +878,16 @@ public static class SeedData
             if (!context.PhotoHistory.Any())
             {
                 context.PhotoHistory.AddRange(
-                    new PhotoHistory { Id = 1, CustomerId = admin.Id, LocationId = 1, BoothId = 1, Amount = 150000, SessionId = 1},
-                    new PhotoHistory {Id = 2, CustomerId = manager.Id, LocationId = 2, BoothId = 2, Amount = 200000, SessionId = 2 },
-                    new PhotoHistory {Id = 3, CustomerId = staff.Id, LocationId = 3, BoothId = 3, Amount = 120000, SessionId = 3 },
-                    new PhotoHistory {Id = 4, CustomerId = user1.Id, LocationId = 4, BoothId = 4, Amount = 180000, SessionId = 4 },
-                    new PhotoHistory {Id = 5, CustomerId = admin.Id, LocationId = 5, BoothId = 5, Amount = 220000, SessionId = 5 },
-                    new PhotoHistory {Id = 6, CustomerId = manager.Id, LocationId = 1, BoothId = 6, Amount = 250000, SessionId = 6 },
-                    new PhotoHistory {Id = 7, CustomerId = staff.Id, LocationId = 2, BoothId = 7, Amount = 300000, SessionId = 7 },
-                    new PhotoHistory {Id = 8, CustomerId = user1.Id, LocationId = 3, BoothId = 8, Amount = 140000, SessionId = 8 },
-                    new PhotoHistory {Id = 9, CustomerId = admin.Id, LocationId = 4, BoothId = 9, Amount = 160000, SessionId = 9 },
-                    new PhotoHistory {Id = 10, CustomerId = manager.Id, LocationId = 5, BoothId = 10, Amount = 200000, SessionId = 10 }
+                    new PhotoHistory { Id = 1, CustomerId = admin.Id,  BoothId = 1,  SessionId = 1},
+                    new PhotoHistory {Id = 2, CustomerId = manager.Id, BoothId = 2, SessionId = 2 },
+                    new PhotoHistory {Id = 3, CustomerId = staff.Id, BoothId = 3, SessionId = 3 },
+                    new PhotoHistory {Id = 4, CustomerId = user1.Id, BoothId = 4, SessionId = 4 },
+                    new PhotoHistory {Id = 5, CustomerId = admin.Id, BoothId = 5, SessionId = 5 },
+                    new PhotoHistory {Id = 6, CustomerId = manager.Id, BoothId = 6, SessionId = 6 },
+                    new PhotoHistory {Id = 7, CustomerId = staff.Id, BoothId = 7, SessionId = 7 },
+                    new PhotoHistory {Id = 8, CustomerId = user1.Id, BoothId = 8, SessionId = 8 },
+                    new PhotoHistory {Id = 9, CustomerId = admin.Id, BoothId = 9, SessionId = 9 },
+                    new PhotoHistory {Id = 10, CustomerId = manager.Id, BoothId = 10, SessionId = 10 }
                 );
 
                 context.SaveChanges();
@@ -644,25 +953,6 @@ public static class SeedData
 
             #endregion
 
-            #region Seed data for Transaction
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
-
-            if (!context.Transaction.Any())
-            {
-                context.Transaction.AddRange(
-                    new Transaction { Id = 1, IsSuccess = true, Amount = 50000, WalletId = 1 },
-                    new Transaction { Id = 2, IsSuccess = false, Amount = 100000, WalletId = 2 },
-                    new Transaction { Id = 3, IsSuccess = true, Amount = 200000, WalletId = 3 },
-                    new Transaction { Id = 4, IsSuccess = true, Amount = 150000, WalletId = 4 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
-
-            #endregion
-
             #region Seed data for Payment
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
 
@@ -688,11 +978,67 @@ public static class SeedData
             if (!context.Sticker.Any())
             {
                 context.Sticker.AddRange(
-                    new Sticker { Id = 1, Name = "Cute Cat", StickerUrl = "https://example.com/sticker1.jpg", StickerStyleId = 1 },
-                    new Sticker { Id = 2, Name = "Happy Dog", StickerUrl = "https://example.com/sticker2.jpg", StickerStyleId = 2 },
-                    new Sticker { Id = 3, Name = "Cool Panda", StickerUrl = "https://example.com/sticker3.jpg", StickerStyleId = 3 },
-                    new Sticker { Id = 4, Name = "Funny Rabbit", StickerUrl = "https://example.com/sticker4.jpg", StickerStyleId = 4 },
-                    new Sticker { Id = 5, Name = "Funny Frog", StickerUrl = "https://example.com/sticker5.jpg", StickerStyleId = 5 }
+                    new Sticker { Id = 1, Name = "Pray", StickerUrl = "https://drive.google.com/file/d/1BZonx3SOuicTnQU_k-yzZgHacziAzP2k/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 2, Name = "Coffee", StickerUrl = "https://drive.google.com/file/d/1JZzmBczOnHxAsfDPeode9Q5hAipWmTi9/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 3, Name = "Cloud", StickerUrl = "https://drive.google.com/file/d/1YqYTDETYKfsSAfxcEyN72xFyerqVt-4e/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 4, Name = "Bean", StickerUrl = "https://drive.google.com/file/d/146ne7Z04Lxa2dlOE0l-0lTNnWd6EBWVy/view", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 5, Name = "Ice_cream", StickerUrl = "https://drive.google.com/file/d/1XXyj8VAKc3Z-vqhxp8U7LomPKXuZQdJY/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 6, Name = "Movie_Sticket", StickerUrl = "https://drive.google.com/file/d/1BtQzit4aWtgygrJf2QbN8NCS5s3sI257/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 7, Name = "Plant", StickerUrl = "https://drive.google.com/file/d/1cHP9JLTY7zO4VKpSljAjWTRyYznfwbs2/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 8, Name = "Rainbow", StickerUrl = "https://drive.google.com/file/d/1AAdxKhOxcNCHSw-BwgTf0oyAH8tmYcWg/view?usp=drive_link", StickerStyleId = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 9, Name = "Smile", StickerUrl = "https://drive.google.com/file/d/18_rCFDs2o7I9c1WdAAf3OUeqzZrp3u6A/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 10, Name = "Wink", StickerUrl = "https://drive.google.com/file/d/1QGv4ZXk5MZaGyVhBDMvxgwSOW9OWGFwQ/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 11, Name = "Cool", StickerUrl = "https://drive.google.com/file/d/1EejiUETR7Ofdjo_Zb8heBC7utJdntMhq/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 12, Name = "Scare", StickerUrl = "https://drive.google.com/file/d/1ggF3lEobZBD0SbBRc3wPZDwbwr05PuNl/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 13, Name = "Proud", StickerUrl = "https://drive.google.com/file/d/1LeP0-AYgW3URwPrDAp_zBDDllhJwmpZH/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 14, Name = "Swag", StickerUrl = "https://drive.google.com/file/d/1RR1LyM7YhZAK1D7uXA5MK-oPS6oNpIV8/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 15, Name = "Angry", StickerUrl = "https://drive.google.com/file/d/1ayDyVxPdeuse7lGr0ll81pUoUrndiR5-/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 16, Name = "Confused", StickerUrl = "https://drive.google.com/file/d/12oDluYCDgJmMcXnzvoNcTAqWL0QH9JCR/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 17, Name = "Happy", StickerUrl = "https://drive.google.com/file/d/10vrMuKNSl9NtLhVKwdJstBodewqhZzXB/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 18, Name = "Love", StickerUrl = "https://drive.google.com/file/d/1PueFMYnXVpdcIP3_DgCR1_5Zr8r9REek/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 19, Name = "Sad", StickerUrl = "https://drive.google.com/file/d/1W1kVS1qGIXSKnmGq-8CBkT5JkaUgP1WO/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 20, Name = "Sick", StickerUrl = "https://drive.google.com/file/d/1v3ghCS8hM7WPsgCKyghKBN8bcM35Yoyn/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 21, Name = "Sleep", StickerUrl = "https://drive.google.com/file/d/10UCZKTWQ9-_N2qzMd8enDaaqoaTusyi7/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 22, Name = "Smiley", StickerUrl = "https://drive.google.com/file/d/1fIMPlwsOqYMMrPXxXj-YRNsMDsswV4om/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 23, Name = "Star", StickerUrl = "https://drive.google.com/file/d/1I85qNS7qjF8RIkjy8sQC3HZlMs0ytGZX/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 24, Name = "Suprises", StickerUrl = "https://drive.google.com/file/d/1Z44M58oL314jRBm2ry5TYlTzkBZj5fSL/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 25, Name = "Vain", StickerUrl = "https://drive.google.com/file/d/1Dsw_h3oZU77VAGEe_jBCUS5-LVTRkVWM/view?usp=drive_link", StickerStyleId = 5, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 26, Name = "Death", StickerUrl = "https://drive.google.com/file/d/1RUTccLKBbM0BweLedxPVMHH_GUEsB1WW/view?usp=drive_link", StickerStyleId = 6, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 27, Name = "Applle", StickerUrl = "https://drive.google.com/file/d/1cGP36rV-mEfpL9zducv4ptbBr8-okQDD/view?usp=drive_link", StickerStyleId = 6, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 28, Name = "Fire", StickerUrl = "https://drive.google.com/file/d/1Jmosmy8L9Q7ExF97BOKumNbPreQCf2kk/view?usp=drive_link", StickerStyleId = 6, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 29, Name = "Ghost", StickerUrl = "https://drive.google.com/file/d/1OMJxFNfHFyIqPodxPPFFQ4yzx60nP_E1/view?usp=drive_link", StickerStyleId = 6, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 30, Name = "Mushroom", StickerUrl = "https://drive.google.com/file/d/1jZrfpw0PuJyexI2mmkqq7hUGuFoobl6g/view?usp=drive_link", StickerStyleId = 6, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 31, Name = "Avocado", StickerUrl = "https://drive.google.com/file/d/1_jbxo4IvsU42kG37lJ6mTbmnTl2gR2aw/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 32, Name = "French-fire", StickerUrl = "https://drive.google.com/file/d/1U7VFuaeGCX8JLuaNZRrWxPGYYdfAZWZ6/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 33, Name = "Egg", StickerUrl = "https://drive.google.com/file/d/1HvJ9t_eAOQhU8b6nprtcE_0o7eL6NpQT/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 34, Name = "Sushi", StickerUrl = "https://drive.google.com/file/d/1PUO0IZzwXEimJ6GgzDKcMNZRZ97_y5Tz/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 35, Name = "Noodle", StickerUrl = "https://drive.google.com/file/d/16SBRl8VydidFGo3XfF7Cg3x0GcNKUyNA/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 36, Name = "Pancake", StickerUrl = "https://drive.google.com/file/d/1UyCo_8TJ17P6QrMZ-ay_MAMd73D2LDkf/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 37, Name = "Sandwich", StickerUrl = "https://drive.google.com/file/d/1MLS1lWh3KRXWeipFtu1fVdV9w_iEZRAy/view?usp=drive_link", StickerStyleId = 7, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 38, Name = "Bee", StickerUrl = "https://drive.google.com/file/d/1Mtl-RMkCfsjpDTAqH6sugHZUSlYIV8u0/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 39, Name = "Dog", StickerUrl = "https://drive.google.com/file/d/1eUUK8ESQNaWK4CHkLTce-b5bSaPc7_w9/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 40, Name = "Dragon", StickerUrl = "https://drive.google.com/file/d/1itHCAlot57G29C52RTXuuL27daTG7y4c/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 41, Name = "Racoon eat", StickerUrl = "https://drive.google.com/file/d/1YYlEEBcmlr-YYQm0h4yaLBXOWhb-XW_6/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 42, Name = "Frog", StickerUrl = "https://drive.google.com/file/d/1lCl9hBe7G4bhxiH_93S0aUXAV-C1HrfJ/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 43, Name = "Rabbit", StickerUrl = "https://drive.google.com/file/d/1B8Tau0JpcvORiyW2700WKhTldrMVRxUb/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 44, Name = "Racoon hi", StickerUrl = "https://drive.google.com/file/d/16B9YCLjjGRIaMhRUVcNOjw4DH9DzCACQ/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 45, Name = "Panda", StickerUrl = "https://drive.google.com/file/d/17B-esPi5HUznad9qsSI3nd26XOn3Epya/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 46, Name = "Panda1", StickerUrl = "https://drive.google.com/file/d/1WcbNbBcBYSFI4Z74GNmEAZka3mp14Ux2/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 47, Name = "Unicorn", StickerUrl = "https://drive.google.com/file/d/1QicqtouCYx0OIIVYQyiK4l05ZYSS2ZUk/view?usp=drive_link", StickerStyleId = 8, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 48, Name = "Halloween", StickerUrl = "https://drive.google.com/file/d/1uKUZKYANvBWUkgh3Vt7rkzEXaYDVf-m_/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 49, Name = "Christmas", StickerUrl = "https://drive.google.com/file/d/1AdzK562of-E3hRZ4vq8P-f-d4L3uEful/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 50, Name = "Holly", StickerUrl = "https://drive.google.com/file/d/1o8gf01UtwDiLWAEs3H7iuLWgj0qrM-Aj/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 51, Name = "Suitcase1", StickerUrl = "https://drive.google.com/file/d/1SAyAvx95IRaTAmtuSveRg_zQ8LRhxb2X/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 52, Name = "Suitcase", StickerUrl = "https://drive.google.com/file/d/1nd1byBx1s-RKR5elRHJFZXMxOefhcYjI/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 53, Name = "Umbrella", StickerUrl = "https://drive.google.com/file/d/1KhivbOMS774jDrXkOEZxhqZ5OlUrx7X8/view?usp=drive_link", StickerStyleId = 9, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 54, Name = "Cassette_love", StickerUrl = "https://drive.google.com/file/d/1-k12jADiL3iCpLY40obXoiN__mBWXlw8/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 55, Name = "Love1", StickerUrl = "https://drive.google.com/file/d/1o8_xHQAsIxfI1p1okjcfrD3hcQy0ffVM/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 56, Name = "Love2", StickerUrl = "https://drive.google.com/file/d/1o8Y2wAzmZ3Igf62iPC2kaKsZHLfZi7N6/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 57, Name = "Love3", StickerUrl = "https://drive.google.com/file/d/1bK6bN1eOcUzFCdcrwMW7fdhy39M0N0He/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 58, Name = "Love4", StickerUrl = "https://drive.google.com/file/d/1m6zPRIuwYzv7mZpj1C6NgQfHgfgakuP2/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 59, Name = "Love5", StickerUrl = "https://drive.google.com/file/d/1C6I-u3TiUYsqPG8Q6rMCTsSGcwOWztcM/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 60, Name = "Cupid", StickerUrl = "https://drive.google.com/file/d/12wNyy3TnUjHqsijTeh6Fu67flFnRAFD2/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Sticker { Id = 61, Name = "Wedding", StickerUrl = "https://drive.google.com/file/d/1_2YO8YU7xqB6XkCQ_qRs9HMypMQuV60-/view?usp=drive_link", StickerStyleId = 10, CreatedAt = DateTime.Parse("2025-03-28 13:15:23"), LastModified = DateTime.Parse("2025-03-28 13:15:23"), IsDeleted = false, CreatedById = null, LastModifiedById = null }
                 );
 
                 context.SaveChanges();
@@ -708,11 +1054,13 @@ public static class SeedData
             if (!context.FrameStyle.Any())
             {
                 context.FrameStyle.AddRange(
-                    new FrameStyle { Id = 1, Name = "Classic", Description = "Traditional wooden frame", ImageUrl = "https://example.com/classic-frame.jpg" },
-                    new FrameStyle { Id = 2, Name = "Modern", Description = "Sleek, minimalistic design", ImageUrl = "https://example.com/modern-frame.jpg" },
-                    new FrameStyle { Id = 3, Name = "Rustic", Description = "Distressed wood, vintage feel", ImageUrl = "https://example.com/rustic-frame.jpg" },
-                    new FrameStyle { Id = 4, Name = "Art Deco", Description = "Geometric and bold", ImageUrl = "https://example.com/art-deco-frame.jpg" },
-                    new FrameStyle { Id = 5, Name = "Luxury", Description = "Premium materials and elegant design", ImageUrl = "https://example.com/luxury-frame.jpg" }
+                    new FrameStyle { Id = 1, Name = "Wedding", Description = "Elegant, romantic wooden frame, perfect for wedding photobooths", ImageUrl = "https://mlf2vmoci1kz.i.optimole.com/w:auto/h:auto/q:mauto/f:best/https://finetemplate.com/wp-content/uploads/2024/02/Mr-Mrs-Bergin-19th-august-2023-copy-Mockup-1-copy-scaled.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 2, Name = "Party", Description = "Colorful, vibrant frame that creates a fun atmosphere for party photobooths", ImageUrl = "https://i.etsystatic.com/25728422/r/il/f059c8/2728468113/il_570xN.2728468113_huxk.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 3, Name = "Retro", Description = "Vintage frame with a nostalgic feel for retro-themed photobooths", ImageUrl = "https://i.etsystatic.com/33935117/r/il/ef952a/3657377352/il_570xN.3657377352_sg9z.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 4, Name = "Holiday", Description = "Festive frame with cheerful decorations ideal for seasonal photobooths", ImageUrl = "https://i.etsystatic.com/21809061/r/il/10cd17/4430822420/il_570xN.4430822420_dmz3.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 5, Name = "Corporate", Description = "Sleek, modern frame designed for professional photobooths at corporate events", ImageUrl = "https://www.prostarra.com/wp-content/uploads/2018/08/sqsp-simple-modern-white-6x4-photo-booth-template-3.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 6, Name = "School", Description = "A fun, youthful frame style perfect for school events and graduation photobooths", ImageUrl = "https://i.etsystatic.com/21809061/r/il/5bfe4d/6014778330/il_570xN.6014778330_m1tp.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new FrameStyle { Id = 7, Name = "Travel", Description = "A dynamic frame style capturing the spirit of adventure, ideal for travel photobooths", ImageUrl = "https://i.etsystatic.com/22697668/r/il/c2ae6d/5439314654/il_fullxfull.5439314654_9oxo.jpg", CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null }
                 );
 
                 context.SaveChanges();
@@ -729,11 +1077,22 @@ public static class SeedData
             if (!context.Frame.Any())
             {
                 context.Frame.AddRange(
-                    new Frame { Id = 1, Name = "Classic Frame", FrameUrl = "https://example.com/classic-frame.jpg", FrameStyleId = 1, SlotCount = 4 },
-                    new Frame { Id = 2, Name = "Modern Frame", FrameUrl = "https://example.com/modern-frame.jpg", FrameStyleId = 2, SlotCount = 6 },
-                    new Frame { Id = 3, Name = "Rustic Frame", FrameUrl = "https://example.com/rustic-frame.jpg", FrameStyleId = 3, SlotCount = 5 },
-                    new Frame { Id = 4, Name = "Art Deco Frame", FrameUrl = "https://example.com/art-deco-frame.jpg", FrameStyleId = 4, SlotCount = 3 },
-                    new Frame { Id = 5, Name = "Luxury Frame", FrameUrl = "https://example.com/luxury-frame.jpg", FrameStyleId = 5, SlotCount = 7 }
+                    new Frame { Id = 1, Name = "HappyBirthday", FrameUrl = "https://drive.google.com/file/d/1ZS1zXdUxBYRkirQadlEElwIgOMa60vad/view", FrameStyleId = 2, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 2, Name = "Instagram", FrameUrl = "https://drive.google.com/file/d/1VND0Z3ropoHb2twX8ILZeKlIfkyoWsTa/view", FrameStyleId = 5, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 3, Name = "Japan", FrameUrl = "https://drive.google.com/file/d/1WahRPkcVZzaoDuuk3SXk5qBoBUBPT6E6/view", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 4, Name = "Happy Wedding", FrameUrl = "https://drive.google.com/file/d/1_0kc_agy8ayR0sFYdK5Us3c02PEyyB3W/view?usp=drive_link", FrameStyleId = 1, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 5, Name = "Graduation", FrameUrl = "https://drive.google.com/file/d/171-FoRED14gl2Cv3hPR6AgfOmcaw0_Xu/view?usp=drive_link", FrameStyleId = 6, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 6, Name = "90's Style", FrameUrl = "https://drive.google.com/file/d/1bNX_D93FLc4qbFtER412RSi9P_lgSUbA/view?usp=drive_link", FrameStyleId = 3, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 7, Name = "Zoo", FrameUrl = "https://drive.google.com/file/d/1xMMXbjZpHfN-IFqWWVRgGzUjIxfZE945/view?usp=drive_link", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 8, Name = "Merry Christmas", FrameUrl = "https://drive.google.com/file/d/15geQ4wNFFXXS24t1UpDT152GtutRiv97/view?usp=drive_link", FrameStyleId = 4, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 9, Name = "Halloween", FrameUrl = "https://drive.google.com/file/d/1SvQYnlAXBDssTuqoARfUHm6B2jazpZzy/view?usp=drive_link", FrameStyleId = 4, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 10, Name = "Summer Sea", FrameUrl = "https://drive.google.com/file/d/10HMLOkIRT61bPwv2Z7p7TptyzRjV-aKF/view?usp=drive_link", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 11, Name = "Night Party", FrameUrl = "https://drive.google.com/file/d/1uAhr0mKlRly59xPKE_V1y_q8uTlYoWHQ/view?usp=drive_link", FrameStyleId = 2, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 12, Name = "Vintage Camera", FrameUrl = "https://drive.google.com/file/d/1ssVFVEseRLDrPDz3cHKunEumIhXSg66S/view?usp=drive_link", FrameStyleId = 3, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 13, Name = "Happy New Year", FrameUrl = "https://drive.google.com/file/d/15lacrlKeqKg-OCKGC1RNxVbT6vv0IAsb/view?usp=drive_link", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 14, Name = "Happy Mid-Autumn", FrameUrl = "https://drive.google.com/file/d/1nc7W2NCYH7Ac-xsglCwA4OOjFNnF6jyv/view?usp=drive_link", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 15, Name = "VietNam Travel", FrameUrl = "https://drive.google.com/file/d/1F6YMTO9XmNbruj8Q1WwDvRpDhkxVct3o/view?usp=drive_link", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 16, Name = "Grunge Retro", FrameUrl = "https://drive.google.com/file/d/1yfWbe2Nu23VXsBKk1nC9Bhi8XIjNYkoZ/view?usp=drive_link", FrameStyleId = 3, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null }
                 );
 
                 context.SaveChanges();
@@ -749,16 +1108,49 @@ public static class SeedData
             if (!context.Coordinate.Any())
             {
                 context.Coordinate.AddRange(
-                    new Coordinate { Id = 1, FrameId = 1, X = 10, Y = 20, Width = 100, Height = 150 },
-                    new Coordinate { Id = 2, FrameId = 2, X = 30, Y = 40, Width = 120, Height = 160 },
-                    new Coordinate { Id = 3, FrameId = 3, X = 50, Y = 60, Width = 130, Height = 170 },
-                    new Coordinate { Id = 4, FrameId = 4, X = 70, Y = 80, Width = 140, Height = 180 },
-                    new Coordinate { Id = 5, FrameId = 5, X = 90, Y = 100, Width = 150, Height = 200 },
-                    new Coordinate { Id = 6, FrameId = 1, X = 110, Y = 120, Width = 110, Height = 130 },
-                    new Coordinate { Id = 7, FrameId = 2, X = 130, Y = 140, Width = 115, Height = 135 },
-                    new Coordinate { Id = 8, FrameId = 3, X = 150, Y = 160, Width = 125, Height = 145 },
-                    new Coordinate { Id = 9, FrameId = 4, X = 170, Y = 180, Width = 135, Height = 155 },
-                    new Coordinate { Id = 10, FrameId = 5, X = 190, Y = 200, Width = 145, Height = 165 }
+                    new Coordinate { Id = 1, FrameId = 1, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 2, FrameId = 2, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 3, FrameId = 4, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 4, FrameId = 5, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 5, FrameId = 3, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 6, FrameId = 3, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 7, FrameId = 3, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 8, FrameId = 3, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 9, FrameId = 6, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 10, FrameId = 6, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 11, FrameId = 6, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 12, FrameId = 6, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 13, FrameId = 7, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 14, FrameId = 7, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 15, FrameId = 7, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 16, FrameId = 7, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 17, FrameId = 8, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 18, FrameId = 8, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 19, FrameId = 8, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 20, FrameId = 8, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 21, FrameId = 9, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 22, FrameId = 9, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 23, FrameId = 9, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 24, FrameId = 9, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 25, FrameId = 10, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 26, FrameId = 10, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 27, FrameId = 10, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 28, FrameId = 10, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 29, FrameId = 11, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 30, FrameId = 11, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 31, FrameId = 11, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 32, FrameId = 11, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 33, FrameId = 12, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 34, FrameId = 13, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 35, FrameId = 14, X = 290, Y = 104, Width = 1414, Height = 943, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 36, FrameId = 15, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 37, FrameId = 15, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 38, FrameId = 15, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 39, FrameId = 15, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 40, FrameId = 16, X = 187, Y = 243, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 41, FrameId = 16, X = 1058, Y = 240, Width = 732, Height = 488, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 42, FrameId = 16, X = 187, Y = 833, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false },
+                    new Coordinate { Id = 43, FrameId = 16, X = 1056, Y = 831, Width = 734, Height = 489, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false }
                 );
 
                 context.SaveChanges();

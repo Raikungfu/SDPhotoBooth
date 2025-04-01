@@ -15,14 +15,27 @@ namespace ServerAPI.Controllers
             _couponService = couponService;
         }
 
-        [HttpGet("{code}")]
-        public async Task<IActionResult> GetCoupon(string code)
+        [HttpGet("by-code/{code}")]
+        public async Task<IActionResult> GetCouponByCode(string code)
         {
             var coupon = await _couponService.GetCoupon(code);
-            if (coupon == null)
-            {
-                return NotFound();
-            }
+            if (coupon == null) return NotFound();
+            return Ok(coupon);
+        }
+
+        [HttpGet("search/{code}/")]
+        public async Task<IActionResult> GetCoupons(string code)
+        {
+            var coupons = await _couponService.GetCoupons(code);
+            if (coupons == null) return NotFound();
+            return Ok(coupons);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetCouponById(int id)
+        {
+            var coupon = await _couponService.GetCouponById(id);
+            if (coupon == null) return NotFound();
             return Ok(coupon);
         }
 
@@ -49,31 +62,31 @@ namespace ServerAPI.Controllers
             return Ok(coupon);
         }
 
-        [HttpPut("{code}")]
-        public async Task<IActionResult> UpdateCoupon(string code, [FromBody] CouponRequestDTO couponRequestDTO)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCoupon(int id, [FromBody] CouponRequestDTO couponRequestDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var isExist = await _couponService.GetCoupon(code);
+            var isExist = await _couponService.GetCouponById(id);
             if (isExist == null)
             {
                 return NotFound();
             }
-            var coupon = await _couponService.UpdateCoupon(code, couponRequestDTO);
+            var coupon = await _couponService.UpdateCoupon(id, couponRequestDTO);
             return Ok(coupon);
         }
 
-        [HttpDelete("{code}")]
-        public async Task<IActionResult> DeleteCoupon(string code)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCoupon(int id)
         {
-            var isExist = await _couponService.GetCoupon(code);
+            var isExist = await _couponService.GetCouponById(id);
             if (isExist == null)
             {
                 return NotFound();
             }
-            var isDeleted = await _couponService.DeleteCoupon(code);
+            var isDeleted = await _couponService.DeleteCoupon(id);
             return Ok(isDeleted);
         }
     }

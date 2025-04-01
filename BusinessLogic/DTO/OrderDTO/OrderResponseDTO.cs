@@ -15,8 +15,8 @@ namespace BusinessLogic.DTO.OrderDTO
         public string? SessionCode { get; set; }
         public string? PaymentMethodName { get; set; }
         public string? CouponCode { get; set; }
-        public string? BoothName { get; set; }
         public string? LocationName { get; set; }
+        public string? BoothName { get; set; }
         public string? TypeSessionName { get; set; }
         public UserResponseOnOrderDTO? User { get; set; }
     }

@@ -8,7 +8,7 @@ namespace BusinessLogic.Service.IService
         Task<LocationResponseDTO> UpdateLocation(int id, LocationRequestDTO locationRequestDTO);
         Task<int> DeleteLocation(int id);
         Task<LocationResponseDTO> GetLocation(int id);
-        Task<LocationResponseDTO> GetLocation(string locationName);
+        Task<IEnumerable<LocationResponseDTO>> GetLocation(string locationName);
         Task<IEnumerable<LocationResponseDTO>> GetAllLocations();
     }
 }

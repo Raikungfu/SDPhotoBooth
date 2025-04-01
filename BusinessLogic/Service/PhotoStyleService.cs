@@ -58,14 +58,14 @@ namespace BusinessLogic.Service
             return _mapper.Map<PhotoStyleResponseDTO>(photoStyle);
         }
 
-        public async Task<PhotoStyleResponseDTO> GetPhotoStyleByName(string name)
+        public async Task<IEnumerable<PhotoStyleResponseDTO>> GetPhotoStyleByName(string name)
         {
-            var photoStyle = await _unitOfWork.PhotoStyle.GetFirstOrDefaultAsync(t => t.Name == name);
-            if (photoStyle == null)
+            var photoStyles = await _unitOfWork.PhotoStyle.GetAllAsync(t => t.Name.ToLower().Contains(name.ToLower()));
+            if (photoStyles == null)
             {
                 return null;
             }
-            return _mapper.Map<PhotoStyleResponseDTO>(photoStyle);
+            return _mapper.Map<IEnumerable<PhotoStyleResponseDTO>>(photoStyles);
         }
 
         public async Task<PhotoStyleResponseDTO> UpdatePhotoStyle(int id, PhotoStyleRequestDTO photoStyle)
@@ -79,7 +79,14 @@ namespace BusinessLogic.Service
             photoStyleObj.Name = photoStyle.Name;
             photoStyleObj.Description = photoStyle.Description;
             photoStyleObj.ImageUrl = photoStyle.ImageUrl;
-            photoStyleObj.LastModified = DateTime.Now;
+            photoStyleObj.Prompt = photoStyle.Prompt;
+            photoStyleObj.NegativePrompt = photoStyle.NegativePrompt;
+            photoStyleObj.Controlnets = photoStyle.Controlnets;
+            photoStyleObj.NumImagesPerGen = photoStyle.NumImagesPerGen;
+            photoStyleObj.BackgroundColor = photoStyle.BackgroundColor;
+            photoStyleObj.Height = photoStyle.Height;
+            photoStyleObj.Width = photoStyle.Width;
+            photoStyleObj.Mode = photoStyle.Mode;
             try
             {
                 _unitOfWork.PhotoStyle.Update(photoStyleObj);

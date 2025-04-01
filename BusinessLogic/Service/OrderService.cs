@@ -29,7 +29,7 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> GetOrder(int id, string? userId)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location",
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
                 filter: e => e.Id == id && (userId == null || e.UserId == userId),
                 asNoTracking: true
             );
@@ -40,7 +40,7 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> GetOrderByCode(long code, string? userId)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location",
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
                 filter: e => e.Code == code && (userId == null || e.UserId == userId),
                 asNoTracking: true
             );
@@ -51,7 +51,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetAllOrders()
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Location",
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
                 asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
@@ -60,7 +60,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetOrdersForCurrentUser(string userId)
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location", filter: e => e.UserId == userId, asNoTracking: true);
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", filter: e => e.UserId == userId, asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
         }
@@ -68,7 +68,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetOrdersByCusId(string userId)
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location", 
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", 
                 filter: e => e.UserId == userId, asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
@@ -85,7 +85,7 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> UpdateOrder(int id, OrderRequestDTO orderRequestDTO)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
-                includeProperties: "User,Session,PaymentMethod,Coupon,Session.TypeSession,Session.Booth,Session.Booth.Location", 
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", 
                 filter: e => e.Id == id);
             order = _mapper.Map(orderRequestDTO, order);
             _unitOfWork.Order.Update(order);

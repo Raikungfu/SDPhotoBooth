@@ -11,10 +11,6 @@ namespace DataAccess.Configurations
             builder.HasIndex(o => o.Code)
                 .IsUnique();
 
-            builder.Property(s => s.IsActive).HasDefaultValue(true);
-
-            builder.Property(s => s.Expired).HasDefaultValueSql("GETDATE()");
-
             builder.HasOne(o => o.Order)
                 .WithOne(o => o.Session)
                 .HasForeignKey<Session>(o => o.OrderId)

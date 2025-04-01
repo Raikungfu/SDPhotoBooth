@@ -6,10 +6,11 @@ namespace BusinessLogic.Service.IService
     {
         Task<IEnumerable<CouponResponseDTO>> GetCoupons();
         Task<CouponResponseDTO> GetCoupon(string code);
+        Task<IEnumerable<CouponResponseDTO>> GetCoupons(string code);
         Task<CouponResponseDTO> GetCouponById(int id);
         Task<CouponResponseDTO> CreateCoupon(CouponRequestDTO couponRequestDTO);
-        Task<CouponResponseDTO> UpdateCoupon(string code, CouponRequestDTO couponRequestDTO);
-        Task<bool> DeleteCoupon(string id);
+        Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO);
+        Task<bool> DeleteCoupon(int id);
 
     }
 }

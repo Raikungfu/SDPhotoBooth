@@ -5,7 +5,7 @@ namespace BusinessLogic.Service.IService
     public interface ITypeSessionService
     {
         Task<TypeSessionResponseDTO> GetTypeSessionCodeByIdAsync(int id);
-        Task<TypeSessionResponseDTO> GetTypeSessionCodeByNameAsync(string name);
+        Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodeByNameAsync(string name);
         Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodesAsync();
         Task<TypeSessionResponseDTO> CreateTypeSessionCodeAsync(TypeSessionRequestDTO typeSessionCodeDTO);
         Task<bool> UpdateTypeSessionCodeAsync(int id, TypeSessionRequestDTO typeSessionCodeDTO);

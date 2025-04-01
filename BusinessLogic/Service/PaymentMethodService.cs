@@ -45,11 +45,11 @@ namespace BusinessLogic.Service
             return paymentMethodResponseDTO;
         }
 
-        public async Task<PaymentMethodResponseDTO> GetPaymentMethod(string paymentMethodName)
+        public async Task<IEnumerable<PaymentMethodResponseDTO>> GetPaymentMethod(string paymentMethodName)
         {
-            var paymentMethod = await _unitOfWork.PaymentMethod.GetFirstOrDefaultAsync(filter: e => e.MethodName == paymentMethodName);
-            var paymentMethodResponseDTO = _mapper.Map<PaymentMethodResponseDTO>(paymentMethod);
-            return paymentMethodResponseDTO;
+            var paymentMethods = await _unitOfWork.PaymentMethod.GetAllAsync(e => e.MethodName.ToLower().Contains(paymentMethodName.ToLower()));
+            var paymentMethodResponseDTOs = _mapper.Map<IEnumerable<PaymentMethodResponseDTO>>(paymentMethods);
+            return paymentMethodResponseDTOs;
         }
 
         public async Task<PaymentMethodResponseDTO> UpdatePaymentMethod(int id, PaymentMethodRequestDTO paymentMethodRequestDTO)

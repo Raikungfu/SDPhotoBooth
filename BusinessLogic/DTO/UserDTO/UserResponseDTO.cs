@@ -13,7 +13,6 @@ namespace BusinessLogic.DTO.UserDTO
         public UserGender Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? Avatar { get; set; }
-        public decimal? Balance { get; set; }
         public string Role { get; set; }
         public bool IsBanned { get; set; }
         public LocationResponseDTO Location { get; set; }

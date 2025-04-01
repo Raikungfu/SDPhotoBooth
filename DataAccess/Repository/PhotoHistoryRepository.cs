@@ -15,8 +15,6 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.PhotoHistory.FirstOrDefault(s => s.Id == photoHistory.Id);
             objFromDb.CustomerId = photoHistory.CustomerId;
-            objFromDb.LocationId = photoHistory.LocationId;
-            objFromDb.Amount = photoHistory.Amount;
             objFromDb.SessionId = photoHistory.SessionId;
         }
 
@@ -24,8 +22,6 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.PhotoHistory.FirstOrDefault(s => s.Id == photoHistory.Id);
             objFromDb.CustomerId = photoHistory.CustomerId;
-            objFromDb.LocationId = photoHistory.LocationId;
-            objFromDb.Amount = photoHistory.Amount;
             objFromDb.SessionId = photoHistory.SessionId;
             return Task.CompletedTask;
         }

@@ -1,10 +1,13 @@
 ﻿using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
+using BussinessObject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
+using StackExchange.Redis;
 using System.Security.Claims;
+using static Azure.Core.HttpHeader;
 
 namespace ServerAPI.Controllers
 {
@@ -133,12 +136,7 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (order.TypeSessionId == null || order.PaymentMethodId == null)
-            {
-                return BadRequest("Type session and Payment method are required.");
-            }
-
+            
             var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
             if (typeSession == null)
             {
@@ -166,23 +164,20 @@ namespace ServerAPI.Controllers
                     && (coupon.MinOrder == null || coupon.MinOrder <= typeSession.Price)
                     && coupon.IsActive && !coupon.IsDeleted)
                 {
-                    order.CouponId = coupon.Id;
                     var discount = Math.Max(0m, coupon.Discount.GetValueOrDefault() + (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
+                    order.CouponId = coupon.Id;
                     order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
-                        ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
-                        : Math.Max(0, typeSession.Price - discount);
+                                ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
+                                : Math.Max(0, typeSession.Price - discount);
                 }
                 else
                 {
                     return BadRequest("Invalid coupon code.");
                 }
             }
-            else
-            {
-                order.Amount = typeSession.Price;
-            }
 
             var newOrder = await orderService.CreateOrder(order);
+            
 
             if (payment.MethodName == "Cash")
             {
