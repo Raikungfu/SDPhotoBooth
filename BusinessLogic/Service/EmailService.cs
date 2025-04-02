@@ -39,7 +39,7 @@ namespace BusinessLogic.Service
             await smtpClient.SendMailAsync(mailMessage);
         }
 
-        public async Task<bool> SendEmailAsync(SendEmailRequestDto sendEmailRequestDto)
+        public async Task<bool> SendEmailAsync(string toEmail, string[] photoUrls)
         {
             try
             {
@@ -57,30 +57,24 @@ namespace BusinessLogic.Service
                 {
                     From = new MailAddress(_configuration["EmailSettings:FromEmail"]),
                     Subject = "Ảnh của bạn từ PhotoBooth",
-                    Body = $"Chào bạn, <br><br> Dưới đây là ảnh của bạn đính kèm. <br><br> Cảm ơn bạn vì đã sử dụng dịch vụ của chúng tôi. <br><br>Trân trọng!",
+                    Body = "Chào bạn, <br><br> Dưới đây là ảnh của bạn:<br><br>",
                     IsBodyHtml = true
                 };
 
-                mailMessage.To.Add(sendEmailRequestDto.toEmail);
+                mailMessage.To.Add(toEmail);
 
-                if (!string.IsNullOrEmpty(sendEmailRequestDto.photoUrl) && System.IO.File.Exists(sendEmailRequestDto.photoUrl))
+                foreach (var photoUrl in photoUrls)
                 {
-                    Attachment attachment = new Attachment(sendEmailRequestDto.photoUrl);
-                    mailMessage.Attachments.Add(attachment);
-                }
-                else
-                {
-                    mailMessage.Body += $"<br/><br/><a href='{sendEmailRequestDto.photoUrl}'>Click here to view the file</a>";
+                    mailMessage.Body += $"<a href='{photoUrl}'>{photoUrl}</a><br>";
                 }
 
                 await smtpClient.SendMailAsync(mailMessage);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
-
     }
 }

@@ -68,7 +68,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetOrdersByCusId(string userId)
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", 
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
                 filter: e => e.UserId == userId, asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
@@ -85,7 +85,7 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> UpdateOrder(int id, OrderRequestDTO orderRequestDTO)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
-                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", 
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
                 filter: e => e.Id == id);
             order = _mapper.Map(orderRequestDTO, order);
             _unitOfWork.Order.Update(order);
@@ -110,7 +110,7 @@ namespace BusinessLogic.Service
         public async Task<OrderResponseDTO> UpdateOrderStatusByCode(OrderStatusCodeRequestDTO orderStatusRequestDTO)
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(filter: e => e.Code == orderStatusRequestDTO.OrderCode);
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }
@@ -155,6 +155,26 @@ namespace BusinessLogic.Service
             totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start && s.Status == OrderStatus.Completed)).Sum(o => o.Amount);
 
             return totalRevenueStatic;
+        }
+
+        public async Task<OrderResponseDTO> GetOrderBySessionCode(string sessionCode)
+        {
+            var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
+                filter: o => o.Session != null && o.Session.Code == sessionCode,
+                includeProperties: "User,Session");
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            return new OrderResponseDTO
+            {
+                Id = order.Id,
+                Email = order.User?.Email,
+                Phone = order.User?.PhoneNumber,
+                SessionCode = order.Session?.Code
+            };
         }
     }
 }
