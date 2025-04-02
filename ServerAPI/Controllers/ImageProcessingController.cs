@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
 using BussinessObject.Models;
 using Microsoft.AspNetCore.Http;
@@ -16,17 +17,17 @@ namespace ServerAPI.Controllers
     {
         private readonly RabbitMqService _rabbitService;
         private readonly FirebaseService _firebaseService;
-        private readonly IHubContext<TranferPhotoHub> _hubContext;
+        private readonly IPhotoStyleService _photoStyleService;
 
-        public ImageProcessingController(RabbitMqService rabbitService, FirebaseService firebaseService, IHubContext<TranferPhotoHub> hubContext)
+        public ImageProcessingController(RabbitMqService rabbitService, FirebaseService firebaseService, IPhotoStyleService photoStyleService)
         {
             _rabbitService = rabbitService;
             _firebaseService = firebaseService;
-            _hubContext = hubContext;
+            _photoStyleService = photoStyleService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendImageProcessing([FromForm] IFormFile image, [FromForm] string photoStyle, [FromForm] string connectionId)
+        public async Task<IActionResult> SendImageProcessing([FromForm] IFormFile image, [FromForm] int photoStyleId, [FromForm] string connectionId)
         {
             if (image == null || image.Length == 0)
             {
@@ -39,11 +40,11 @@ namespace ServerAPI.Controllers
                 firebaseUrl = await _firebaseService.UploadImageAsync(stream, image.FileName, image.ContentType);
             }
 
-            string queue = QueueRoutingHelper.GetQueueName(photoStyle);
+            var photoStyle = await _photoStyleService.GetPhotoStyleById(photoStyleId);
 
-            await _rabbitService.SendMessageAsync(firebaseUrl, connectionId, photoStyle, queue);
+            await _rabbitService.SendMessageAsync(firebaseUrl, connectionId, photoStyle);
 
-            return Ok(new { Message = "Image sent for processing", ImageUrl = firebaseUrl, Queue = queue });
+            return Ok(new { Message = "Image sent for processing", ImageUrl = firebaseUrl });
         }
     }
 }

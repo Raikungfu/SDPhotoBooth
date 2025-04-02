@@ -1,7 +1,10 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.RabbitMQDTO;
+using BussinessObject.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -14,7 +17,8 @@ namespace ServerAPI.Services
 {
     public class RabbitMqService
     {
-        private const string ReplyQueue = "image_response_queue";
+        private readonly string ReplyQueue;
+        private readonly string SendQueue;
         private readonly ConnectionFactory _factory;
         private readonly IHubContext<TranferPhotoHub> _hubContext;
 
@@ -27,9 +31,12 @@ namespace ServerAPI.Services
             };
 
             _hubContext = hubContext;
+            ReplyQueue = configuration["RabbitMq:ReplyQueue"];
+            SendQueue = configuration["RabbitMq:SendQueue"];
+
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, string photoStyle, string _queueName)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
@@ -39,13 +46,25 @@ namespace ServerAPI.Services
                         { "x-message-ttl", 300000 }
                     };
 
-            await channel.QueueDeclareAsync(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: arguments);
+            await channel.QueueDeclareAsync(queue: SendQueue, durable: false, exclusive: false, autoDelete: false, arguments: arguments);
+
 
             var message = new
             {
                 imageUrl,
                 correlationId,
-                photoStyle
+                photoStyle = photoStyle.Name,
+                prompt = photoStyle.Prompt,
+                negativePrompt = photoStyle.NegativePrompt,
+                controlnets = photoStyle.Controlnets,
+                numImagesPerGen = photoStyle.NumImagesPerGen,
+                guidanceScale = photoStyle.GuidanceScale,
+                strength = photoStyle.Strength,
+                faceImage = photoStyle.FaceImage,
+                backgroundRemover = photoStyle.BackgroundRemover,
+                height = photoStyle.Height,
+                width = photoStyle.Width,
+                mode = photoStyle.Mode
             };
 
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
@@ -56,7 +75,7 @@ namespace ServerAPI.Services
                 ReplyTo = ReplyQueue
             };
 
-            await channel.BasicPublishAsync(exchange: string.Empty, routingKey: _queueName, mandatory: false, basicProperties: properties, body: body);
+            await channel.BasicPublishAsync(exchange: string.Empty, routingKey: SendQueue, mandatory: false, basicProperties: properties, body: body);
         }
 
         public async Task StartListeningAsync()
