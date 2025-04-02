@@ -98,5 +98,43 @@ namespace BusinessLogic.Service
             var photoHistoryResponseDTO = _mapper.Map<PhotoHistoryResponseDTO>(photoHistory);
             return photoHistoryResponseDTO;
         }
+
+        public async Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(filter: o => o.Code == sessionCode);
+            if (session == null)
+            {
+                return false;
+            }
+
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(
+                filter: o => o.SessionId == session.Id,
+                includeProperties: "Photos"
+            );
+
+            if (photoHistory == null)
+            {
+                return false;
+            }
+
+            var existingUrls = photoHistory.Photos.Select(p => p.Url).ToHashSet();
+
+            foreach (var url in photoUrls)
+            {
+                if (!existingUrls.Contains(url))
+                {
+                    photoHistory.Photos.Add(new Photo
+                    {
+                        Url = url,
+                        PhotoHistoryId = photoHistory.Id,
+                        PhotoStyleId = 1
+                    });
+                }
+            }
+
+            _unitOfWork.PhotoHistory.Update(photoHistory);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
     }
 }

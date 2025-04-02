@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Service.IService;
+﻿using BusinessLogic.DTO.PhotoHistoryDTO;
+using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,9 +12,12 @@ namespace ServerAPI.Controllers
     public class PhotoHistoryController : ControllerBase
     {
         private readonly IPhotoHistoryService _photoHistoryService;
-        public PhotoHistoryController(IPhotoHistoryService photoHistoryService)
+        private readonly FirebaseService _firebaseService;
+
+        public PhotoHistoryController(IPhotoHistoryService photoHistoryService, FirebaseService firebaseService)
         {
             _photoHistoryService = photoHistoryService;
+            _firebaseService = firebaseService;
         }
 
         [HttpGet("{sessionCode}")]
@@ -85,6 +89,44 @@ namespace ServerAPI.Controllers
             }
             return Ok(photoHistory);
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadPhotos([FromForm] PhotoHistoryRequestDTO request)
+        {
+            if (request.PhotoPaths == null || !request.PhotoPaths.Any() || string.IsNullOrEmpty(request.SessionCode))
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            var uploadedUrls = new List<string>();
+
+            foreach (var image in request.PhotoPaths)
+            {
+                if (image.Length == 0) continue;
+
+                string fileName = $"{request.SessionCode}/{image.FileName}";
+                await using var stream = image.OpenReadStream();
+                string contentType = image.ContentType;
+
+                string url = await _firebaseService.UploadIfNotExistsAsync(stream, fileName, contentType);
+                uploadedUrls.Add(url);
+            }
+
+            if (!uploadedUrls.Any())
+            {
+                return BadRequest("No photos were uploaded.");
+            }
+
+            var success = await _photoHistoryService.SaveUploadedPhotos(request.SessionCode, uploadedUrls);
+
+            if (!success)
+            {
+                return NotFound("SessionCode not found.");
+            }
+
+            return Ok(new { Message = "Photos uploaded and saved successfully.", UploadedUrls = uploadedUrls });
+        }
+
     }
 
 }
