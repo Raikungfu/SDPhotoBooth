@@ -1,9 +1,20 @@
 ﻿using BussinessObject.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLogic.DTO.PhotoStyleDTO
 {
-    public class PhotoStyleRequestDTO
+    public class PhotoStyleRequestDTO : BasePhotoStyleDTO
+    {
+        public string? ImageUrl { get; set; }
+    }
+
+    public class PhotostyleWithFormFileRequestDTO : BasePhotoStyleDTO
+    {
+        public IFormFile? ImageUrl { get; set; }
+    }
+
+    public class BasePhotoStyleDTO 
     {
         [Required]
         [MaxLength(50)]
@@ -11,8 +22,6 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
 
         [MaxLength(100)]
         public string? Description { get; set; }
-
-        public string? ImageUrl { get; set; }
 
         public string Prompt { get; set; }
 
@@ -29,9 +38,11 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
         public int? Width { get; set; }
 
         public InpaintMode? Mode { get; set; } = InpaintMode.None;
+
         public int? NumInferenceSteps { get; set; }
         public double? GuidanceScale { get; set; }
         public double? Strength { get; set; }
+
         public bool? FaceImage { get; set; }
         public bool? BackgroundRemover { get; set; }
     }

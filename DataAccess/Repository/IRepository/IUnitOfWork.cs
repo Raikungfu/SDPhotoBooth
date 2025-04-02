@@ -14,8 +14,10 @@
         IPhotoStyleRepository PhotoStyle { get; }
         IUserRepository User { get; }
         IStickerRepository Sticker { get; }
-
         IStickerStyleRepository StickerStyle { get; }
+        IFrameStyleRepository FrameStyle { get; }
+        IFrameRepository Frame { get; }
+        ICoordinateRepository Coordinate { get; }
         void Save();
         Task SaveAsync();
     }

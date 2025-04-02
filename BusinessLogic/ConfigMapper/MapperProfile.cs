@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.BoothDTO;
+using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentMethod;
@@ -65,7 +67,6 @@ namespace BusinessLogic.ConfigMapper
 
 
 
-
             CreateMap<OrderRequestDTO, Order>().ReverseMap();
             CreateMap<OrderResponseDTO, Order>().ReverseMap();
 
@@ -85,6 +86,7 @@ namespace BusinessLogic.ConfigMapper
             
             CreateMap<PhotoStyle, PhotoStyleResponseDTO>();
             CreateMap<PhotoStyleRequestDTO, PhotoStyle>();
+            CreateMap<PhotostyleWithFormFileRequestDTO, PhotoStyleRequestDTO>();
 
             CreateMap<PhotoHistory, PhotoHistoryResponseDTO>()
                  .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => new PhotoResponseDTO
@@ -105,6 +107,20 @@ namespace BusinessLogic.ConfigMapper
                     Name = s.Name,
                     StickerUrl = s.StickerUrl
                 })));
+
+            CreateMap<FrameStyleRequestDTO, FrameStyle>();
+            CreateMap<FrameStyle, FrameStyleResponseDTO>();
+
+            CreateMap<FrameRequestDTO, Frame>();
+            CreateMap<Frame, FrameResponseDTO>()
+                .ForMember(dest => dest.FrameStyleName, opt => opt.MapFrom(src => src.FrameStyle != null ? src.FrameStyle.Name : null));
+            CreateMap<FrameWithFormFileDTO, FrameRequestDTO>();
+            CreateMap<Coordinate, CordianteOnFrameResponseDTO>();
+
+
+            CreateMap<CoordinateRequestDTO, Coordinate>();
+            CreateMap<Coordinate, CoordinateResponseDTO>()
+                .ForMember(dest => dest.FrameName, opt => opt.MapFrom(src => src.Frame != null ? src.Frame.Name : null));
         }
     }
 }

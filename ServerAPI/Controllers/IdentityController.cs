@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using BusinessLogic.DTO.IdentityDTO;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
@@ -22,9 +24,10 @@ namespace ServerAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
         private readonly IEmailService _emailService;
+        private readonly FirebaseService _firebaseService;
 
         public IdentityController(UserManager<User> userManager, SignInManager<User> signInManager,
-            IConfiguration configuration, IMapper mapper, IDistributedCache cache, IEmailService emailService)
+            IConfiguration configuration, IMapper mapper, IDistributedCache cache, IEmailService emailService, FirebaseService firebaseService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -32,6 +35,7 @@ namespace ServerAPI.Controllers
             _mapper = mapper;
             _cache = cache;
             _emailService = emailService;
+            _firebaseService = firebaseService;
         }
 
         [HttpPost("login")]
@@ -151,7 +155,6 @@ namespace ServerAPI.Controllers
             }
             if (model.Gender.HasValue) user.Gender = model.Gender.Value;
             if (model.BirthDate.HasValue) user.BirthDate = model.BirthDate.Value;
-            if (!string.IsNullOrEmpty(model.Avatar)) user.Avatar = model.Avatar;
             if(!string.IsNullOrEmpty(model.FullName)) user.FullName = model.FullName;
 
             var result = await _userManager.UpdateAsync(user);
@@ -162,6 +165,31 @@ namespace ServerAPI.Controllers
 
             return Ok(new { message = "Profile updated successfully" });
         }
+
+        [HttpPut("update-avatar")]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> UpdateAvatar([FromForm] UpdateAvatarRequest request)
+        {
+            var avatar = request.Avatar;
+            if (avatar == null || avatar.Length == 0)
+                return BadRequest("Avatar file is required.");
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound(new { message = "User not found" });
+
+            var uploadedUrl = await _firebaseService.UploadImageAsync(avatar.OpenReadStream(), avatar.FileName, avatar.ContentType);
+
+            user.Avatar = uploadedUrl;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { message = "Avatar updated successfully", avatarUrl = uploadedUrl });
+        }
+
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDTO request)

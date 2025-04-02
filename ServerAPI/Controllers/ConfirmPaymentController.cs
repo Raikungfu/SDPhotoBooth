@@ -17,9 +17,9 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("confirm-payment-payos")]
-        public void ConfirmPaymentPayos([FromQuery] string connectId, [FromQuery] string code, [FromQuery] string id, [FromQuery] bool cancel, [FromQuery] string status, [FromQuery] long orderCode)
+        public async Task ConfirmPaymentPayos([FromQuery] string connectId, [FromQuery] string code, [FromQuery] string id, [FromQuery] bool cancel, [FromQuery] string status, [FromQuery] long orderCode)
         {
-            _hubContext.Clients.Client(connectId).SendAsync("ConfirmPaymentPayOS", cancel, status, orderCode);
+            await _hubContext.Clients.Client(connectId).SendAsync("ConfirmPaymentPayOS", cancel, status, orderCode);
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using BusinessLogic.Service.IService;
+﻿using BusinessLogic.ConfigMapper;
 using BusinessLogic.Service;
+using BusinessLogic.Service.IService;
 using DataAccess.Data;
+using DataAccess.Extensions;
 using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using BusinessLogic.ConfigMapper;
-using DataAccess.Extensions;
 using ServerAPI.Services;
 
 
@@ -34,6 +34,9 @@ namespace ServerAPI.Extensions
             services.AddScoped<IPhotoStyleService, PhotoStyleService>();
             services.AddScoped<IStickerService, StickerService>();
             services.AddScoped<IStickerStyleService, StickerStyleService>();
+            services.AddScoped<IFrameStyleService, FrameStyleService>();
+            services.AddScoped<IFrameService, FrameService>();
+            services.AddScoped<ICoordinateService, CoordinateService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();

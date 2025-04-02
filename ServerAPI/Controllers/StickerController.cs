@@ -10,24 +10,25 @@ namespace ServerAPI.Controllers
     {
         private readonly IStickerService _stickerService;
         private readonly IStickerStyleService _stickerStyleService;
-        public StickerController(IStickerService stickerService, IStickerStyleService stickerStyleService)
+        private readonly FirebaseService _firebaseService;
+        public StickerController(IStickerService stickerService, IStickerStyleService stickerStyleService, FirebaseService firebaseService)
         {
             _stickerService = stickerService;
             _stickerStyleService = stickerStyleService;
+            _firebaseService = firebaseService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<StickerResponseDTO>> CreateSticker(StickerRequestDTO stickerRequestDTO)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<StickerResponseDTO>> CreateSticker([FromForm] StickerWithFormFileRequestDTO stickerRequestDTO)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if(string.IsNullOrEmpty(stickerRequestDTO.StickerUrl))
-            {
-                return BadRequest("Sticker Url is required");
-            }
+            if (stickerRequestDTO.StickerFile == null || stickerRequestDTO.StickerFile.Length == 0)
+                return BadRequest("Sticker file is required.");
 
             if (stickerRequestDTO.StickerStyleId.HasValue)
             {
@@ -37,7 +38,15 @@ namespace ServerAPI.Controllers
                     return BadRequest("Sticker Style does not exist");
                 }
             }
-            var sticker = await _stickerService.CreateSticker(stickerRequestDTO);
+            string uploadedUrl = await _firebaseService.UploadImageAsync(stickerRequestDTO.StickerFile.OpenReadStream(), stickerRequestDTO.StickerFile.FileName, stickerRequestDTO.StickerFile.ContentType);
+            
+            var dto = new StickerRequestDTO
+            {
+                Name = stickerRequestDTO.Name,
+                StickerUrl = uploadedUrl,
+                StickerStyleId = stickerRequestDTO.StickerStyleId
+            };
+            var sticker = await _stickerService.CreateSticker(dto);
             return Ok(sticker);
         }
 
@@ -84,7 +93,8 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<StickerResponseDTO>> UpdateSticker(int id, StickerRequestDTO stickerRequestDTO)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<StickerResponseDTO>> UpdateSticker(int id, [FromForm] StickerWithFormFileRequestDTO stickerRequestDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +116,18 @@ namespace ServerAPI.Controllers
                 }
             }
 
-            var updatedSticker = await _stickerService.UpdateSticker(id, stickerRequestDTO);
+            StickerRequestDTO dto = new StickerRequestDTO
+            {
+                Name = stickerRequestDTO.Name,
+                StickerStyleId = stickerRequestDTO.StickerStyleId
+            };
+
+            if (stickerRequestDTO.StickerFile != null && stickerRequestDTO.StickerFile.Length != 0)
+            {
+                string uploadedUrl = await _firebaseService.UploadImageAsync(stickerRequestDTO.StickerFile.OpenReadStream(), stickerRequestDTO.StickerFile.FileName, stickerRequestDTO.StickerFile.ContentType);
+                dto.StickerUrl = uploadedUrl;
+            }
+            var updatedSticker = await _stickerService.UpdateSticker(id, dto);
             return Ok(updatedSticker);
         }
     }
