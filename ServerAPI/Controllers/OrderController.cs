@@ -132,6 +132,7 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OrderRequestDTO order)
         {
+            ModelState.Remove("ConnectionId");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -192,16 +193,24 @@ namespace ServerAPI.Controllers
                 return Ok(newOrder);
             }
             string clientUrl = "";
-            if (_env.IsProduction())
+            var domain = Request.Headers["Origin"].ToString();
+            if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
             {
-                clientUrl = _configuration["ClientUrl:Production"];
+                clientUrl = domain;
             }
-            else if (_env.IsDevelopment())
+            else
             {
-                clientUrl = _configuration["ClientUrl:Development"];
+                if(_env.IsDevelopment())
+                {
+                    clientUrl = _configuration["ServerUrl:Development"];
+                }
+                else
+                {
+                    clientUrl = _configuration["ServerUrl:Production"];
+                }
             }
 
-            var paymentLink = await payOSService.CreatePaymentLink(newOrder.Amount, payment.MethodName, newOrder, typeSession, customer, clientUrl);
+            var paymentLink = await payOSService.CreatePaymentLink(newOrder.Amount, payment.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
             return Ok(new { newOrder, paymentLink });
         }
 

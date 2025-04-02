@@ -13,7 +13,7 @@ namespace ServerAPI.Services
 {
     public interface IPayOSService
     {
-        Task<string> CreatePaymentLink(decimal amount, string paymentMethod, OrderResponseDTO order, TypeSessionResponseDTO typeSession, UserResponseDTO user, string clientUrl);
+        Task<string> CreatePaymentLink(decimal amount, string paymentMethod, OrderResponseDTO order, TypeSessionResponseDTO typeSession, UserResponseDTO user, string clientUrl, string? connectId);
         bool VerifyPaymentWebhookData(WebhookType request);
     }
 
@@ -30,8 +30,13 @@ namespace ServerAPI.Services
             );
         }
 
-        public async Task<string> CreatePaymentLink(decimal amount, string paymentMethod, OrderResponseDTO order, TypeSessionResponseDTO typeSession, UserResponseDTO user, string clientUrl)
+        public async Task<string> CreatePaymentLink(decimal amount, string paymentMethod, OrderResponseDTO order, TypeSessionResponseDTO typeSession, UserResponseDTO user, string clientUrl, string? connectId)
         {
+            var url = $"{clientUrl}/confirm-payment-payos";
+            if (!string.IsNullOrEmpty(connectId))
+            {
+                url += $"?connectId={connectId}";
+            }
             var paymentData = new PaymentData(
                 orderCode: order.Code,
                 amount: (int)Math.Round(amount),
@@ -44,8 +49,8 @@ namespace ServerAPI.Services
                         price: (int)typeSession.Price
                     )
                 },
-                returnUrl: $"{clientUrl}/confirm-payment-payos",
-                cancelUrl: $"{clientUrl}/confirm-payment-payos",
+                returnUrl: url,
+                cancelUrl: url,
                 buyerEmail: user == null ? order.Email : user.Email,
                 buyerPhone: user == null ? order.Phone : user.PhoneNumber
             );
