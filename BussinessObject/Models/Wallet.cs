@@ -15,6 +15,6 @@ namespace BussinessObject.Models
         [ForeignKey("CustomerId")]
         public virtual User Customer { get; set; }
 
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<Deposit> Deposits { get; set; }
     }
 }

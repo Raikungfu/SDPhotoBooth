@@ -2,9 +2,11 @@
 using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.OrderDTO;
+using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.DTO.PhotoDTO;
 using BusinessLogic.DTO.PhotoHistoryDTO;
@@ -12,6 +14,7 @@ using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.DTO.StickerDTO;
 using BusinessLogic.DTO.StickerStyleDTO;
+using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
 using BussinessObject.Models;
@@ -67,15 +70,15 @@ namespace BusinessLogic.ConfigMapper
 
 
 
-            CreateMap<OrderRequestDTO, Order>().ReverseMap();
-            CreateMap<OrderResponseDTO, Order>().ReverseMap();
+            CreateMap<OrderRequestDTO, Order>();
+            CreateMap<Order, OrderResponseDTO>();
 
             CreateMap<Order, OrderResponseDTO>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User != null ? new UserResponseOnOrderDTO
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Customer != null ? new UserResponseOnOrderDTO
                 {
-                    Id = src.User.Id,
-                    Email = src.User.Email,
-                    PhoneNumber = src.User.PhoneNumber
+                    Id = src.Customer.Id,
+                    Email = src.Customer.Email,
+                    PhoneNumber = src.Customer.PhoneNumber
                 } : null))
                 .ForMember(dest => dest.SessionCode, opt => opt.MapFrom(src => src.Session != null ? src.Session.Code : null))
                 .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null ? src.Payment.PaymentMethod.MethodName : null))
@@ -121,6 +124,18 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<CoordinateRequestDTO, Coordinate>();
             CreateMap<Coordinate, CoordinateResponseDTO>()
                 .ForMember(dest => dest.FrameName, opt => opt.MapFrom(src => src.Frame != null ? src.Frame.Name : null));
+
+            CreateMap<Payment, PaymentResponseDTO>()
+                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.MethodName : null))
+                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order != null ? src.Order.Code : (long?)null));
+
+            CreateMap<TransactionRequestDTO, Transaction>();
+            CreateMap<Transaction, TransactionResponseDTO>()
+                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null && src.Payment.PaymentMethod != null ? src.Payment.PaymentMethod.MethodName : null));
+
+            CreateMap<DepositRequestDTO, Deposit>();
+            CreateMap<Deposit, DepositResponseDTO>()
+                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null && src.Payment.PaymentMethod != null ? src.Payment.PaymentMethod.MethodName : null));
         }
     }
 }

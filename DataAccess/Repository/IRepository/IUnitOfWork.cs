@@ -7,6 +7,9 @@
         ILocationRepository Location { get; }
         IOrderRepository Order { get; }
         IPaymentMethodRepository PaymentMethod { get; }
+        IPaymentRepository Payment { get; }
+        ITransactionRepository Transaction { get; }
+        IDepositRepository Deposit { get; }
         IPhotoHistoryRepository PhotoHistory { get; }
         IPhotoRepository Photo { get; }
         ISessionRepository Session { get; }

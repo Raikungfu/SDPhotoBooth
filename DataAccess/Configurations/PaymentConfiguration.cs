@@ -30,9 +30,13 @@ namespace DataAccess.Configurations
                 .WithOne(o => o.Payment)
                 .HasForeignKey<Payment>(p => p.OrderId);
 
+            builder.HasOne(p => p.Deposit)
+                .WithOne(o => o.Payment)
+                .HasForeignKey<Payment>(p => p.DepositId);
+
             builder.HasOne(p => p.Transaction)
                 .WithOne(t => t.Payment)
-                .HasForeignKey<Payment>(p => p.TransactionId);
+                .HasForeignKey<Transaction>(p => p.PaymentId);
         }
     }
 }

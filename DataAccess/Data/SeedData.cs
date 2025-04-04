@@ -669,25 +669,6 @@ public static class SeedData
 
             #endregion
 
-            #region Seed data for Transaction
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
-
-            if (!context.Transaction.Any())
-            {
-                context.Transaction.AddRange(
-                    new Transaction { Id = 1, IsSuccess = true, Amount = 50000, WalletId = 1 },
-                    new Transaction { Id = 2, IsSuccess = false, Amount = 100000, WalletId = 2 },
-                    new Transaction { Id = 3, IsSuccess = true, Amount = 200000, WalletId = 3 },
-                    new Transaction { Id = 4, IsSuccess = true, Amount = 150000, WalletId = 4 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
-
-            #endregion
-
             #region Seed data for Order
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
 
@@ -698,14 +679,13 @@ public static class SeedData
                     {
                         Id = 1,
                         Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = admin.Id,
+                        CustomerId = admin.Id,
                         Status = OrderStatus.Pending,
                         Amount = 100000,
                         Email = "admin@example.com",
                         Phone = "123456789",
                         CouponId = 1,
                         TypeSessionId = 1,
-                        TransactionId = 1,
                         CreatedById = admin.Id,
                         LastModifiedById = admin.Id
                     },
@@ -713,128 +693,13 @@ public static class SeedData
                     {
                         Id = 2,
                         Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = manager.Id,
+                        CustomerId = manager.Id,
                         Status = OrderStatus.Completed,
                         Amount = 500000,
                         Email = "manager@example.com",
                         Phone = "987654321",
                         CouponId = 2,
                         TypeSessionId = 2,
-                        TransactionId = 2,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 3,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = staff.Id,
-                        Status = OrderStatus.Pending,
-                        Amount = 200000,
-                        Email = "staff@example.com",
-                        Phone = "555123456",
-                        CouponId = 3,
-                        TransactionId = 3,
-                        TypeSessionId = 5,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 4,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = user1.Id,
-                        Status = OrderStatus.Cancelled,
-                        Amount = 150000,
-                        Email = "user1@example.com",
-                        Phone = "555654321",
-                        CouponId = 4,
-                        TransactionId = 4,
-                        TypeSessionId = 6,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 5,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = admin.Id,
-                        Status = OrderStatus.Pending,
-                        Amount = 250000,
-                        Email = "admin@example.com",
-                        Phone = "123456789",
-                        CouponId = 5,
-                        TypeSessionId = 7,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 6,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = manager.Id,
-                        Status = OrderStatus.Completed,
-                        Amount = 450000,
-                        Email = "manager@example.com",
-                        Phone = "987654321",
-                        CouponId = 1,
-                        TypeSessionId = 8,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 7,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = staff.Id,
-                        Status = OrderStatus.Pending,
-                        Amount = 80000,
-                        Email = "staff@example.com",
-                        Phone = "555123456",
-                        CouponId = 2,
-                        TypeSessionId = 9,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 8,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = user1.Id,
-                        Status = OrderStatus.Completed,
-                        Amount = 350000,
-                        Email = "user1@example.com",
-                        Phone = "555654321",
-                        CouponId = 3,
-                        TypeSessionId = 10,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 9,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = admin.Id,
-                        Status = OrderStatus.Pending,
-                        Amount = 300000,
-                        Email = "admin@example.com",
-                        Phone = "123456789",
-                        CouponId = 4,
-                        TypeSessionId = 11,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    new Order
-                    {
-                        Id = 10,
-                        Code = new Random().NextInt64(1000000000, 9999999999),
-                        UserId = manager.Id,
-                        Status = OrderStatus.Completed,
-                        Amount = 550000,
-                        Email = "manager@example.com",
-                        Phone = "987654321",
-                        CouponId = 5,
-                        TypeSessionId = 12,
                         CreatedById = admin.Id,
                         LastModifiedById = admin.Id
                     }
@@ -844,6 +709,76 @@ public static class SeedData
             }
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] OFF");
+
+            #endregion
+
+            #region Seed data for Order
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
+
+            if (!context.Deposit.Any())
+            {
+                context.Deposit.AddRange(
+                    new Deposit
+                    {
+                        Id = 1,
+                        WalletId = 1,
+                        Amount = 100000,
+                        Status = DepositStatus.Success,
+                        PaymentId = 1,
+                    },
+                    new Deposit
+                    {
+                        Id = 2,
+                        WalletId = 2,
+                        Amount = 100000,
+                        Status = DepositStatus.Success,
+                        PaymentId = 1,
+                    }
+                );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
+
+            #endregion
+
+
+            #region Seed data for Payment
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
+
+            if (!context.Payment.Any())
+            {
+                context.Payment.AddRange(
+                    new Payment { Id = 1, OrderId = 1, PaymentMethodId = 1, Status = PaymentStatus.Success, Amount = 150000 },
+                    new Payment { Id = 2, OrderId = 2, PaymentMethodId = 2, Status = PaymentStatus.Success, Amount = 200000 },
+                    new Payment { Id = 3, DepositId = 1, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000 },
+                    new Payment { Id = 4, DepositId = 2, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 250000 }
+                );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
+
+            #endregion
+
+            #region Seed data for Transaction
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
+
+            if (!context.Transaction.Any())
+            {
+                context.Transaction.AddRange(
+                    new Transaction { Id = 1, Type = TransactionType.Purchase, Amount = 50000, PaymentId = 1 },
+                    new Transaction { Id = 2, Type = TransactionType.Purchase, Amount = 100000, PaymentId = 2 },
+                    new Transaction { Id = 3, Type = TransactionType.Deposit, Amount = 200000, PaymentId = 3 },
+                    new Transaction { Id = 4, Type = TransactionType.Deposit, Amount = 150000, PaymentId = 4 }
+                );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
 
             #endregion
 
@@ -950,25 +885,6 @@ public static class SeedData
             }
             context.SaveChanges();
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
-
-            #endregion
-
-            #region Seed data for Payment
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
-
-            if (!context.Payment.Any())
-            {
-                context.Payment.AddRange(
-                    new Payment { Id = 1, OrderId = 1, TransactionId = 1, PaymentMethodId = 1, IsSuccess = true, Amount = 150000 },
-                    new Payment { Id = 2, OrderId = 2, TransactionId = 2, PaymentMethodId = 2, IsSuccess = false, Amount = 200000 },
-                    new Payment { Id = 3, OrderId = 3, TransactionId = 3, PaymentMethodId = 3, IsSuccess = true, Amount = 100000 },
-                    new Payment { Id = 4, OrderId = 4, TransactionId = 4, PaymentMethodId = 4, IsSuccess = true, Amount = 250000 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
 
             #endregion
 

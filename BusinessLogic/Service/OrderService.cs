@@ -30,7 +30,7 @@ namespace BusinessLogic.Service
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
                 includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
-                filter: e => e.Id == id && (userId == null || e.UserId == userId),
+                filter: e => e.Id == id && (userId == null || e.CustomerId == userId),
                 asNoTracking: true
             );
 
@@ -41,7 +41,7 @@ namespace BusinessLogic.Service
         {
             var order = await _unitOfWork.Order.GetFirstOrDefaultAsync(
                 includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
-                filter: e => e.Code == code && (userId == null || e.UserId == userId),
+                filter: e => e.Code == code && (userId == null || e.CustomerId == userId),
                 asNoTracking: true
             );
 
@@ -60,7 +60,7 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<OrderResponseDTO>> GetOrdersForCurrentUser(string userId)
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
-                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", filter: e => e.UserId == userId, asNoTracking: true);
+                includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location", filter: e => e.CustomerId == userId, asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
         }
@@ -69,7 +69,7 @@ namespace BusinessLogic.Service
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
                 includeProperties: "User,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
-                filter: e => e.UserId == userId, asNoTracking: true);
+                filter: e => e.CustomerId == userId, asNoTracking: true);
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
         }
@@ -171,8 +171,8 @@ namespace BusinessLogic.Service
             return new OrderResponseDTO
             {
                 Id = order.Id,
-                Email = order.User?.Email,
-                Phone = order.User?.PhoneNumber,
+                Email = order.Customer?.Email,
+                Phone = order.Customer?.PhoneNumber,
                 SessionCode = order.Session?.Code
             };
         }

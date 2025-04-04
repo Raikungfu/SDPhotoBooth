@@ -13,23 +13,6 @@ namespace DataAccess.Configurations
 
             builder.Property(o => o.Amount).IsRequired().HasPrecision(18, 2);
 
-            builder.HasOne(o => o.User)
-                .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);
-
-            builder.HasOne(o => o.TypeSession)
-                .WithMany(p => p.Orders)
-                .HasForeignKey(o => o.TypeSessionId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(o => o.Coupon)
-                .WithMany(c => c.Orders)
-                .HasForeignKey(o => o.CouponId);
-
-            builder.HasOne(o => o.TypeSession)
-                .WithMany(t => t.Orders)
-                .HasForeignKey(o => o.TypeSessionId).OnDelete(DeleteBehavior.NoAction);
-
             builder.HasOne(o => o.CreatedBy)
                 .WithMany(u => u.CreatedOrders)
                 .HasForeignKey(o => o.CreatedById);
@@ -47,20 +30,17 @@ namespace DataAccess.Configurations
                 .HasForeignKey<Payment>(o => o.OrderId);
 
             builder.HasOne(o => o.TypeSession)
-                .WithMany(w => w.Orders)
-                .HasForeignKey(o => o.TypeSessionId);
+                .WithMany(p => p.Orders)
+                .HasForeignKey(o => o.TypeSessionId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(o => o.Coupon)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CouponId);
 
-            builder.HasOne(o => o.User)
+            builder.HasOne(o => o.Customer)
                 .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);
-
-            builder.HasOne(o => o.Transaction)
-                .WithOne(t => t.Order)
-                .HasForeignKey<Order>(t => t.TransactionId);
+                .HasForeignKey(o => o.CustomerId);
         }
     }
 }

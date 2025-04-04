@@ -23,6 +23,7 @@ namespace DataAccess.Data
         public DbSet<PhotoStyle> PhotoStyle { get; set; }
 
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Deposit> Deposit { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
         public DbSet<Payment> Payment { get; set; }
 

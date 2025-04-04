@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.OrderDTO;
+using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
@@ -125,6 +127,16 @@ namespace BusinessLogic.Service
             await _unitOfWork.SaveAsync();
             var couponResponseDTO = _mapper.Map<CouponResponseDTO>(existingCoupon);
             return couponResponseDTO;
+        }
+
+        public bool IsValidCoupon(CouponResponseDTO coupon, decimal price)
+        {
+            return (coupon.StartDate == null || coupon.StartDate <= DateTime.Now)
+                && (coupon.EndDate == null || coupon.EndDate >= DateTime.Now)
+                && (coupon.MaxUse == null || coupon.MaxUse > coupon.UsedAmount)
+                && (coupon.MinOrder == null || coupon.MinOrder <= price)
+                && coupon.IsActive
+                && !coupon.IsDeleted;
         }
     }
 }

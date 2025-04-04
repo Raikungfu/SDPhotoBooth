@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.GoogleDTO;
 using BusinessLogic.DTO.OrderDTO;
+using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
@@ -24,12 +25,16 @@ namespace ServerAPI.Controllers
         private readonly IOrderService orderService;
         private readonly IPayOSService payOSService;
         private readonly IMapper mapper;
+        private readonly IPaymentService paymentService;
+        private readonly ITransactionService transactionService;
 
-        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper)
+        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper, IPaymentService paymentService, ITransactionService transactionService)
         {
             this.orderService = orderService;
             this.payOSService = payOSService;
             this.mapper = mapper;
+            this.paymentService = paymentService;
+            this.transactionService = transactionService;
         }
 
 
@@ -53,8 +58,30 @@ namespace ServerAPI.Controllers
                     return BadRequest(new { code = "20", desc = "Invalid Signature" });
                 }
 
-                var status = code == "00" ? OrderStatus.Completed : OrderStatus.Failed;
+                var status = request.success ? OrderStatus.Completed : OrderStatus.Failed;
                 var order = await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode, Status = status });
+                var payment = await paymentService.UpdatePaymentStatusByOrderId(order.Id, request.success ? PaymentStatus.Success : PaymentStatus.Failed);
+
+                await transactionService.CreateTransaction(new TransactionRequestDTO
+                {
+                    PaymentId = payment.Id,
+                    Amount = amount,
+                    Type = TransactionType.Purchase,
+                    Description = request.data.description,
+                    AccountNumber = request.data.accountNumber,
+                    Reference = request.data.reference,
+                    TransactionDateTime = request.data.transactionDateTime,
+                    Currency = request.data.currency,
+                    PaymentLinkId = request.data.paymentLinkId,
+                    Code = code,
+                    Desc = request.data.desc,
+                    CounterAccountBankId = request.data.counterAccountBankId,
+                    CounterAccountBankName = request.data.counterAccountBankName,
+                    CounterAccountName = request.data.counterAccountName,
+                    CounterAccountNumber = request.data.counterAccountNumber,
+                    VirtualAccountName = request.data.virtualAccountName,
+                    VirtualAccountNumber = request.data.virtualAccountNumber
+                });
 
                 return Ok(new
                 {
@@ -89,7 +116,17 @@ namespace ServerAPI.Controllers
                     return BadRequest(new { code = "20", desc = "Invalid purchase" });
                 }
 
-                await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode, Status = OrderStatus.Completed });
+                var order = await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode, Status = OrderStatus.Completed });
+
+                var payment = await paymentService.UpdatePaymentStatusByOrderId(order.Id, PaymentStatus.Success);
+
+                await transactionService.CreateTransaction(new TransactionRequestDTO
+                {
+                    PaymentId = payment.Id,
+                    Amount = payment.Amount,
+                    Type = TransactionType.Purchase,
+                    Description = $"Order {order.Code} via Google Billing",
+                });
 
                 return Ok(new
                 {

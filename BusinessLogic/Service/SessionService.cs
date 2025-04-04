@@ -86,7 +86,7 @@ namespace BusinessLogic.Service
 
                 // Create photo history
                 var photoHistory = new PhotoHistory() {
-                    CustomerId = session.Order.UserId,
+                    CustomerId = session.Order.CustomerId,
                     SessionId = session.Id,
                     BoothId = boothId,
                 };

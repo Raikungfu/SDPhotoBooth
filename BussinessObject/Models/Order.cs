@@ -1,4 +1,5 @@
 ﻿using BussinessObject.Enums;
+using BussinessObject.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace BussinessObject.Models
     {
         public long Code { get; set; } = new Random().NextInt64(1000000000, 9999999999);
 
-        public string? UserId { get; set; }
+        public string? CustomerId { get; set; }
 
         public OrderStatus? Status { get; set; } = OrderStatus.Pending;
 
@@ -25,8 +26,6 @@ namespace BussinessObject.Models
         [Required]
         public int TypeSessionId { get; set; }
 
-        public int? TransactionId { get; set; }
-
         public virtual Session Session { get; set; }
 
         public virtual Payment Payment { get; set; }
@@ -34,13 +33,10 @@ namespace BussinessObject.Models
         [ForeignKey("TypeSessionId")]
         public virtual TypeSession TypeSession { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        [ForeignKey("CustomerId")]
+        public virtual User Customer { get; set; }
 
         [ForeignKey("CouponId")]
         public virtual Coupon Coupon { get; set; }
-
-        [ForeignKey("TransactionId")]
-        public virtual Transaction Transaction { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace BusinessLogic.DTO.OrderDTO
 {
     public class OrderResponseDTO
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public long Code { get; set; }
         public OrderStatus? Status { get; set; }
         public decimal Amount { get; set; }

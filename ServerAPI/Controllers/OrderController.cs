@@ -1,4 +1,7 @@
-﻿using BusinessLogic.DTO.OrderDTO;
+﻿using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.OrderDTO;
+using BusinessLogic.DTO.PaymentDTO;
+using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
@@ -23,8 +26,9 @@ namespace ServerAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _env;
         private readonly IPayOSService payOSService;
+        private readonly IPaymentService paymentService;
 
-        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService)
+        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService, IPaymentService paymentService)
         {
             this.orderService = orderService;
             this.typeSessionService = typeSessionService;
@@ -34,6 +38,7 @@ namespace ServerAPI.Controllers
             _configuration = configuration;
             _env = env;
             this.payOSService = payOSService;
+            this.paymentService = paymentService;
         }
 
         [HttpGet]
@@ -132,138 +137,158 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OrderRequestDTO order)
         {
-            ModelState.Remove("ConnectionId");
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
-            if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
-            {
-                return BadRequest("Type session or payment method is invalid.");
-            }
+                ModelState.Remove("ConnectionId");
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
-            if (typeSession == null)
-            {
-                return BadRequest("Invalid type session.");
-            }
-            
-            var payment = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-            if (payment == null)
-            {
-                return BadRequest("Invalid payment.");
-            }
+                if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
+                    return BadRequest("Type session or payment method is invalid.");
 
-            var customer = await userService.UserDetail(order.Email);
-            if (customer != null)
-            {
-                order.UserId = customer.Id;
-            }
+                var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+                if (typeSession == null)
+                    return BadRequest("Invalid type session.");
 
-            if (!string.IsNullOrEmpty(order.CouponCode))
-            {
-                var coupon = await couponService.GetCoupon(order.CouponCode);
-                if (coupon != null && (coupon.StartDate == null || coupon.StartDate <= DateTime.Now)
-                    && (coupon.EndDate == null || coupon.EndDate >= DateTime.Now)
-                    && (coupon.MaxUse == null || coupon.MaxUse > coupon.UsedAmount)
-                    && (coupon.MinOrder == null || coupon.MinOrder <= typeSession.Price)
-                    && coupon.IsActive && !coupon.IsDeleted)
+                var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+                if (paymentMethod == null)
+                    return BadRequest("Invalid payment.");
+
+                var customer = await userService.UserDetail(order.Email);
+                if (customer != null)
+                    order.UserId = customer.Id;
+
+                var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+                if (error != null)
+                    return error;
+
+                var newOrder = await orderService.CreateOrder(order);
+
+                if (newOrder == null)
+                    return BadRequest("Failed to create order.");
+
+                if (paymentMethod.MethodName == "Cash")
                 {
-                    var discount = Math.Max(0m, coupon.Discount.GetValueOrDefault() + (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
-                    order.CouponId = coupon.Id;
-                    order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
-                                ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
-                                : Math.Max(0, typeSession.Price - discount);
+                    var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                    {
+                        OrderId = newOrder.Id,
+                        Amount = newOrder.Amount,
+                        PaymentMethodId = order.PaymentMethodId,
+                        Status = PaymentStatus.Success
+                    });
+                    return Ok(newOrder);
+                }
+
+                string clientUrl = "";
+                var domain = Request.Headers["Origin"].ToString();
+                if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
+                {
+                    clientUrl = domain;
                 }
                 else
                 {
-                    return BadRequest("Invalid coupon code.");
+                    clientUrl = _env.IsDevelopment() ? _configuration["ServerUrl:Development"] : _configuration["ServerUrl:Production"];
                 }
-            }
-            else
-            {
-                order.Amount = typeSession.Price;
-            }
 
-            var newOrder = await orderService.CreateOrder(order);
-            
-
-            if (payment.MethodName == "Cash")
-            {
-                return Ok(newOrder);
-            }
-            string clientUrl = "";
-            var domain = Request.Headers["Origin"].ToString();
-            if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
-            {
-                clientUrl = domain;
-            }
-            else
-            {
-                if(_env.IsDevelopment())
+                if (order.Amount == null)
+                    return BadRequest("Amount is null.");
+                var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
+                await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
                 {
-                    clientUrl = _configuration["ServerUrl:Development"];
-                }
-                else
-                {
-                    clientUrl = _configuration["ServerUrl:Production"];
-                }
+                    OrderId = newOrder.Id,
+                    Amount = newOrder.Amount,
+                    PaymentMethodId = order.PaymentMethodId,
+                    PaymentLink = paymentLink,
+                });
+                return Ok(new { newOrder, paymentLink });
             }
-
-            var paymentLink = await payOSService.CreatePaymentLink(newOrder.Amount, payment.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
-            return Ok(new { newOrder, paymentLink });
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("customer")]
         [Authorize]
         public async Task<IActionResult> CustomerOrder([FromBody] OrderRequestDTO order)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized("User not authenticated.");
+
+                order.UserId = userId;
+
+                var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+                if (typeSession == null)
+                    return BadRequest("Invalid type session.");
+
+                var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+                if (error != null)
+                    return error;
+
+                var newOrder = await orderService.CreateOrder(order);
+                await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                {
+                    OrderId = newOrder.Id,
+                    Amount = newOrder.Amount,
+                    PaymentMethodId = order.PaymentMethodId
+                });
+                return Ok(newOrder);
+            }
+            catch (Exception ex)
             {
-                return Unauthorized("User not authenticated.");
-            }
-            order.UserId = userId;
+                return BadRequest(ex.Message);
 
+            }
+        }
+
+        [HttpPost("apply-coupon")]
+        public async Task<IActionResult> ApplyCoupon([FromBody] OrderRequestDTO order)
+        {
             var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
             if (typeSession == null)
-            {
-                return BadRequest("Invalid type session.");
-            }
+                return BadRequest("Invalid session.");
 
-            if (!string.IsNullOrEmpty(order.CouponCode))
+            var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+            if (error != null)
+                return error;
+
+            return Ok(new
             {
-                var coupon = await couponService.GetCoupon(order.CouponCode);
-                if (coupon != null && (coupon.StartDate == null || coupon.StartDate <= DateTime.Now)
-                    && (coupon.EndDate == null || coupon.EndDate >= DateTime.Now)
-                    && (coupon.MaxUse == null || coupon.MaxUse > coupon.UsedAmount)
-                    && (coupon.MinOrder == null || coupon.MinOrder <= typeSession.Price)
-                    && coupon.IsActive && !coupon.IsDeleted)
-                {
-                    order.CouponId = coupon.Id;
-                    var discount = Math.Max(0m, coupon.Discount.GetValueOrDefault() + (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
-                    order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
-                        ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
-                        : Math.Max(0, typeSession.Price - discount);
-                }
-                else
-                {
-                    return BadRequest("Invalid coupon code.");
-                }
-            }
-            else
+                Order = updatedOrder,
+                Coupon = validCoupon
+            });
+        }
+
+        private async Task<(IActionResult? error, OrderRequestDTO order, CouponResponseDTO? coupon)> ApplyCouponIfAny(OrderRequestDTO order, TypeSessionResponseDTO typeSession)
+        {
+            if (string.IsNullOrEmpty(order.CouponCode))
             {
                 order.Amount = typeSession.Price;
+                return (null, order, null);
             }
 
-            var newOrder = await orderService.CreateOrder(order);
+            var coupon = await couponService.GetCoupon(order.CouponCode);
+            if (coupon == null || !couponService.IsValidCoupon(coupon, typeSession.Price))
+            {
+                return (BadRequest("Invalid coupon code."), order, null);
+            }
 
-            return Ok(newOrder);
+            order.CouponId = coupon.Id;
+            var discount = Math.Max(0m,
+                coupon.Discount.GetValueOrDefault() +
+                (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
+
+            order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
+                ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
+                : Math.Max(0, typeSession.Price - discount);
+
+            return (null, order, coupon);
         }
 
 

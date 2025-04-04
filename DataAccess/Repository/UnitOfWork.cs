@@ -26,6 +26,9 @@ namespace DataAccess.Repository
             FrameStyle = new FrameStyleRepository(_db);
             Frame = new FrameRepository(_db);
             Coordinate = new CoordinateRepository(_db);
+            Payment = new PaymentRepository(_db);
+            Transaction = new TransactionRepository(_db);
+            Deposit = new DepositRepository(_db);
         }
         public IBoothRepository Booth { get; private set; }
         public ICouponRepository Coupon { get; private set; }
@@ -43,6 +46,9 @@ namespace DataAccess.Repository
         public IFrameStyleRepository FrameStyle { get; private set; }
         public IFrameRepository Frame { get; private set; }
         public ICoordinateRepository Coordinate { get; private set; }
+        public IPaymentRepository Payment { get; private set; }
+        public ITransactionRepository Transaction { get; private set; }
+        public IDepositRepository Deposit { get; private set; }
 
         public void Dispose()
         {

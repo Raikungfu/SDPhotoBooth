@@ -17,7 +17,7 @@ namespace DataAccess.Configurations
                 .WithOne(l => l.Wallet)
                 .HasForeignKey<Wallet>(b => b.CustomerId);
 
-            builder.HasMany(b => b.Transactions)
+            builder.HasMany(b => b.Deposits)
                 .WithOne(l => l.Wallet)
                 .HasForeignKey(b => b.WalletId);
         }
