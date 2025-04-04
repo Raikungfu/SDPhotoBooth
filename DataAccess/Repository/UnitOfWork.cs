@@ -26,6 +26,9 @@ namespace DataAccess.Repository
             FrameStyle = new FrameStyleRepository(_db);
             Frame = new FrameRepository(_db);
             Coordinate = new CoordinateRepository(_db);
+            LevelMembership = new LevelMembershipRepository(_db);
+            MembershipCard = new MembershipCardRepository(_db);
+            Wallet = new WalletRepository(_db);
         }
         public IBoothRepository Booth { get; private set; }
         public ICouponRepository Coupon { get; private set; }
@@ -43,6 +46,9 @@ namespace DataAccess.Repository
         public IFrameStyleRepository FrameStyle { get; private set; }
         public IFrameRepository Frame { get; private set; }
         public ICoordinateRepository Coordinate { get; private set; }
+        public ILevelMembershipRepository LevelMembership { get; private set; }
+        public IMembershipCardRepository MembershipCard { get; private set; }
+        public IWalletRepository Wallet { get; private set; }
 
         public void Dispose()
         {

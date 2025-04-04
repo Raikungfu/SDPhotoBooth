@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.DTO.UserDTO;
+using BusinessLogic.DTO.WalletDTO;
 using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
 using BussinessObject.Enums;
@@ -18,14 +19,30 @@ namespace BusinessLogic.Service
     {
         private readonly UserManager<User> _userManager;
         private readonly ILocationService _locationService;
+        private readonly IWalletService _walletService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService, IUnitOfWork unitOfWork)
+        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService, IUnitOfWork unitOfWork, IWalletService walletService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _locationService = locationService;
             this._unitOfWork = unitOfWork;
+            _walletService = walletService;
+        }
+
+        public async Task<UserResponseDTO> UserDetailById(string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return null;
+            }
+            var userDTO = _mapper.Map<UserResponseDTO>(user);
+            var roleOfUser = await _userManager.GetRolesAsync(user);
+            userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
+            userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
+            return userDTO;
         }
         public async Task<UserResponseDTO> BanUser(string email)
         {
@@ -65,16 +82,19 @@ namespace BusinessLogic.Service
             }
 
             var result = await _userManager.CreateAsync(user, userRequestDTO.Password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, userRequestDTO.Role.ToString());
-            }
-
             if (!result.Succeeded)
             {
                 throw new Exception($"Failed to create new user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
-            var userDTO = _mapper.Map<UserResponseDTO>(user);
+
+            await _userManager.AddToRoleAsync(user, userRequestDTO.Role.ToString());
+            await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+
+            var createdUser = await _userManager.Users
+            .Include(u => u.Wallet)
+            .FirstOrDefaultAsync(u => u.Id == user.Id);
+
+            var userDTO = _mapper.Map<UserResponseDTO>(createdUser);
             userDTO.Role = userRequestDTO.Role.ToString();
             userDTO.Location = userRequestDTO.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(userRequestDTO.LocationId.Value)) : null;
             return userDTO;
@@ -82,7 +102,10 @@ namespace BusinessLogic.Service
 
         public async Task<IEnumerable<UserResponseDTO>> GetUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users
+            .Include(u => u.Wallet)
+            .ToListAsync();
+
             foreach (var user in users)
             {
                 if (user.LocationId != null)
@@ -111,7 +134,8 @@ namespace BusinessLogic.Service
                 Avatar = u.Avatar,
                 Role = userRoles.ContainsKey(u.Id) ? userRoles[u.Id] : null,
                 IsBanned = u.IsBanned,
-                Location = _mapper.Map<LocationResponseDTO>(u.Location)
+                Location = _mapper.Map<LocationResponseDTO>(u.Location),
+                Wallet = _mapper.Map<WalletResponseDTO>(u.Wallet)
             }).ToList();
         }
 
@@ -123,7 +147,9 @@ namespace BusinessLogic.Service
 
         public async Task<UserResponseDTO> UserDetail(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.Users
+             .Include(u => u.Wallet)
+             .FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
                 return null;
@@ -132,12 +158,15 @@ namespace BusinessLogic.Service
             var roleOfUser = await _userManager.GetRolesAsync(user);
             userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
             userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
+            userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
             return userDTO;
         }
 
         public async Task<UserResponseDTO> UserDetailByPhone(string phone)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phone);
+            var user = await _userManager.Users
+             .Include(u => u.Wallet)
+             .FirstOrDefaultAsync(u => u.PhoneNumber == phone);
             if (user == null)
             {
                 return null;
@@ -147,6 +176,7 @@ namespace BusinessLogic.Service
             var roleOfUser = await _userManager.GetRolesAsync(user);
             userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
             userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
+            userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
             return userDTO;
         }
 

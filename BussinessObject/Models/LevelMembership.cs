@@ -5,7 +5,7 @@ namespace BussinessObject.Models
 {
     public class LevelMembership : BaseEntity
     {
-        public Level Name { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]

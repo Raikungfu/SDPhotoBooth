@@ -7,7 +7,6 @@
         public string Address { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime ?LastModified { get; set; }
-        public bool IsDeleted { get; set; }
         public string? CreatedById { get; set; }
         public string? LastModifiedById { get; set; }
     }
