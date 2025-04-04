@@ -27,14 +27,16 @@ namespace ServerAPI.Controllers
         private readonly IMapper mapper;
         private readonly IPaymentService paymentService;
         private readonly ITransactionService transactionService;
+        private readonly IDepositService depositService;
 
-        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper, IPaymentService paymentService, ITransactionService transactionService)
+        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper, IPaymentService paymentService, ITransactionService transactionService, IDepositService depositService)
         {
             this.orderService = orderService;
             this.payOSService = payOSService;
             this.mapper = mapper;
             this.paymentService = paymentService;
             this.transactionService = transactionService;
+            this.depositService = depositService;
         }
 
 
@@ -108,25 +110,42 @@ namespace ServerAPI.Controllers
                     return BadRequest(new { code = "20", desc = "Invalid request data" });
                 }
                 var orderCode = request.OrderCode;
+                var depositId = request.DepositId;
                 var purchaseToken = request.PurchaseToken;
                 var typeSessionId = request.TypeSessionName;
-                var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(orderCode, typeSessionId, purchaseToken);
+                var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
                 if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
                 {
                     return BadRequest(new { code = "20", desc = "Invalid purchase" });
                 }
 
-                var order = await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode, Status = OrderStatus.Completed });
-
-                var payment = await paymentService.UpdatePaymentStatusByOrderId(order.Id, PaymentStatus.Success);
-
-                await transactionService.CreateTransaction(new TransactionRequestDTO
+                if (orderCode.HasValue)
                 {
-                    PaymentId = payment.Id,
-                    Amount = payment.Amount,
-                    Type = TransactionType.Purchase,
-                    Description = $"Order {order.Code} via Google Billing",
-                });
+                    var order = await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode.Value, Status = OrderStatus.Completed });
+
+                    var payment = await paymentService.UpdatePaymentStatusByOrderId(order.Id, PaymentStatus.Success);
+                    await transactionService.CreateTransaction(new TransactionRequestDTO
+                    {
+                        PaymentId = payment.Id,
+                        Amount = payment.Amount,
+                        Type = TransactionType.Purchase,
+                        Description = $"Order {order.Code} via Google Billing",
+                    });
+                }
+                else if(depositId.HasValue)
+                {
+                    var deposit = await depositService.UpdateDepositStatusById(depositId.Value, DepositStatus.Success );
+
+                    var payment = await paymentService.UpdatePaymentStatusByDepositId(deposit.Id, PaymentStatus.Success);
+
+                    await transactionService.CreateTransaction(new TransactionRequestDTO
+                    {
+                        PaymentId = payment.Id,
+                        Amount = payment.Amount,
+                        Type = TransactionType.Purchase,
+                        Description = $"Order {deposit.Id} via Google Billing",
+                    });
+                }
 
                 return Ok(new
                 {

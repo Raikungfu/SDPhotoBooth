@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.Service.IService;
+using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 using System;
@@ -22,8 +23,14 @@ namespace BusinessLogic.Service
         }
         public async Task<DepositResponseDTO> CreateDeposit(DepositRequestDTO depositRequestDTO, string userId)
         {
-            var wallet = await _unitOfWork.Wallet.GetFirstOrDefaultAsync(t => t. == userId);
+            var wallet = await _unitOfWork.Wallet.GetFirstOrDefaultAsync(t => t.CustomerId == userId);
+            if (wallet == null)
+            {
+                return null;
+            }
             var depositObj = _mapper.Map<Deposit>(depositRequestDTO);
+
+            depositObj.WalletId = wallet.Id;
             await _unitOfWork.Deposit.AddAsync(depositObj);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<DepositResponseDTO>(depositObj);
@@ -69,6 +76,30 @@ namespace BusinessLogic.Service
             deposit.Status = depositRequestDTO.Status;
 
             _unitOfWork.Deposit.Update(deposit);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<DepositResponseDTO>(deposit);
+        }
+
+        public async Task<DepositResponseDTO> UpdateDepositStatusById(int id, DepositStatus depositStatus)
+        {
+            var deposit = await _unitOfWork.Deposit.GetFirstOrDefaultAsync(t => t.Id == id);
+            if (deposit == null)
+            {
+                return null;
+            }
+
+            deposit.Status = depositStatus;
+            _unitOfWork.Deposit.Update(deposit);
+
+            if (depositStatus == DepositStatus.Success)
+            {
+                var wallet = await _unitOfWork.Wallet.GetFirstOrDefaultAsync(t => t.Id == deposit.WalletId);
+                if (wallet != null)
+                {
+                    wallet.Balance += deposit.Amount;
+                    _unitOfWork.Wallet.Update(wallet);
+                }
+            }
             await _unitOfWork.SaveAsync();
             return _mapper.Map<DepositResponseDTO>(deposit);
         }

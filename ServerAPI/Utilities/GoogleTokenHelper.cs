@@ -38,7 +38,7 @@ namespace ServerAPI.Helpers
         }
 
 
-        public static async Task<GooglePurchaseResponse> VerifyPurchaseAsync(long orderCode, string typeSessionId, string purchaseToken)
+        public static async Task<GooglePurchaseResponse> VerifyPurchaseAsync(string typeSessionId, string purchaseToken)
         {
             string url = $"https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.techx.sd_photobooth_app/purchases/products/{typeSessionId}/tokens/{purchaseToken}";
 

@@ -13,6 +13,10 @@ namespace BussinessObject.Models
 
         public bool IsActive { get; set; } = true;
 
+        public bool? ForMobile { get; set; } = false;
+
+        public bool? IsOnline { get; set; } = false;
+
         public virtual ICollection<Payment> Payments { get; set; }
     }
 }

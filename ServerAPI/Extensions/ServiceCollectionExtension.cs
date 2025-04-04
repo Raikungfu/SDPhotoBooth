@@ -37,6 +37,9 @@ namespace ServerAPI.Extensions
             services.AddScoped<IFrameStyleService, FrameStyleService>();
             services.AddScoped<IFrameService, FrameService>();
             services.AddScoped<ICoordinateService, CoordinateService>();
+            services.AddScoped<ILevelMembershipService, LevelMembershipService>();
+            services.AddScoped<IMembershipCardService, MembershipCardService>();
+            services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();

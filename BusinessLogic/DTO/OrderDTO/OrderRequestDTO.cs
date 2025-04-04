@@ -12,7 +12,7 @@ namespace BusinessLogic.DTO.OrderDTO
         public int PaymentMethodId { get; set; }
         public decimal? Amount { get; set; }
         public string? SessionId { get; set; }
-        public string? UserId { get; set; }
+        public string? CustomerId { get; set; }
         public int? CouponId { get; set; }
         public string? ConnectionId { get; set; }
         public OrderStatus? Status { get; set; } = OrderStatus.Pending;

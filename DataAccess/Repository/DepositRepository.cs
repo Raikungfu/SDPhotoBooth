@@ -23,7 +23,6 @@ namespace DataAccess.Repository
             if (objFromDb != null)
             {
                 objFromDb.Amount = deposit.Amount;
-                objFromDb.PaymentId = deposit.PaymentId;
                 objFromDb.WalletId = deposit.WalletId;
                 objFromDb.Status = deposit.Status;
             }
@@ -35,7 +34,6 @@ namespace DataAccess.Repository
             if (objFromDb != null)
             {
                 objFromDb.Amount = deposit.Amount;
-                objFromDb.PaymentId = deposit.PaymentId;
                 objFromDb.WalletId = deposit.WalletId;
                 objFromDb.Status = deposit.Status;
             }

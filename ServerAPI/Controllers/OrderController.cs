@@ -27,8 +27,9 @@ namespace ServerAPI.Controllers
         private readonly IHostEnvironment _env;
         private readonly IPayOSService payOSService;
         private readonly IPaymentService paymentService;
+        private readonly IWalletService walletService;
 
-        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService, IPaymentService paymentService)
+        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService, IPaymentService paymentService, IWalletService walletService)
         {
             this.orderService = orderService;
             this.typeSessionService = typeSessionService;
@@ -39,6 +40,7 @@ namespace ServerAPI.Controllers
             _env = env;
             this.payOSService = payOSService;
             this.paymentService = paymentService;
+            this.walletService = walletService;
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@ namespace ServerAPI.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("customer")]
+        [HttpGet("mobile")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetOrderCreated()
         {
@@ -156,7 +158,7 @@ namespace ServerAPI.Controllers
 
                 var customer = await userService.UserDetail(order.Email);
                 if (customer != null)
-                    order.UserId = customer.Id;
+                    order.CustomerId = customer.Id;
 
                 var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
                 if (error != null)
@@ -208,8 +210,8 @@ namespace ServerAPI.Controllers
             }
         }
 
-        [HttpPost("customer")]
-        [Authorize]
+        [HttpPost("mobile")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CustomerOrder([FromBody] OrderRequestDTO order)
         {
             try
@@ -221,23 +223,59 @@ namespace ServerAPI.Controllers
                 if (string.IsNullOrEmpty(userId))
                     return Unauthorized("User not authenticated.");
 
-                order.UserId = userId;
+                order.CustomerId = userId;
 
                 var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
                 if (typeSession == null)
-                    return BadRequest("Invalid type session.");
+                    throw new Exception("Invalid type session.");
 
                 var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
                 if (error != null)
-                    return error;
+                    throw new Exception(error.ToString());
 
                 var newOrder = await orderService.CreateOrder(order);
-                await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+
+                var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+                if (paymentMethod == null)
+                    throw new Exception("Invalid payment.");
+                else if (paymentMethod.MethodName == "Wallet")
                 {
-                    OrderId = newOrder.Id,
-                    Amount = newOrder.Amount,
-                    PaymentMethodId = order.PaymentMethodId
-                });
+                    var customerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (customerId == null)
+                        throw new Exception("Customer not found.");
+
+                    if(order.Amount == null)
+                        throw new Exception("Amount is null.");
+
+                    var walletUpdate = await walletService.UpdateBalanceWallet(customerId, order.Amount.Value, false);
+
+                    if (walletUpdate != null)
+                    {
+                        var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                        {
+                            OrderId = newOrder.Id,
+                            Amount = newOrder.Amount,
+                            PaymentMethodId = order.PaymentMethodId,
+                            Status = PaymentStatus.Success
+                        });
+
+                        await orderService.UpdateOrderStatus(new OrderStatusRequestDTO
+                        {
+                            OrderId = newOrder.Id,
+                            Status = OrderStatus.Completed
+                        });
+                    }
+                }
+                else
+                {
+                    await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                    {
+                        OrderId = newOrder.Id,
+                        Amount = newOrder.Amount,
+                        PaymentMethodId = order.PaymentMethodId
+                    });
+                }
+                    
                 return Ok(newOrder);
             }
             catch (Exception ex)

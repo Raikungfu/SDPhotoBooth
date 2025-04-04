@@ -12,14 +12,11 @@ namespace BussinessObject.Models
     {
         public decimal Amount { get; set; }
 
-        public int PaymentId { get; set; }
-
         public int WalletId { get; set; }
 
         public DepositStatus Status { get; set; } = DepositStatus.Pending;
 
-        [ForeignKey("PaymentId")]
-        public virtual Payment? Payment { get; set; }
+        public virtual Payment Payment { get; set; }
 
         [ForeignKey("WalletId")]
         public virtual Wallet Wallet { get; set; } = null!;

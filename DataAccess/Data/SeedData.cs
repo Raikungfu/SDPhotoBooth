@@ -184,11 +184,11 @@ public static class SeedData
             if (!context.LevelMembership.Any())
             {
                 context.LevelMembership.AddRange(
-                    new LevelMembership { Id = 1, Name = Level.Basic, Description = "Basic membership level", Price = 0, Duration = 0, Point = 0, DiscountPercent = 0, MaxDiscount = 0, MinOrder = 0, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 2, Name = Level.Bronze, Description = "Bronze membership level", Price = 50000, Duration = 30, Point = 100, DiscountPercent = 0.05m, MaxDiscount = 50000, MinOrder = 100000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 3, Name = Level.Silver, Description = "Silver membership level", Price = 100000, Duration = 60, Point = 200, DiscountPercent = 0.10m, MaxDiscount = 100000, MinOrder = 150000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 4, Name = Level.Gold, Description = "Gold membership level", Price = 200000, Duration = 90, Point = 400, DiscountPercent = 0.15m, MaxDiscount = 150000, MinOrder = 200000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 5, Name = Level.Platinum, Description = "Platinum membership level", Price = 300000, Duration = 120, Point = 600, DiscountPercent = 0.20m, MaxDiscount = 200000, MinOrder = 300000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    new LevelMembership { Id = 1, Name = "Basic", Description = "Basic membership level", Price = 0, Duration = 0, Point = 0, DiscountPercent = 0, MaxDiscount = 0, MinOrder = 0, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership { Id = 2, Name = "Bronze", Description = "Bronze membership level", Price = 50000, Duration = 30, Point = 100, DiscountPercent = 0.05m, MaxDiscount = 50000, MinOrder = 100000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership { Id = 3, Name = "Silver", Description = "Silver membership level", Price = 100000, Duration = 60, Point = 200, DiscountPercent = 0.10m, MaxDiscount = 100000, MinOrder = 150000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership { Id = 4, Name = "Gold", Description = "Gold membership level", Price = 200000, Duration = 90, Point = 400, DiscountPercent = 0.15m, MaxDiscount = 150000, MinOrder = 200000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership { Id = 5, Name = "Platinum", Description = "Platinum membership level", Price = 300000, Duration = 120, Point = 600, DiscountPercent = 0.20m, MaxDiscount = 200000, MinOrder = 300000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
                 );
 
                 context.SaveChanges();
@@ -204,11 +204,10 @@ public static class SeedData
             if (!context.PaymentMethod.Any())
             {
                 context.PaymentMethod.AddRange(
-                    new PaymentMethod { Id = 1, MethodName = "Wallet", Description = "Internal wallet balance", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new PaymentMethod { Id = 1, MethodName = "Wallet", ForMobile = true, IsOnline = true, Description = "Internal wallet balance", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
                     new PaymentMethod { Id = 2, MethodName = "Cash", Description = "Pay with cash upon delivery", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PaymentMethod { Id = 3, MethodName = "Banking", Description = "Bank transfer via online banking", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PaymentMethod { Id = 4, MethodName = "ZaloPay", Description = "ZaloPay mobile payment", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new PaymentMethod { Id = 5, MethodName = "Momo", Description = "Momo e-wallet", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    new PaymentMethod { Id = 3, MethodName = "Banking", IsOnline = true, Description = "Bank transfer via online banking", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new PaymentMethod { Id = 4, MethodName = "Google Billing", ForMobile = true, IsOnline = true, Description = "Momo e-wallet", IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
                 );
 
                 context.SaveChanges();
@@ -724,7 +723,6 @@ public static class SeedData
                         WalletId = 1,
                         Amount = 100000,
                         Status = DepositStatus.Success,
-                        PaymentId = 1,
                     },
                     new Deposit
                     {
@@ -732,7 +730,6 @@ public static class SeedData
                         WalletId = 2,
                         Amount = 100000,
                         Status = DepositStatus.Success,
-                        PaymentId = 1,
                     }
                 );
 

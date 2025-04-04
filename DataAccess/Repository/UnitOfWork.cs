@@ -29,6 +29,9 @@ namespace DataAccess.Repository
             Payment = new PaymentRepository(_db);
             Transaction = new TransactionRepository(_db);
             Deposit = new DepositRepository(_db);
+            LevelMembership = new LevelMembershipRepository(_db);
+            MembershipCard = new MembershipCardRepository(_db);
+            Wallet = new WalletRepository(_db);
         }
         public IBoothRepository Booth { get; private set; }
         public ICouponRepository Coupon { get; private set; }
@@ -49,6 +52,9 @@ namespace DataAccess.Repository
         public IPaymentRepository Payment { get; private set; }
         public ITransactionRepository Transaction { get; private set; }
         public IDepositRepository Deposit { get; private set; }
+        public ILevelMembershipRepository LevelMembership { get; private set; }
+        public IMembershipCardRepository MembershipCard { get; private set; }
+        public IWalletRepository Wallet { get; private set; }
 
         public void Dispose()
         {

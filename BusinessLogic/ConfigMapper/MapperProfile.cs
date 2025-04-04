@@ -4,7 +4,9 @@ using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.DTO.FrameDTO;
+using BusinessLogic.DTO.LevelMembershipDTO;
 using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.MembershipCardDTO;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.DTO.PaymentMethod;
@@ -17,6 +19,7 @@ using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.UserDTO;
+using BusinessLogic.DTO.WalletDTO;
 using BussinessObject.Models;
 
 namespace BusinessLogic.ConfigMapper
@@ -40,7 +43,6 @@ namespace BusinessLogic.ConfigMapper
                 Address = src.Location.Address,
                 CreatedAt = src.Location.CreatedAt,
                 LastModified = src.Location.LastModified,
-                IsDeleted = src.Location.IsDeleted,
                 CreatedById = src.Location.CreatedById,
                 LastModifiedById = src.Location.LastModifiedById
             } : null));
@@ -57,7 +59,6 @@ namespace BusinessLogic.ConfigMapper
                     Address = src.Location.Address,
                     CreatedAt = src.Location.CreatedAt,
                     LastModified = src.Location.LastModified,
-                    IsDeleted = src.Location.IsDeleted,
                     CreatedById = src.Location.CreatedById,
                     LastModifiedById = src.Location.LastModifiedById
                 } : null));
@@ -124,10 +125,9 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<CoordinateRequestDTO, Coordinate>();
             CreateMap<Coordinate, CoordinateResponseDTO>()
                 .ForMember(dest => dest.FrameName, opt => opt.MapFrom(src => src.Frame != null ? src.Frame.Name : null));
-
             CreateMap<Payment, PaymentResponseDTO>()
-                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.MethodName : null))
-                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order != null ? src.Order.Code : (long?)null));
+               .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.MethodName : null))
+               .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order != null ? src.Order.Code : (long?)null));
 
             CreateMap<TransactionRequestDTO, Transaction>();
             CreateMap<Transaction, TransactionResponseDTO>()
@@ -136,6 +136,29 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<DepositRequestDTO, Deposit>();
             CreateMap<Deposit, DepositResponseDTO>()
                 .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null && src.Payment.PaymentMethod != null ? src.Payment.PaymentMethod.MethodName : null));
+            CreateMap<CreateLevelMembershipRequestDTO, LevelMembership>();
+            CreateMap<LevelMembership, LevelMembershipResponseDTO>();
+
+            CreateMap<CreateMembershipCardRequestDTO, MembershipCard>();
+            CreateMap<MembershipCard, MembershipCardResponseDTO>()
+                .ForMember(dest => dest.Customer, opt => opt.MapFrom(src => src.Customer != null ? new CustomerOnMembershipCard 
+                {
+                    Id = src.Customer.Id,
+                    FullName = src.Customer.FullName,
+                    Gender = src.Customer.Gender,
+                    BirthDate = src.Customer.BirthDate,
+                    Email = src.Customer.Email,
+                    PhoneNumber = src.Customer.PhoneNumber
+                } : null))
+                .ForMember(dest => dest.LevelMemberShip, opt => opt.MapFrom(src => src.LevelMemberShip != null ? new LevelMembershipOnMembershipCard
+                {
+                    Id = src.LevelMemberShip.Id,
+                    Name = src.LevelMemberShip.Name,
+                    Point = src.LevelMemberShip.Point
+                } : null));
+
+            CreateMap<WalletRequestDTO, Wallet>();
+            CreateMap<Wallet, WalletResponseDTO>();
         }
     }
 }

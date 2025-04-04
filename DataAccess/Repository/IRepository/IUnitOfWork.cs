@@ -21,6 +21,9 @@
         IFrameStyleRepository FrameStyle { get; }
         IFrameRepository Frame { get; }
         ICoordinateRepository Coordinate { get; }
+        ILevelMembershipRepository LevelMembership { get; }
+        IMembershipCardRepository MembershipCard { get; }
+        IWalletRepository Wallet { get; }
         void Save();
         Task SaveAsync();
     }

@@ -19,7 +19,7 @@ namespace DataAccess.Configurations
 
             builder.HasOne(c => c.Payment)
                 .WithOne(c => c.Deposit)
-                .HasForeignKey<Deposit>(c => c.PaymentId)
+                .HasForeignKey<Payment>(c => c.DepositId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(c => c.Wallet)

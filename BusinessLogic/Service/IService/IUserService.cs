@@ -13,6 +13,7 @@ namespace BusinessLogic.Service.IService
         Task<UserResponseDTO> BanUser(string email);
         Task<UserResponseDTO> UnbanUser(string email);
         Task<UserResponseDTO> UserDetail(string email);
+        Task<UserResponseDTO> UserDetailById(string id);
         Task<UserResponseDTO> UserDetailByPhone(string phone);
         Task<bool> ChangeRole(string email, UserType role);
         Task<bool> MoveLocation(string email, int locationId);

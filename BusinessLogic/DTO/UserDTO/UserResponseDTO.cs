@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.WalletDTO;
 using BussinessObject.Enums;
 
 namespace BusinessLogic.DTO.UserDTO
@@ -16,5 +17,6 @@ namespace BusinessLogic.DTO.UserDTO
         public string Role { get; set; }
         public bool IsBanned { get; set; }
         public LocationResponseDTO Location { get; set; }
+        public WalletResponseDTO Wallet { get; set; }
     }
 }

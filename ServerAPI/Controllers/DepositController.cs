@@ -3,10 +3,12 @@ using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
+using BussinessObject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
+using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace ServerAPI.Controllers
@@ -16,11 +18,12 @@ namespace ServerAPI.Controllers
     public class DepositController : ControllerBase
     {
         private readonly IDepositService _depositService;
-        private readonly FirebaseService _firebaseService;
-        public DepositController(IDepositService depositService, FirebaseService firebaseService)
+        private readonly IPaymentService paymentService;
+
+        public DepositController(IDepositService depositService, IPaymentService paymentService)
         {
             _depositService = depositService;
-            _firebaseService = firebaseService;
+            this.paymentService = paymentService;
         }
 
         [HttpPost]
@@ -38,8 +41,15 @@ namespace ServerAPI.Controllers
                     return Unauthorized("User not found");
                 }
 
-                var created = await _depositService.CreateDeposit(depositRequest, userId);
-                return Ok(created);
+                var deposit = await _depositService.CreateDeposit(depositRequest, userId);
+
+                var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                {
+                    DepositId = deposit.Id,
+                    Amount = deposit.Amount,
+                    PaymentMethodId = depositRequest.PaymentMethodId
+                });
+                return Ok(deposit);
             }
             catch (Exception ex)
             {
