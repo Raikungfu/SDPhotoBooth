@@ -72,5 +72,34 @@ namespace BusinessLogic.Service
             await _unitOfWork.SaveAsync();
             return _mapper.Map<PaymentResponseDTO>(payment);
         }
+
+        public Task<IEnumerable<PaymentResponseDTO>> GetAllPayments()
+        {
+            var payments = _unitOfWork.Payment.GetAll(includeProperties: "Order,PaymentMethod");
+            var paymentDTOs = _mapper.Map<IEnumerable<PaymentResponseDTO>>(payments);
+            return Task.FromResult(paymentDTOs);
+        }
+
+        public Task<PaymentResponseDTO> GetPaymentById(int id)
+        {
+            var payment = _unitOfWork.Payment.GetFirstOrDefaultAsync(t => t.Id == id, includeProperties: "Order,PaymentMethod");
+            if (payment == null)
+            {
+                return null;
+            }
+            var paymentDTO = _mapper.Map<PaymentResponseDTO>(payment);
+            return Task.FromResult(paymentDTO);
+        }
+
+        public Task<PaymentResponseDTO> GetPaymentByCusId(string cusId)
+        {
+            var payment = _unitOfWork.Payment.GetFirstOrDefaultAsync(t => t.Order.CustomerId == cusId, includeProperties: "Order,PaymentMethod");
+            if (payment == null)
+            {
+                return null;
+            }
+            var paymentDTO = _mapper.Map<PaymentResponseDTO>(payment);
+            return Task.FromResult(paymentDTO);
+        }
     }
 }

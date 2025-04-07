@@ -10,8 +10,8 @@ namespace BusinessLogic.DTO.PaymentDTO
 {
     public class PaymentRequestDTO
     {
-        public int OrderId { get; set; }
-        public int DepositId { get; set; }
+        public int? OrderId { get; set; }
+        public int? DepositId { get; set; }
         public int PaymentMethodId { get; set; }
         public decimal Amount { get; set; }
         public string? PaymentLink { get; set; }

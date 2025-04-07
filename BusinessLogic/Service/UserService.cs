@@ -88,7 +88,11 @@ namespace BusinessLogic.Service
             }
 
             await _userManager.AddToRoleAsync(user, userRequestDTO.Role.ToString());
-            await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+
+            if (userRequestDTO.Role == UserType.Customer)
+            {
+                await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+            }
 
             var createdUser = await _userManager.Users
             .Include(u => u.Wallet)

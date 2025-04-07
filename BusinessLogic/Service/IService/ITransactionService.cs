@@ -11,6 +11,7 @@ namespace BusinessLogic.Service.IService
     {
         Task<IEnumerable<TransactionResponseDTO>> GetAllTransactions();
         Task<TransactionResponseDTO> GetTransactionById(int Id);
+        Task<IEnumerable<TransactionResponseDTO>> GetTransactionByCusId(string cusId);
         Task<TransactionResponseDTO> CreateTransaction(TransactionRequestDTO transactionRequestDTO);
     }
 }

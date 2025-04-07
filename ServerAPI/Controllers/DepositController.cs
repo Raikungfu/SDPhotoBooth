@@ -28,7 +28,7 @@ namespace ServerAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> CreateDeposit([FromForm] DepositRequestDTO depositRequest)
+        public async Task<IActionResult> CreateDeposit([FromBody] DepositRequestDTO depositRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -43,12 +43,14 @@ namespace ServerAPI.Controllers
 
                 var deposit = await _depositService.CreateDeposit(depositRequest, userId);
 
-                var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                var payment = await paymentService.CreatePaymentForDeposit(new PaymentRequestDTO
                 {
                     DepositId = deposit.Id,
                     Amount = deposit.Amount,
                     PaymentMethodId = depositRequest.PaymentMethodId
                 });
+
+                deposit.PaymentId = payment.Id;
                 return Ok(deposit);
             }
             catch (Exception ex)

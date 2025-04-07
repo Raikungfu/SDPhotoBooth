@@ -687,10 +687,120 @@ public static class SeedData
                         TypeSessionId = 1,
                         CreatedById = admin.Id,
                         LastModifiedById = admin.Id
+                    }, new Order
+                    {
+                        Id = 2,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = admin.Id,
+                        Status = OrderStatus.Pending,
+                        Amount = 100000,
+                        Email = "admin@example.com",
+                        Phone = "123456789",
+                        CouponId = 1,
+                        TypeSessionId = 1,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    }, new Order
+                    {
+                        Id = 3,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = admin.Id,
+                        Status = OrderStatus.Pending,
+                        Amount = 100000,
+                        Email = "admin@example.com",
+                        Phone = "123456789",
+                        CouponId = 1,
+                        TypeSessionId = 1,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
                     },
                     new Order
                     {
-                        Id = 2,
+                        Id = 4,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 5,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 6,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 7,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 8,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 9,
+                        Code = new Random().NextInt64(1000000000, 9999999999),
+                        CustomerId = manager.Id,
+                        Status = OrderStatus.Completed,
+                        Amount = 500000,
+                        Email = "manager@example.com",
+                        Phone = "987654321",
+                        CouponId = 2,
+                        TypeSessionId = 2,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    },
+                    new Order
+                    {
+                        Id = 10,
                         Code = new Random().NextInt64(1000000000, 9999999999),
                         CustomerId = manager.Id,
                         Status = OrderStatus.Completed,

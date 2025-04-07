@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentDTO;
+using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
@@ -28,8 +29,9 @@ namespace ServerAPI.Controllers
         private readonly IPayOSService payOSService;
         private readonly IPaymentService paymentService;
         private readonly IWalletService walletService;
+        private readonly ITransactionService transactionService;
 
-        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService, IPaymentService paymentService, IWalletService walletService)
+        public OrderController(IOrderService orderService, ITypeSessionService typeSessionService, IPaymentMethodService paymentMethodService, IUserService userService, ICouponService couponService, IConfiguration configuration, IHostEnvironment env, IPayOSService payOSService, IPaymentService paymentService, IWalletService walletService, ITransactionService transactionService)
         {
             this.orderService = orderService;
             this.typeSessionService = typeSessionService;
@@ -41,6 +43,7 @@ namespace ServerAPI.Controllers
             this.payOSService = payOSService;
             this.paymentService = paymentService;
             this.walletService = walletService;
+            this.transactionService = transactionService;
         }
 
         [HttpGet]
@@ -164,6 +167,11 @@ namespace ServerAPI.Controllers
                 if (error != null)
                     return error;
 
+                if(paymentMethod.MethodName == "Cash")
+                {
+                    order.Status = OrderStatus.Completed;
+                }
+
                 var newOrder = await orderService.CreateOrder(order);
 
                 if (newOrder == null)
@@ -178,6 +186,15 @@ namespace ServerAPI.Controllers
                         PaymentMethodId = order.PaymentMethodId,
                         Status = PaymentStatus.Success
                     });
+
+                    await transactionService.CreateTransaction(new TransactionRequestDTO
+                    {
+                        PaymentId = payment.Id,
+                        Amount = payment.Amount,
+                        Type = TransactionType.Purchase,
+                        Description = $"Order {newOrder.Code} via Cash",
+                    });
+
                     return Ok(newOrder);
                 }
 

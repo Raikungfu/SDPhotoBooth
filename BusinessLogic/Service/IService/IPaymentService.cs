@@ -11,6 +11,9 @@ namespace BusinessLogic.Service.IService
 {
     public interface IPaymentService
     {
+        Task<IEnumerable<PaymentResponseDTO>> GetAllPayments();
+        Task<PaymentResponseDTO> GetPaymentById(int id);
+        Task<PaymentResponseDTO> GetPaymentByCusId(string cusId);
         Task<PaymentResponseDTO> CreatePaymentForOrder(PaymentRequestDTO paymentRequest);
         Task<PaymentResponseDTO> CreatePaymentForDeposit(PaymentRequestDTO paymentRequest);
         Task<PaymentResponseDTO> UpdatePaymentStatusByOrderId(int orderId, PaymentStatus paymentStatus);

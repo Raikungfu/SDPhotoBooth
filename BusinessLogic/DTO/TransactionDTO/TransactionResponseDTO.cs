@@ -18,6 +18,8 @@ namespace BusinessLogic.DTO.TransactionDTO
         public TransactionType Type { get; set; } = TransactionType.Purchase;
         public decimal Amount { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int? OrderId { get; set; }
+        public int? DepositId { get; set; }
 
 
         public string? Description { get; set; }

@@ -125,13 +125,17 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<CoordinateRequestDTO, Coordinate>();
             CreateMap<Coordinate, CoordinateResponseDTO>()
                 .ForMember(dest => dest.FrameName, opt => opt.MapFrom(src => src.Frame != null ? src.Frame.Name : null));
+
+            CreateMap<PaymentRequestDTO, Payment>();
             CreateMap<Payment, PaymentResponseDTO>()
                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.MethodName : null))
                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order != null ? src.Order.Code : (long?)null));
 
             CreateMap<TransactionRequestDTO, Transaction>();
             CreateMap<Transaction, TransactionResponseDTO>()
-                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null && src.Payment.PaymentMethod != null ? src.Payment.PaymentMethod.MethodName : null));
+                .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.Payment != null && src.Payment.PaymentMethod != null ? src.Payment.PaymentMethod.MethodName : null))
+               .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Payment.OrderId != null ? src.Payment.OrderId : (int?)null))
+               .ForMember(dest => dest.DepositId, opt => opt.MapFrom(src => src.Payment.DepositId != null ? src.Payment.DepositId : (int?)null));
 
             CreateMap<DepositRequestDTO, Deposit>();
             CreateMap<Deposit, DepositResponseDTO>()

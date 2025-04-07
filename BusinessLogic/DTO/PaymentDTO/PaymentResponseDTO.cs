@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BussinessObject.Enums;
 
 namespace BusinessLogic.DTO.PaymentDTO
 {
@@ -16,8 +17,7 @@ namespace BusinessLogic.DTO.PaymentDTO
         public int? OrderId { get; set; }
         public int? DepositId { get; set; }
         public int PaymentMethodId { get; set; }
-        public string PaymentMethodNametMethodName { get; set; }
-        public bool IsSuccess { get; set; }
+        public PaymentStatus Status { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public decimal Amount { get; set; }

@@ -6,6 +6,8 @@ using BussinessObject.ViewModels;
 using BussinessObject.Enums;
 using ServerAPI.Services;
 using Azure.Core;
+using BusinessLogic.DTO.WalletDTO;
+using BusinessLogic.Service.IService;
 
 namespace ServerAPI.Controllers
 {
@@ -17,13 +19,15 @@ namespace ServerAPI.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWalletService _walletService;
 
-        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IConfiguration configuration, IWalletService _walletService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _roleManager = roleManager;
+            this._walletService = _walletService;
         }
 
         [HttpPost("google/callback")]
@@ -98,6 +102,8 @@ namespace ServerAPI.Controllers
                     }
 
                     await _userManager.AddToRoleAsync(newUser, UserType.Customer.ToString());
+
+                    await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
 
                     return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(newUser.Id, newUser.UserName, UserType.Customer, _configuration["Jwt:PrivateKey"]) });
                 }

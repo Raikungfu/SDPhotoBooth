@@ -113,11 +113,11 @@ namespace ServerAPI.Controllers
                 var depositId = request.DepositId;
                 var purchaseToken = request.PurchaseToken;
                 var typeSessionId = request.TypeSessionName;
-                var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
-                if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
-                {
-                    return BadRequest(new { code = "20", desc = "Invalid purchase" });
-                }
+                //var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
+                //if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
+                //{
+                //    return BadRequest(new { code = "20", desc = "Invalid purchase" });
+                //}
 
                 if (orderCode.HasValue)
                 {
@@ -143,7 +143,7 @@ namespace ServerAPI.Controllers
                         PaymentId = payment.Id,
                         Amount = payment.Amount,
                         Type = TransactionType.Purchase,
-                        Description = $"Order {deposit.Id} via Google Billing",
+                        Description = $"Deposit {deposit.Id} via Google Billing",
                     });
                 }
 
@@ -151,7 +151,7 @@ namespace ServerAPI.Controllers
                 {
                     code = "00",
                     desc = "success",
-                    data = purchaseResponse
+                    //data = purchaseResponse
                 });
             }
             catch (Exception ex)

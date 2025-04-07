@@ -40,6 +40,9 @@ namespace ServerAPI.Extensions
             services.AddScoped<ILevelMembershipService, LevelMembershipService>();
             services.AddScoped<IMembershipCardService, MembershipCardService>();
             services.AddScoped<IWalletService, WalletService>();
+            services.AddScoped<IDepositService, DepositService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();
