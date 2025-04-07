@@ -11,6 +11,11 @@
         public bool IsDeleted { get; set; }
         public string CreatedById { get; set; }
         public string LastModifiedById { get; set; }
+
+
+        public bool ForMobile { get; set; }
+
+        public bool IsOnline { get; set; }
     }
     
 }

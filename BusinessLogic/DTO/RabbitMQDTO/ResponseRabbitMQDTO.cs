@@ -10,5 +10,7 @@ namespace BusinessLogic.DTO.RabbitMQDTO
     {
         public string CorrelationId { get; set; }
         public string[] ProcessedImageUrl { get; set; }
+        public string SessionCode { get; set; }
+        public int PhotoStyleId { get; set; }
     }
 }

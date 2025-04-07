@@ -27,7 +27,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendImageProcessing([FromForm] IFormFile image, [FromForm] int photoStyleId, [FromForm] string connectionId)
+        public async Task<IActionResult> SendImageProcessing([FromForm] IFormFile image, [FromForm] int photoStyleId, [FromForm] string connectionId, [FromForm] string sessionCode)
         {
             if (image == null || image.Length == 0)
             {
@@ -42,7 +42,7 @@ namespace ServerAPI.Controllers
 
             var photoStyle = await _photoStyleService.GetPhotoStyleById(photoStyleId);
 
-            await _rabbitService.SendMessageAsync(firebaseUrl, connectionId, photoStyle);
+            await _rabbitService.SendMessageAsync(firebaseUrl, connectionId, photoStyle, sessionCode);
 
             return Ok(new { Message = "Image sent for processing", ImageUrl = firebaseUrl });
         }

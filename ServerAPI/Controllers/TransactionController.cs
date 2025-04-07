@@ -20,7 +20,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet]
-        [Authorize("Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllTransactions()
         {
             var transactions = await transactionService.GetAllTransactions();

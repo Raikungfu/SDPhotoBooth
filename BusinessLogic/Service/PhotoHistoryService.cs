@@ -99,7 +99,7 @@ namespace BusinessLogic.Service
             return photoHistoryResponseDTO;
         }
 
-        public async Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls)
+        public async Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls, int PhotoStyleId)
         {
             var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(filter: o => o.Code == sessionCode);
             if (session == null)
@@ -127,7 +127,7 @@ namespace BusinessLogic.Service
                     {
                         Url = url,
                         PhotoHistoryId = photoHistory.Id,
-                        PhotoStyleId = 1
+                        PhotoStyleId = PhotoStyleId
                     });
                 }
             }

@@ -139,87 +139,253 @@ namespace ServerAPI.Controllers
             return Ok(order);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OrderRequestDTO order)
+
+        //[HttpPost("dashboard")]
+        //[Authorize(Roles = "Manager,Staff")]
+        //public async Task<IActionResult> CreateOrderDashboard([FromBody] OrderRequestDTO order)
+        //{
+        //    try
+        //    {
+        //        ModelState.Remove("ConnectionId");
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(ModelState);
+
+        //        if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
+        //            return BadRequest("Type session or payment method is invalid.");
+
+        //        var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+        //        if (typeSession == null)
+        //            return BadRequest("Invalid type session.");
+
+        //        var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+        //        if (paymentMethod == null)
+        //            return BadRequest("Invalid payment.");
+
+        //        var customer = await userService.UserDetail(order.Email);
+        //        if (customer != null)
+        //            order.CustomerId = customer.Id;
+
+        //        var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+        //        if (error != null)
+        //            return error;
+
+        //        if(!paymentMethod.IsOnline)
+        //        {
+        //            order.Status = OrderStatus.Completed;
+        //        }
+
+        //        var newOrder = await orderService.CreateOrder(order);
+
+        //        if (newOrder == null)
+        //            return BadRequest("Failed to create order.");
+
+        //        if (!paymentMethod.IsOnline)
+        //        {
+        //            var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+        //            {
+        //                OrderId = newOrder.Id,
+        //                Amount = newOrder.Amount,
+        //                PaymentMethodId = order.PaymentMethodId,
+        //                Status = PaymentStatus.Success
+        //            });
+
+        //            await transactionService.CreateTransaction(new TransactionRequestDTO
+        //            {
+        //                PaymentId = payment.Id,
+        //                Amount = payment.Amount,
+        //                Type = TransactionType.Purchase,
+        //                Description = $"Order {newOrder.Code} via Cash",
+        //            });
+
+        //            return Ok(newOrder);
+        //        }
+
+        //        string clientUrl = "";
+        //        var domain = Request.Headers["Origin"].ToString();
+        //        if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
+        //        {
+        //            clientUrl = domain;
+        //        }
+        //        else
+        //        {
+        //            clientUrl = _env.IsDevelopment() ? _configuration["ServerUrl:Development"] : _configuration["ServerUrl:Production"];
+        //        }
+
+        //        if (order.Amount == null)
+        //            return BadRequest("Amount is null.");
+        //        var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
+        //        await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+        //        {
+        //            OrderId = newOrder.Id,
+        //            Amount = newOrder.Amount,
+        //            PaymentMethodId = order.PaymentMethodId,
+        //            PaymentLink = paymentLink,
+        //        });
+        //        return Ok(new { newOrder, paymentLink });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+        //[HttpPost("desktop")]
+        //public async Task<IActionResult> CreateOrderDesktop([FromBody] OrderRequestDTO order)
+        //{
+        //    try
+        //    {
+        //        ModelState.Remove("ConnectionId");
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(ModelState);
+
+        //        if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
+        //            return BadRequest("Type session or payment method is invalid.");
+
+        //        var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+        //        if (typeSession == null)
+        //            return BadRequest("Invalid type session.");
+
+        //        var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+        //        if (paymentMethod == null || !paymentMethod.IsOnline || paymentMethod.ForMobile)
+        //            return BadRequest("Invalid payment.");
+
+        //        var customer = await userService.UserDetail(order.Email);
+        //        if (customer != null)
+        //            order.CustomerId = customer.Id;
+
+        //        var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+        //        if (error != null)
+        //            return error;
+
+        //        var newOrder = await orderService.CreateOrder(order);
+
+        //        if (newOrder == null)
+        //            return BadRequest("Failed to create order.");
+
+        //        string clientUrl = "";
+        //        var domain = Request.Headers["Origin"].ToString();
+        //        if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
+        //        {
+        //            clientUrl = domain;
+        //        }
+        //        else
+        //        {
+        //            clientUrl = _env.IsDevelopment() ? _configuration["ServerUrl:Development"] : _configuration["ServerUrl:Production"];
+        //        }
+
+        //        if (order.Amount == null)
+        //            return BadRequest("Amount is null.");
+        //        var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
+        //        await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+        //        {
+        //            OrderId = newOrder.Id,
+        //            Amount = newOrder.Amount,
+        //            PaymentMethodId = order.PaymentMethodId,
+        //            PaymentLink = paymentLink,
+        //        });
+        //        return Ok(new { newOrder, paymentLink });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+        //[HttpPost("mobile")]
+        //[Authorize(Roles = "Customer")]
+        //public async Task<IActionResult> CreateOrderMobile([FromBody] OrderRequestDTO order)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(ModelState);
+
+        //        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //        if (string.IsNullOrEmpty(userId))
+        //            return Unauthorized("User not authenticated.");
+
+        //        order.CustomerId = userId;
+
+        //        var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+        //        if (typeSession == null)
+        //            throw new Exception("Invalid type session.");
+
+        //        var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+        //        if (error != null)
+        //            throw new Exception(error.ToString());
+
+        //        var newOrder = await orderService.CreateOrder(order);
+
+        //        var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+        //        if (paymentMethod == null || !paymentMethod.IsOnline || !paymentMethod.ForMobile)
+        //            throw new Exception("Invalid payment.");
+        //        else if (paymentMethod.MethodName == "Wallet")
+        //        {
+        //            var customerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //            if (customerId == null)
+        //                throw new Exception("Customer not found.");
+
+        //            if(order.Amount == null)
+        //                throw new Exception("Amount is null.");
+
+        //            var walletUpdate = await walletService.UpdateBalanceWallet(customerId, order.Amount.Value, false);
+
+        //            if (walletUpdate != null)
+        //            {
+        //                var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+        //                {
+        //                    OrderId = newOrder.Id,
+        //                    Amount = newOrder.Amount,
+        //                    PaymentMethodId = order.PaymentMethodId,
+        //                    Status = PaymentStatus.Success
+        //                });
+
+        //                await orderService.UpdateOrderStatus(new OrderStatusRequestDTO
+        //                {
+        //                    OrderId = newOrder.Id,
+        //                    Status = OrderStatus.Completed
+        //                });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+        //            {
+        //                OrderId = newOrder.Id,
+        //                Amount = newOrder.Amount,
+        //                PaymentMethodId = order.PaymentMethodId
+        //            });
+        //        }
+
+        //        return Ok(newOrder);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+
+        //    }
+        //}
+
+        [HttpPost("dashboard")]
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<IActionResult> CreateOrderDashboard([FromBody] OrderRequestDTO order)
         {
             try
             {
-                ModelState.Remove("ConnectionId");
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                return await ProcessOrder(order, isMobile: false, isDashboard: true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-                if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
-                    return BadRequest("Type session or payment method is invalid.");
-
-                var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
-                if (typeSession == null)
-                    return BadRequest("Invalid type session.");
-
-                var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-                if (paymentMethod == null)
-                    return BadRequest("Invalid payment.");
-
-                var customer = await userService.UserDetail(order.Email);
-                if (customer != null)
-                    order.CustomerId = customer.Id;
-
-                var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
-                if (error != null)
-                    return error;
-
-                if(paymentMethod.MethodName == "Cash")
-                {
-                    order.Status = OrderStatus.Completed;
-                }
-
-                var newOrder = await orderService.CreateOrder(order);
-
-                if (newOrder == null)
-                    return BadRequest("Failed to create order.");
-
-                if (paymentMethod.MethodName == "Cash")
-                {
-                    var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
-                    {
-                        OrderId = newOrder.Id,
-                        Amount = newOrder.Amount,
-                        PaymentMethodId = order.PaymentMethodId,
-                        Status = PaymentStatus.Success
-                    });
-
-                    await transactionService.CreateTransaction(new TransactionRequestDTO
-                    {
-                        PaymentId = payment.Id,
-                        Amount = payment.Amount,
-                        Type = TransactionType.Purchase,
-                        Description = $"Order {newOrder.Code} via Cash",
-                    });
-
-                    return Ok(newOrder);
-                }
-
-                string clientUrl = "";
-                var domain = Request.Headers["Origin"].ToString();
-                if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
-                {
-                    clientUrl = domain;
-                }
-                else
-                {
-                    clientUrl = _env.IsDevelopment() ? _configuration["ServerUrl:Development"] : _configuration["ServerUrl:Production"];
-                }
-
-                if (order.Amount == null)
-                    return BadRequest("Amount is null.");
-                var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
-                await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
-                {
-                    OrderId = newOrder.Id,
-                    Amount = newOrder.Amount,
-                    PaymentMethodId = order.PaymentMethodId,
-                    PaymentLink = paymentLink,
-                });
-                return Ok(new { newOrder, paymentLink });
+        [HttpPost("desktop")]
+        public async Task<IActionResult> CreateOrderDesktop([FromBody] OrderRequestDTO order)
+        {
+            try
+            {
+                return await ProcessOrder(order, isMobile: false, isDashboard: false);
             }
             catch (Exception ex)
             {
@@ -229,46 +395,38 @@ namespace ServerAPI.Controllers
 
         [HttpPost("mobile")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> CustomerOrder([FromBody] OrderRequestDTO order)
+        public async Task<IActionResult> CreateOrderMobile([FromBody] OrderRequestDTO order)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(userId))
-                    return Unauthorized("User not authenticated.");
+                if (string.IsNullOrEmpty(userId)) return Unauthorized("User not authenticated.");
 
                 order.CustomerId = userId;
 
                 var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
-                if (typeSession == null)
-                    throw new Exception("Invalid type session.");
+                if (typeSession == null) return BadRequest("Invalid type session.");
 
-                var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
-                if (error != null)
-                    throw new Exception(error.ToString());
+                var (error, _, _) = await ApplyCouponIfAny(order, typeSession);
+                if (error != null) return error;
 
                 var newOrder = await orderService.CreateOrder(order);
 
                 var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-                if (paymentMethod == null)
-                    throw new Exception("Invalid payment.");
-                else if (paymentMethod.MethodName == "Wallet")
+                if (paymentMethod == null || !paymentMethod.IsOnline || !paymentMethod.ForMobile)
+                    return BadRequest("Invalid payment.");
+
+                if (paymentMethod.MethodName == "Wallet")
                 {
-                    var customerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    if (customerId == null)
-                        throw new Exception("Customer not found.");
+                    if (order.Amount == null) return BadRequest("Amount is null.");
 
-                    if(order.Amount == null)
-                        throw new Exception("Amount is null.");
-
-                    var walletUpdate = await walletService.UpdateBalanceWallet(customerId, order.Amount.Value, false);
+                    var walletUpdate = await walletService.UpdateBalanceWallet(userId, order.Amount.Value, false);
 
                     if (walletUpdate != null)
                     {
-                        var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                        await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
                         {
                             OrderId = newOrder.Id,
                             Amount = newOrder.Amount,
@@ -292,14 +450,92 @@ namespace ServerAPI.Controllers
                         PaymentMethodId = order.PaymentMethodId
                     });
                 }
-                    
+
                 return Ok(newOrder);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
+        }
+
+        private async Task<IActionResult> ProcessOrder(OrderRequestDTO order, bool isMobile, bool isDashboard)
+        {
+            ModelState.Remove("ConnectionId");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
+                return BadRequest("Type session or payment method is invalid.");
+
+            var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+            if (typeSession == null) return BadRequest("Invalid type session.");
+
+            var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+            if (paymentMethod == null) return BadRequest("Invalid payment.");
+
+            if (!isMobile)
+            {
+                if ((isDashboard && paymentMethod.IsOnline == false) || (!isDashboard && (!paymentMethod.IsOnline || paymentMethod.ForMobile)))
+                    return BadRequest("Invalid payment.");
+            }
+
+            var customer = await userService.UserDetail(order.Email);
+            if (customer != null)
+                order.CustomerId = customer.Id;
+
+            var (error, _, _) = await ApplyCouponIfAny(order, typeSession);
+            if (error != null) return error;
+
+            if (!paymentMethod.IsOnline)
+                order.Status = OrderStatus.Completed;
+
+            var newOrder = await orderService.CreateOrder(order);
+            if (newOrder == null) return BadRequest("Failed to create order.");
+
+            if (!paymentMethod.IsOnline)
+            {
+                var payment = await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                {
+                    OrderId = newOrder.Id,
+                    Amount = newOrder.Amount,
+                    PaymentMethodId = order.PaymentMethodId,
+                    Status = PaymentStatus.Success
+                });
+
+                await transactionService.CreateTransaction(new TransactionRequestDTO
+                {
+                    PaymentId = payment.Id,
+                    Amount = payment.Amount,
+                    Type = TransactionType.Purchase,
+                    Description = $"Order {newOrder.Code} via Cash"
+                });
+
+                return Ok(newOrder);
+            }
+
+            if (order.Amount == null) return BadRequest("Amount is null.");
+
+            string clientUrl = GetClientUrl();
+
+            var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
+
+            await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+            {
+                OrderId = newOrder.Id,
+                Amount = newOrder.Amount,
+                PaymentMethodId = order.PaymentMethodId,
+                PaymentLink = paymentLink
+            });
+
+            return Ok(new { newOrder, paymentLink });
+        }
+
+        private string GetClientUrl()
+        {
+            var domain = Request.Headers["Origin"].ToString();
+            if (domain == _configuration["ClientUrl:Production"] || domain == _configuration["ClientUrl:Development"])
+                return domain;
+            return _env.IsDevelopment() ? _configuration["ServerUrl:Development"] : _configuration["ServerUrl:Production"];
         }
 
         [HttpPost("apply-coupon")]

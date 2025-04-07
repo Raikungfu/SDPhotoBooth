@@ -1,7 +1,10 @@
 ﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.RabbitMQDTO;
+using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Identity.Client;
@@ -21,9 +24,10 @@ namespace ServerAPI.Services
         private readonly string SendQueue;
         private readonly ConnectionFactory _factory;
         private readonly IHubContext<TranferPhotoHub> _hubContext;
+        private readonly IPhotoHistoryService photoHistoryService;
 
 
-        public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext)
+        public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext, IPhotoHistoryService photoHistoryService)
         {
             _factory = new ConnectionFactory
             {
@@ -33,10 +37,10 @@ namespace ServerAPI.Services
             _hubContext = hubContext;
             ReplyQueue = configuration["RabbitMq:ReplyQueue"];
             SendQueue = configuration["RabbitMq:SendQueue"];
-
+            this.photoHistoryService = photoHistoryService;
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle, string sessionCode)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
@@ -53,6 +57,8 @@ namespace ServerAPI.Services
             {
                 imageUrl,
                 correlationId,
+                sessionCode,
+                photoStyleId = photoStyle.Id,
                 photoStyle = photoStyle.Name,
                 prompt = photoStyle.Prompt,
                 negativePrompt = photoStyle.NegativePrompt,
@@ -96,10 +102,15 @@ namespace ServerAPI.Services
                 {
                     string correlationId = data.CorrelationId;
                     string[] processedImageUrl = data.ProcessedImageUrl ?? [];
-
-                    Console.WriteLine($"Received message with correlation id: {correlationId}, Image: {processedImageUrl}");
+                    string sessionCode = data.SessionCode;
+                    int photoStyleId = data.PhotoStyleId;
 
                     await _hubContext.Clients.Client(correlationId).SendAsync("ReceiveProcessedPhoto", processedImageUrl);
+
+                    if (!string.IsNullOrEmpty(sessionCode) && processedImageUrl.Length > 0)
+                    {
+                        await photoHistoryService.SaveUploadedPhotos(sessionCode, processedImageUrl.ToList(), photoStyleId);
+                    }
                 }
 
                 await Task.CompletedTask;

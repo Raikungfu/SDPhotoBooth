@@ -127,6 +127,25 @@ namespace ServerAPI.Controllers
             return Ok(new { Message = "Photos uploaded and saved successfully.", UploadedUrls = uploadedUrls });
         }
 
+
+        [HttpPost("upload-url")]
+        public async Task<IActionResult> UploadUrlPhotos([FromBody] PhotoHistoryUrlRequestDTO request)
+        {
+            if (request.PhotoPaths == null || !request.PhotoPaths.Any() || string.IsNullOrEmpty(request.SessionCode))
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            var success = await _photoHistoryService.SaveUploadedPhotos(request.SessionCode, request.PhotoPaths);
+
+            if (!success)
+            {
+                return NotFound("SessionCode not found.");
+            }
+
+            return Ok(new { Message = "Photos uploaded and saved successfully." });
+        }
+
     }
 
 }
