@@ -18,5 +18,15 @@ namespace BusinessLogic.DTO.UserDTO
         public bool IsBanned { get; set; }
         public LocationResponseDTO Location { get; set; }
         public WalletResponseDTO Wallet { get; set; }
+        public MemberShipCardOnUserResponseDTO MembershipCard { get; set; }
+
+    }
+
+    public class MemberShipCardOnUserResponseDTO
+    {
+        public string CurrentLevel { get; set; }
+        public int CurrentPoint { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; }
     }
 }

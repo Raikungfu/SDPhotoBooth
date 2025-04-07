@@ -4,6 +4,7 @@ using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -18,6 +19,11 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        public async Task<int> GetCouponCount()
+        {
+            return await _unitOfWork.Coupon.CountAsync();
+        }
+
         public async Task<CouponResponseDTO> CreateCoupon(CouponRequestDTO couponRequestDTO)
         {
             var coupon = _mapper.Map<Coupon>(couponRequestDTO);
@@ -42,13 +48,15 @@ namespace BusinessLogic.Service
             return couponResponseDTO;
         }
 
-        public async Task<IEnumerable<CouponResponseDTO>> GetCoupons()
+        public async Task<IEnumerable<CouponResponseDTO>> GetCoupons(PaginationParams? pagination)
         {
-            var coupon = await _unitOfWork.Coupon.GetAllAsync();
-            var couponResponseDTO = _mapper.Map<IEnumerable<CouponResponseDTO>>(coupon);
-            return couponResponseDTO;
+            var coupons = await _unitOfWork.Coupon.GetAllAsync(
+                pagination: pagination
+            );
 
+            return _mapper.Map<IEnumerable<CouponResponseDTO>>(coupons);
         }
+
 
         public async Task<IEnumerable<CouponResponseDTO>?> GetCoupons(string code)
         {

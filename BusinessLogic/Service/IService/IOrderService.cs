@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.OrderDTO;
+using DataAccess.Extensions.Pagination;
 
 namespace BusinessLogic.Service.IService
 {
@@ -12,12 +13,13 @@ namespace BusinessLogic.Service.IService
         Task<OrderResponseDTO> UpdateOrderStatusByCode(OrderStatusCodeRequestDTO orderStatusRequestDTO);
         Task<OrderResponseDTO> GetOrder(int id, string? userId);
         Task<OrderResponseDTO> GetOrderByCode(long code, string? userId);
-        Task<IEnumerable<OrderResponseDTO>> GetAllOrders();
+        Task<IEnumerable<OrderResponseDTO>> GetAllOrders(PaginationParams? pagination);
         Task<IEnumerable<OrderResponseDTO>> GetOrdersForCurrentUser(string userId);
         Task<IEnumerable<OrderResponseDTO>> GetOrdersByCusId(string userId);
         Task<TotalOrderStaticResponseDTO> StaticOrderCreated(StaticType staticType);
         Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType);
         Task<OrderResponseDTO> GetOrderBySessionCode(string sessionCode);
+        Task<int> GetCount();
 
     }
 }

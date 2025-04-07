@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -17,6 +18,12 @@ namespace BusinessLogic.Service
             _mapper = mapper;
         }
 
+        public async Task<int> GetCount()
+        {
+            var transactions = await _unitOfWork.Transaction.GetAllAsync();
+            return transactions.Count();
+        }
+
         public async Task<TransactionResponseDTO> CreateTransaction(TransactionRequestDTO transactionRequestDTO)
         {
             var transaction = _mapper.Map<Transaction>(transactionRequestDTO);
@@ -26,9 +33,13 @@ namespace BusinessLogic.Service
             return _mapper.Map<TransactionResponseDTO>(newTransaction);
         }
 
-        public async Task<IEnumerable<TransactionResponseDTO>> GetAllTransactions()
+        public async Task<IEnumerable<TransactionResponseDTO>> GetAllTransactions(PaginationParams? pagination)
         {
-            var transactions = await _unitOfWork.Transaction.GetAllAsync(includeProperties: "Payment,Payment.PaymentMethod");
+            var transactions = await _unitOfWork.Transaction.GetAllAsync(
+                includeProperties: "Payment,Payment.PaymentMethod",
+                pagination: pagination
+            );
+
             return _mapper.Map<IEnumerable<TransactionResponseDTO>>(transactions);
         }
 

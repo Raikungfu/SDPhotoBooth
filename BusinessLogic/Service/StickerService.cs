@@ -3,6 +3,7 @@ using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.StickerDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -16,6 +17,12 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            var stickers = await _unitOfWork.Sticker.GetAllAsync();
+            return stickers.Count();
         }
         public async Task<StickerResponseDTO> CreateSticker(StickerRequestDTO stickerRequestDTO)
         {
@@ -34,12 +41,16 @@ namespace BusinessLogic.Service
 
         }
 
-        public async Task<IEnumerable<StickerResponseDTO>> GetAllStickers()
+        public async Task<IEnumerable<StickerResponseDTO>> GetAllStickers(PaginationParams? pagination)
         {
-            var stickers = await _unitOfWork.Sticker.GetAllAsync(includeProperties: "StickerStyle");
-            var stickerResponseDTOs = _mapper.Map<IEnumerable<StickerResponseDTO>>(stickers);
-            return stickerResponseDTOs;
+            var stickers = await _unitOfWork.Sticker.GetAllAsync(
+                includeProperties: "StickerStyle",
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<StickerResponseDTO>>(stickers);
         }
+
 
         public async Task<StickerResponseDTO> GetStickerById(int Id)
         {

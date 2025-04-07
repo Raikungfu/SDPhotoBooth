@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +16,49 @@ namespace ServerAPI.Controllers
             _paymentMethodService = paymentMethodService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
-            var paymentMethods = await _paymentMethodService.GetAllPaymentMethod();
-            if (paymentMethods == null)
+            var count = await _paymentMethodService.GetCount();
+            return Ok(count);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] PaginationParams pagination)
+        {
+            try
             {
-                return NotFound();
+                var paymentMethods = await _paymentMethodService.GetAllPaymentMethod(pagination);
+                return Ok(paymentMethods);
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("all/destop")]
+        public async Task<IActionResult> GetAllForDestop()
+        {
+            var paymentMethods = await _paymentMethodService.GetAllFor(false, true);
             return Ok(paymentMethods);
         }
+
+        [HttpGet("all/mobile")]
+        public async Task<IActionResult> GetAllForMobile()
+        {
+            var paymentMethods = await _paymentMethodService.GetAllFor(true, null);
+            return Ok(paymentMethods);
+        }
+
+        [HttpGet("all/web")]
+        public async Task<IActionResult> GetAllForWeb()
+        {
+            var paymentMethods = await _paymentMethodService.GetAllFor(false, null);
+            return Ok(paymentMethods);
+        }
+
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)

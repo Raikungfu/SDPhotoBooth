@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 using System.Linq;
 
@@ -41,12 +42,16 @@ namespace BusinessLogic.Service
             return true;
         }
 
-        public async Task<IEnumerable<BoothResponseDTO>> GetBooths()
+        public async Task<IEnumerable<BoothResponseDTO>> GetBooths(PaginationParams? pagination)
         {
-            var booths = await _unitOfWork.Booth.GetAllAsync(includeProperties: "Location");
-            var boothResponseDTOs = _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
-            return boothResponseDTOs;
+            var booths = await _unitOfWork.Booth.GetAllAsync(
+                includeProperties: "Location",
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
         }
+
 
         public async Task<BoothResponseDTO> GetBooth(int id)
         {
@@ -105,6 +110,11 @@ namespace BusinessLogic.Service
             var booths = await _unitOfWork.Booth.GetAllAsync(b => b.LocationId == locationId);
             var boothResponseDTOs = _mapper.Map<IEnumerable<BoothResponseDTO>>(booths);
             return boothResponseDTOs;
+        }
+
+        public Task<int> GetBoothCount()
+        {
+            return _unitOfWork.Booth.CountAsync();
         }
     }
 }

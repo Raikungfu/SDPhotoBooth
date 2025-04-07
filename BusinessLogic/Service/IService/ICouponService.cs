@@ -1,10 +1,11 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
+using DataAccess.Extensions.Pagination;
 
 namespace BusinessLogic.Service.IService
 {
     public interface ICouponService
     {
-        Task<IEnumerable<CouponResponseDTO>> GetCoupons();
+        Task<IEnumerable<CouponResponseDTO>> GetCoupons(PaginationParams? pagination);
         Task<CouponResponseDTO> GetCoupon(string code);
         Task<IEnumerable<CouponResponseDTO>> GetCoupons(string code);
         Task<CouponResponseDTO> GetCouponById(int id);
@@ -12,5 +13,6 @@ namespace BusinessLogic.Service.IService
         Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO);
         Task<bool> DeleteCoupon(int id);
         bool IsValidCoupon(CouponResponseDTO coupon, decimal price);
+        Task<int> GetCouponCount();
     }
 }

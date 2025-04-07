@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.LocationDTO;
+using BusinessLogic.DTO.MembershipCardDTO;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.DTO.WalletDTO;
 using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Numerics;
 
 namespace BusinessLogic.Service
 {
@@ -20,30 +21,26 @@ namespace BusinessLogic.Service
         private readonly UserManager<User> _userManager;
         private readonly ILocationService _locationService;
         private readonly IWalletService _walletService;
+        private readonly IMembershipCardService _membershipCardService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService, IUnitOfWork unitOfWork, IWalletService walletService)
+        public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService,
+            IUnitOfWork unitOfWork, IWalletService walletService, IMembershipCardService membershipCardService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _locationService = locationService;
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
             _walletService = walletService;
+            _membershipCardService = membershipCardService;
         }
 
-        public async Task<UserResponseDTO> UserDetailById(string id)
+        public async Task<int> GetCount()
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-            {
-                return null;
-            }
-            var userDTO = _mapper.Map<UserResponseDTO>(user);
-            var roleOfUser = await _userManager.GetRolesAsync(user);
-            userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
-            userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
-            return userDTO;
-        }
+            var users = await _userManager.Users.Where(u => !u.IsDeleted).CountAsync();
+            return users;
+        }   
+
         public async Task<UserResponseDTO> BanUser(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -88,14 +85,21 @@ namespace BusinessLogic.Service
             }
 
             await _userManager.AddToRoleAsync(user, userRequestDTO.Role.ToString());
-
-            if (userRequestDTO.Role == UserType.Customer)
+            if(userRequestDTO.Role == UserType.Customer)
             {
                 await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+                await _membershipCardService.Create(new CreateMembershipCardRequestDTO() {
+                    CustomerId = user.Id,
+                    LevelMemberShipId = 1,
+                    Points = 0,
+                    IsActive = true
+                });
             }
-
+            
             var createdUser = await _userManager.Users
-            .Include(u => u.Wallet)
+            .Include(u => u.MembershipCard)
+            .ThenInclude(m => m.LevelMemberShip)
+                .Include(u => u.Wallet)
             .FirstOrDefaultAsync(u => u.Id == user.Id);
 
             var userDTO = _mapper.Map<UserResponseDTO>(createdUser);
@@ -104,11 +108,24 @@ namespace BusinessLogic.Service
             return userDTO;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> GetUsers()
+        public async Task<IEnumerable<UserResponseDTO>> GetUsers(PaginationParams? pagination)
         {
-            var users = await _userManager.Users
-            .Include(u => u.Wallet)
-            .ToListAsync();
+            var query = _userManager.Users
+                .Include(u => u.Wallet)
+                .Include(u => u.MembershipCard)
+                    .ThenInclude(m => m.LevelMemberShip)
+                .AsQueryable();
+
+            if (pagination != null)
+            {
+                var (isPaged, pageNumber, pageSize) = pagination.Validate();
+                if (isPaged)
+                {
+                    query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                }
+            }
+
+            var users = await query.ToListAsync();
 
             foreach (var user in users)
             {
@@ -136,23 +153,21 @@ namespace BusinessLogic.Service
                 Gender = u.Gender,
                 BirthDate = u.BirthDate,
                 Avatar = u.Avatar,
-                Role = userRoles.ContainsKey(u.Id) ? userRoles[u.Id] : null,
+                Role = userRoles.GetValueOrDefault(u.Id),
                 IsBanned = u.IsBanned,
                 Location = _mapper.Map<LocationResponseDTO>(u.Location),
-                Wallet = _mapper.Map<WalletResponseDTO>(u.Wallet)
+                Wallet = _mapper.Map<WalletResponseDTO>(u.Wallet),
+                MembershipCard = _mapper.Map<MemberShipCardOnUserResponseDTO>(u.MembershipCard)
             }).ToList();
         }
 
 
-        public Task<UserResponseDTO> ResetPassword(string email, string newPassword)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<UserResponseDTO> UserDetail(string email)
         {
             var user = await _userManager.Users
-             .Include(u => u.Wallet)
+             .Include(u => u.MembershipCard)
+             .ThenInclude(m => m.LevelMemberShip)
+                .Include(u => u.Wallet)
              .FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
@@ -163,24 +178,7 @@ namespace BusinessLogic.Service
             userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
             userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
             userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
-            return userDTO;
-        }
-
-        public async Task<UserResponseDTO> UserDetailByPhone(string phone)
-        {
-            var user = await _userManager.Users
-             .Include(u => u.Wallet)
-             .FirstOrDefaultAsync(u => u.PhoneNumber == phone);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var userDTO = _mapper.Map<UserResponseDTO>(user);
-            var roleOfUser = await _userManager.GetRolesAsync(user);
-            userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
-            userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
-            userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
+            userDTO.MembershipCard = _mapper.Map<MemberShipCardOnUserResponseDTO>(user.MembershipCard);
             return userDTO;
         }
 
@@ -204,8 +202,6 @@ namespace BusinessLogic.Service
             await _userManager.UpdateAsync(user);
             return true;
         }
-
-
 
         public async Task<TotalUserStaticResponseDTO> StaticUserCreated(StaticType staticType)
         {

@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -12,6 +13,13 @@ namespace ServerAPI.Controllers
         public StickerStyleController(IStickerStyleService stickerStyleService)
         {
             _stickerStyleService = stickerStyleService;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _stickerStyleService.GetCount();
+            return Ok(count);
         }
 
         [HttpPost]
@@ -42,10 +50,17 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<StickerStyleResponseDTO>>> GetAllStickerStyles()
+        public async Task<ActionResult<IEnumerable<StickerStyleResponseDTO>>> GetAllStickerStyles([FromQuery] PaginationParams pagination)
         {
-            var stickerStyles = await _stickerStyleService.GetAllStickerStyles();
-            return Ok(stickerStyles);
+            try
+            {
+                var stickerStyles = await _stickerStyleService.GetAllStickerStyles(pagination);
+                return Ok(stickerStyles);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]

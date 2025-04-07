@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -78,10 +79,17 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFrames()
+        public async Task<IActionResult> GetFrames([FromQuery] PaginationParams pagination)
         {
-            var frames = await _frameService.GetFrames();
-            return Ok(frames);
+            try
+            {
+                var frames = await _frameService.GetFrames(pagination);
+                return Ok(frames);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("frame-style/{frameStyleId:int}")]
@@ -135,6 +143,13 @@ namespace ServerAPI.Controllers
         {
             var frames = await _frameService.SearchFrame(frameName);
             return Ok(frames);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _frameService.GetCount();
+            return Ok(count);
         }
     }
 }

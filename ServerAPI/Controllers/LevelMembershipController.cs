@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.LevelMembershipDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -18,10 +19,17 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLevelMemberships()
+        public async Task<IActionResult> GetLevelMemberships([FromQuery] PaginationParams pagination)
         {
-            var levelMemberships = await _levelMembershipService.GetAllLevelMemberships();
-            return Ok(levelMemberships);
+            try
+            {
+                var levelMemberships = await _levelMembershipService.GetAllLevelMemberships(pagination);
+                return Ok(levelMemberships);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -71,6 +79,13 @@ namespace ServerAPI.Controllers
                 return NotFound();
             }
             return Ok(result);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _levelMembershipService.GetCount();
+            return Ok(count);
         }
     }
 }

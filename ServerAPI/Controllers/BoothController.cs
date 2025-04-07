@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -13,12 +14,22 @@ namespace ServerAPI.Controllers
         {
             _boothService = boothService;
         }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoothResponseDTO>>> GetBooths()
+        public async Task<IActionResult> GetBooths([FromQuery] PaginationParams pagination)
         {
-            var booths = await _boothService.GetBooths();
-            return Ok(booths);
+            try
+            {
+                var booths = await _boothService.GetBooths(pagination);
+                return Ok(booths);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BoothResponseDTO>> GetBooth(int id)
         {
@@ -84,6 +95,13 @@ namespace ServerAPI.Controllers
             }
             var booth = await _boothService.DeleteBooth(id);
             return Ok(booth);
+        }
+
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetBoothCount()
+        {
+            var count = await _boothService.GetBoothCount();
+            return Ok(count);
         }
     }
 }

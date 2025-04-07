@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,6 +19,13 @@ namespace ServerAPI.Controllers
         {
             _photoHistoryService = photoHistoryService;
             _firebaseService = firebaseService;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _photoHistoryService.GetCount();
+            return Ok(count);
         }
 
         [HttpGet("{sessionCode}")]
@@ -52,11 +60,19 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("manage/all")]
-        public async Task<IActionResult> GetAllPhotoHistory()
+        public async Task<IActionResult> GetAllPhotoHistory([FromQuery] PaginationParams pagination)
         {
-            var photoHistories = await _photoHistoryService.GetAllPhotoHistory();
-            return Ok(photoHistories);
+            try
+            {
+                var photoHistories = await _photoHistoryService.GetAllPhotoHistory(pagination);
+                return Ok(photoHistories);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
 
         [HttpGet("manage/customer/{customerId}")]
         public async Task<IActionResult> GetPhotoHistoryByCustomerIdAsync(string customerId)

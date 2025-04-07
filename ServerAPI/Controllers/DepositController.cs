@@ -4,6 +4,7 @@ using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -61,10 +62,25 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetDeposits()
+        public async Task<IActionResult> GetDeposits([FromQuery] PaginationParams pagination)
         {
-            var result = await _depositService.GetAllDeposits();
-            return Ok(result);
+            try
+            {
+                var result = await _depositService.GetAllDeposits(pagination);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _depositService.GetCount();
+            return Ok(count);
+        }
+
     }
 }

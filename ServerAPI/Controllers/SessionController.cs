@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,23 +12,32 @@ namespace ServerAPI.Controllers
     public class SessionController : ControllerBase
     {
         private readonly ISessionService _sessionService;
-        private readonly IMapper _mapper;
         public SessionController(ISessionService sessionService, IMapper mapper)
         {
             _sessionService = sessionService;
-            _mapper = mapper;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _sessionService.GetCount();
+            return Ok(count);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PaginationParams pagination)
         {
-            var sessions = await _sessionService.GetAllSessions();
-            if (sessions == null)
+            try
             {
-                return NotFound();
+                var sessions = await _sessionService.GetAllSessions(pagination);
+                return Ok(sessions);
             }
-            return Ok(sessions);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
 
         [HttpGet("by-code/{code}")]
         public async Task<IActionResult> Get(string code)

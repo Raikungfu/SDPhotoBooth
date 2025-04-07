@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.LevelMembershipDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -15,11 +16,18 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<LevelMembershipResponseDTO>> GetAllLevelMemberships()
+
+        public async Task<int> GetCount()
         {
-            var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync();
-            var levelMembershipsDTO = _mapper.Map<IEnumerable<LevelMembershipResponseDTO>>(levelMemberships);
-            return levelMembershipsDTO;
+            return await _unitOfWork.LevelMembership.CountAsync();
+        }
+        public async Task<IEnumerable<LevelMembershipResponseDTO>> GetAllLevelMemberships(PaginationParams? pagination)
+        {
+            var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync(
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<LevelMembershipResponseDTO>>(levelMemberships);
         }
         public async Task<LevelMembershipResponseDTO> GetLevelMembershipById(int id)
         {
@@ -50,14 +58,6 @@ namespace BusinessLogic.Service
             if (!string.IsNullOrEmpty(levelMembershipRequestDTO.Description))
             {
                 levelMembership.Description = levelMembershipRequestDTO.Description;
-            }
-            if (levelMembershipRequestDTO.Price.HasValue)
-            {
-                levelMembership.Price = levelMembershipRequestDTO.Price;
-            }
-            if (levelMembershipRequestDTO.Duration.HasValue)
-            {
-                levelMembership.Duration = levelMembershipRequestDTO.Duration;
             }
             if (levelMembershipRequestDTO.Point.HasValue)
             {

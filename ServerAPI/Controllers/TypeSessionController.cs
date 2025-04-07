@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +16,25 @@ namespace ServerAPI.Controllers
             _typeSessionService = typeSessionService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
-            var typeSessions = await _typeSessionService.GetTypeSessionCodesAsync();
-            if (typeSessions == null)
+            var count = await _typeSessionService.GetCount();
+            return Ok(count);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] PaginationParams pagination)
+        {
+            try
             {
-                return NotFound();
+                var typeSessions = await _typeSessionService.GetTypeSessionCodesAsync(pagination);
+                return Ok(typeSessions);
             }
-            return Ok(typeSessions);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]

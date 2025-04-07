@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using DataAccess.Extensions.Pagination;
+using System.Linq.Expressions;
 
 namespace DataAccess.Repository.IRepository
 {
@@ -6,11 +7,12 @@ namespace DataAccess.Repository.IRepository
     {
         // Đồng bộ
         IEnumerable<T> GetAll(
-            Expression<Func<T, bool>>? filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-            string? includeProperties = null,
-            bool asNoTracking = false
-        );
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        string? includeProperties = null,
+        bool asNoTracking = false,
+        PaginationParams? pagination = null);
+
         T GetFirstOrDefault(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null,
@@ -23,13 +25,6 @@ namespace DataAccess.Repository.IRepository
         void RemoveRange(IEnumerable<T> entities);
 
         // Bất đồng bộ
-        Task<IEnumerable<T>> GetAllAsync(
-            Expression<Func<T, bool>>? filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-            string? includeProperties = null,
-            bool asNoTracking = false,
-            CancellationToken cancellationToken = default
-        );
         Task<T> GetFirstOrDefaultAsync(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null,
@@ -37,10 +32,19 @@ namespace DataAccess.Repository.IRepository
             bool asNoTracking = false,
             CancellationToken cancellationToken = default
         );
+        Task<IEnumerable<T>> GetAllAsync(
+         Expression<Func<T, bool>>? filter = null,
+         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+         string? includeProperties = null,
+         bool asNoTracking = false,
+         PaginationParams? pagination = null,
+         CancellationToken cancellationToken = default);
+
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
         Task<int> CountAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default);
         int Count(Expression<Func<T, bool>>? filter = null);
+
     }
 }

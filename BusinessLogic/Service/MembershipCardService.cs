@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.MembershipCardDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -15,6 +16,10 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.MembershipCard.CountAsync();
+        }
         public async Task<MembershipCardResponseDTO> Create(CreateMembershipCardRequestDTO membershipCardRequestDTO)
         {
             var membershipCard = _mapper.Map<MembershipCard>(membershipCardRequestDTO);
@@ -23,23 +28,16 @@ namespace BusinessLogic.Service
             return _mapper.Map<MembershipCardResponseDTO>(membershipCard);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<IEnumerable<MembershipCardResponseDTO>> GetAll(PaginationParams? pagination)
         {
-            var membershipCard = await _unitOfWork.MembershipCard.GetFirstOrDefaultAsync(s => s.Id == id);
-            if (membershipCard == null)
-            {
-                return false;
-            }
-            _unitOfWork.MembershipCard.Remove(membershipCard);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
+            var membershipCards = await _unitOfWork.MembershipCard.GetAllAsync(
+                includeProperties: "Customer,LevelMemberShip",
+                pagination: pagination
+            );
 
-        public async Task<IEnumerable<MembershipCardResponseDTO>> GetAll()
-        {
-            var membershipCards = await _unitOfWork.MembershipCard.GetAllAsync(includeProperties: "Customer,LevelMemberShip");
             return _mapper.Map<IEnumerable<MembershipCardResponseDTO>>(membershipCards);
         }
+
 
         public async Task<MembershipCardResponseDTO> GetByCustomerId(string customerId)
         {
@@ -75,10 +73,6 @@ namespace BusinessLogic.Service
         {
             var membershipCard = await _unitOfWork.MembershipCard.GetFirstOrDefaultAsync(s => s.Id == id);
             
-            if(membershipCardRequestDTO.CustomerId != null)
-            {
-                membershipCard.CustomerId = membershipCardRequestDTO.CustomerId;
-            }
             if (membershipCardRequestDTO.LevelMemberShipId != null)
             {
                 membershipCard.LevelMemberShipId = membershipCardRequestDTO.LevelMemberShipId.Value;
@@ -86,10 +80,6 @@ namespace BusinessLogic.Service
             if (membershipCardRequestDTO.Points != null)
             {
                 membershipCard.Points = membershipCardRequestDTO.Points.Value;
-            }
-            if (membershipCardRequestDTO.Expired != null)
-            {
-                membershipCard.Expired = membershipCardRequestDTO.Expired.Value;
             }
             if (membershipCardRequestDTO.Description != null)
             {

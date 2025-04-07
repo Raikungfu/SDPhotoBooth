@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,13 @@ namespace ServerAPI.Controllers
         public CouponController(ICouponService couponService)
         {
             _couponService = couponService;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _couponService.GetCouponCount();
+            return Ok(count);
         }
 
         [HttpGet("by-code/{code}")]
@@ -40,10 +48,17 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCoupons()
+        public async Task<IActionResult> GetCoupons([FromQuery] PaginationParams pagination)
         {
-            var coupons = await _couponService.GetCoupons();
-            return Ok(coupons);
+            try
+            {
+                var coupons = await _couponService.GetCoupons(pagination);
+                return Ok(coupons);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

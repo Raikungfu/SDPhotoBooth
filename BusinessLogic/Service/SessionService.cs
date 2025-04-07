@@ -4,6 +4,7 @@ using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -18,6 +19,12 @@ namespace BusinessLogic.Service
             _mapper = mapper;
         }
 
+
+        public async Task<int> GetCount()
+        {
+            var sessions = await _unitOfWork.Session.GetAllAsync();
+            return sessions.Count();
+        }
         public async Task<SessionResponseDTO> CreateSession(long orderCode)
         {
             if (await _unitOfWork.Order.GetFirstOrDefaultAsync(o => o.Code == orderCode) == null)
@@ -51,11 +58,12 @@ namespace BusinessLogic.Service
             return _mapper.Map<SessionResponseDTO>(sessionWithDetails);
         }
 
-        public async Task<IEnumerable<SessionResponseDTO>> GetAllSessions()
+        public async Task<IEnumerable<SessionResponseDTO>> GetAllSessions(PaginationParams? pagination)
         {
-            var allSession = await _unitOfWork.Session.GetAllAsync();
-            return _mapper.Map<IEnumerable<SessionResponseDTO>>(allSession);
+            var allSessions = await _unitOfWork.Session.GetAllAsync(pagination: pagination);
+            return _mapper.Map<IEnumerable<SessionResponseDTO>>(allSessions);
         }
+
 
         public async Task<IEnumerable<SessionResponseDTO>> SearchSessionByCode(string code)
         {

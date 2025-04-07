@@ -5,6 +5,7 @@ using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -19,6 +20,12 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.Order.CountAsync();
+        }
+
         public async Task<OrderResponseDTO> CreateOrder(OrderRequestDTO orderRequestDTO)
         {
             var order = _mapper.Map<Order>(orderRequestDTO);
@@ -49,11 +56,13 @@ namespace BusinessLogic.Service
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
-        public async Task<IEnumerable<OrderResponseDTO>> GetAllOrders()
+        public async Task<IEnumerable<OrderResponseDTO>> GetAllOrders(PaginationParams? pagination)
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
                 includeProperties: "Customer,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
-                asNoTracking: true);
+                asNoTracking: true,
+                pagination: pagination
+            );
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(orders);
         }
