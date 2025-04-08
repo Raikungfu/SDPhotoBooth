@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Extensions.Pagination;
 
 namespace BusinessLogic.Service
 {
@@ -25,6 +26,10 @@ namespace BusinessLogic.Service
             _mapper = mapper;
         }
 
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.Payment.CountAsync();
+        }
         public async Task<PaymentResponseDTO> CreatePaymentForOrder(PaymentRequestDTO paymentRequest)
         {
             var payment = _mapper.Map<Payment>(paymentRequest);
@@ -73,11 +78,14 @@ namespace BusinessLogic.Service
             return _mapper.Map<PaymentResponseDTO>(payment);
         }
 
-        public Task<IEnumerable<PaymentResponseDTO>> GetAllPayments()
+        public async Task<IEnumerable<PaymentResponseDTO>> GetAllPayments(PaginationParams? pagination)
         {
-            var payments = _unitOfWork.Payment.GetAll(includeProperties: "Order,PaymentMethod");
-            var paymentDTOs = _mapper.Map<IEnumerable<PaymentResponseDTO>>(payments);
-            return Task.FromResult(paymentDTOs);
+            var payments = await _unitOfWork.Payment.GetAllAsync(
+                includeProperties: "Order,PaymentMethod",
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<PaymentResponseDTO>>(payments);
         }
 
         public Task<PaymentResponseDTO> GetPaymentById(int id)

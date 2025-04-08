@@ -20,7 +20,6 @@ namespace DataAccess.Repository
                 objFromDb.CustomerId = membershipCard.CustomerId;
                 objFromDb.LevelMemberShipId = membershipCard.LevelMemberShipId;
                 objFromDb.Points = membershipCard.Points;
-                objFromDb.Expired = membershipCard.Expired;
                 objFromDb.Description = membershipCard.Description;
                 objFromDb.IsActive = membershipCard.IsActive;
             }
@@ -33,7 +32,6 @@ namespace DataAccess.Repository
                 objFromDb.CustomerId = membershipCard.CustomerId;
                 objFromDb.LevelMemberShipId = membershipCard.LevelMemberShipId;
                 objFromDb.Points = membershipCard.Points;
-                objFromDb.Expired = membershipCard.Expired;
                 objFromDb.Description = membershipCard.Description;
                 objFromDb.IsActive = membershipCard.IsActive;
             }

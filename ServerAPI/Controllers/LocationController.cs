@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -14,16 +15,27 @@ namespace ServerAPI.Controllers
             _locationService = locationService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
-            var locations = await _locationService.GetAllLocations();
-            if (locations == null)
-            {
-                return NotFound();
-            }
-            return Ok(locations);
+            var count = await _locationService.GetCount();
+            return Ok(count);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLocations([FromQuery] PaginationParams pagination)
+        {
+            try
+            {
+                var locations = await _locationService.GetAllLocations(pagination);
+                return Ok(locations);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)

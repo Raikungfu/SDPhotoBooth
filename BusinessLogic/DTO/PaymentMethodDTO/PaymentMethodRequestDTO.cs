@@ -7,7 +7,6 @@
         public bool? IsActive { get; set; }
 
         public bool? ForMobile { get; set; } = false;
-
         public bool? IsOnline { get; set; } = false;
     }
 }

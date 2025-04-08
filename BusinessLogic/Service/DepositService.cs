@@ -3,6 +3,7 @@ using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,12 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.Deposit.CountAsync();
+        }
+
         public async Task<DepositResponseDTO> CreateDeposit(DepositRequestDTO depositRequestDTO, string userId)
         {
             var wallet = await _unitOfWork.Wallet.GetFirstOrDefaultAsync(t => t.CustomerId == userId);
@@ -58,9 +65,9 @@ namespace BusinessLogic.Service
             return _mapper.Map<DepositResponseDTO>(deposit);
         }
 
-        public async Task<IEnumerable<DepositResponseDTO>> GetAllDeposits()
+        public async Task<IEnumerable<DepositResponseDTO>> GetAllDeposits(PaginationParams? pagination)
         {
-            var deposits = await _unitOfWork.Deposit.GetAllAsync();
+            var deposits = await _unitOfWork.Deposit.GetAllAsync(pagination: pagination);
             return _mapper.Map<IEnumerable<DepositResponseDTO>>(deposits);
         }
 
@@ -102,6 +109,16 @@ namespace BusinessLogic.Service
             }
             await _unitOfWork.SaveAsync();
             return _mapper.Map<DepositResponseDTO>(deposit);
+        }
+
+        public async Task<IEnumerable<DepositResponseDTO>> GetDepositsByCusId(string id)
+        {
+            var wallet = await _unitOfWork.Wallet.GetFirstOrDefaultAsync(t => t.CustomerId == id, includeProperties: "Deposits");
+            if (wallet == null)
+            {
+                return null;
+            }
+            return _mapper.Map<IEnumerable<DepositResponseDTO>>(wallet.Deposits);
         }
     }
 }

@@ -13,8 +13,6 @@ namespace BussinessObject.Models
 
         public int Points { get; set; } = 0;
 
-        public DateTime Expired { get; set; } = DateTime.Now.AddYears(1);
-
         public string? Description { get; set; }
 
         public bool IsActive { get; set; } = true;

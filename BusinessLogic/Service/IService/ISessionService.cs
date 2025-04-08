@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO.SessionCodeDTO;
+using DataAccess.Extensions.Pagination;
 
 namespace BusinessLogic.Service.IService
 {
@@ -6,9 +7,10 @@ namespace BusinessLogic.Service.IService
     {
         Task<SessionResponseDTO> CreateSession(long orderCode);
         Task<IEnumerable<SessionResponseDTO>> SearchSessionByCode(string code);
-        Task<IEnumerable<SessionResponseDTO>> GetAllSessions();
+        Task<IEnumerable<SessionResponseDTO>> GetAllSessions(PaginationParams? pagination);
         Task<SessionResponseDTO> GetSessionById(int Id);
         Task<SessionResponseDTO> GetSessionByCode(string code);
         Task<SessionResponseDTO> UseSession(string code, int? boothId);
+        Task<int> GetCount();
     }
 }

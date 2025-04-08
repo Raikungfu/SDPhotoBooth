@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,26 @@ namespace ServerAPI.Controllers
             this.transactionService = transactionService;
         }
 
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await transactionService.GetCount();
+            return Ok(count);
+        }
 
         [HttpGet]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> GetAllTransactions()
+        [Authorize("Manager")]
+        public async Task<IActionResult> GetAllTransactions([FromQuery] PaginationParams pagination)
         {
-            var transactions = await transactionService.GetAllTransactions();
-            if (transactions == null)
+            try
             {
-                return NotFound();
+                var transactions = await transactionService.GetAllTransactions(pagination);
+                return Ok(transactions);
             }
-            return Ok(transactions);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("mobile")]

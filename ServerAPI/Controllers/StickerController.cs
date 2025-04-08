@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.StickerDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -16,6 +17,13 @@ namespace ServerAPI.Controllers
             _stickerService = stickerService;
             _stickerStyleService = stickerStyleService;
             _firebaseService = firebaseService;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _stickerService.GetCount();
+            return Ok(count);
         }
 
         [HttpPost]
@@ -63,11 +71,19 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<StickerResponseDTO>>> GetAllStickers()
+        public async Task<ActionResult<IEnumerable<StickerResponseDTO>>> GetAllStickers([FromQuery] PaginationParams pagination)
         {
-            var stickers = await _stickerService.GetAllStickers();
-            return Ok(stickers);
+            try
+            {
+                var stickers = await _stickerService.GetAllStickers(pagination);
+                return Ok(stickers);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<StickerResponseDTO>> GetSticker(int id)

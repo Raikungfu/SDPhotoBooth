@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +20,29 @@ namespace ServerAPI.Controllers
             _firebaseService = firebaseService;
             _mapper = mapper;
         }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhotoStyleResponseDTO>>> GetAllPhotoStyles()
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
-            var photoStyles = await _photoStyleService.GetAllPhotoStyles();
-            return Ok(photoStyles);
+            var count = await _photoStyleService.GetCount();
+            return Ok(count);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PhotoStyleResponseDTO>>> GetAllPhotoStyles([FromQuery] PaginationParams pagination)
+        {
+            try
+            {
+                var photoStyles = await _photoStyleService.GetAllPhotoStyles(pagination);
+                return Ok(photoStyles);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PhotoStyleResponseDTO>> GetPhotoStyle(int id)
         {

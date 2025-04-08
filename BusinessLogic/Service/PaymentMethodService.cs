@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.PaymentMethod;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -14,6 +15,12 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            var paymentMethods = await _unitOfWork.PaymentMethod.GetAllAsync();
+            return paymentMethods.Count();
         }
         public async Task<int> CreatePaymentMethod(PaymentMethodRequestDTO paymentMethodRequestDTO)
         {
@@ -31,11 +38,26 @@ namespace BusinessLogic.Service
             return id;
         }
 
-        public async Task<IEnumerable<PaymentMethodResponseDTO>> GetAllPaymentMethod()
+        public async Task<IEnumerable<PaymentMethodResponseDTO>> GetAllFor(bool forMobile, bool? isOnline)
         {
-            var paymentMethods =await _unitOfWork.PaymentMethod.GetAllAsync();
-            var paymentMethodResponseDTOs = _mapper.Map<IEnumerable<PaymentMethodResponseDTO>>(paymentMethods);
-            return paymentMethodResponseDTOs;
+            if (isOnline == null)
+            {
+                var paymentMethods = await _unitOfWork.PaymentMethod.GetAllAsync(e => e.ForMobile == forMobile);
+                var paymentMethodResponseDTOs = _mapper.Map<IEnumerable<PaymentMethodResponseDTO>>(paymentMethods);
+                return paymentMethodResponseDTOs;
+            }
+            else
+            {
+                var paymentMethods = await _unitOfWork.PaymentMethod.GetAllAsync(e => e.ForMobile == forMobile && e.IsOnline == isOnline);
+                var paymentMethodResponseDTOs = _mapper.Map<IEnumerable<PaymentMethodResponseDTO>>(paymentMethods);
+                return paymentMethodResponseDTOs;
+            }
+        }
+
+        public async Task<IEnumerable<PaymentMethodResponseDTO>> GetAllPaymentMethod(PaginationParams? pagination)
+        {
+            var paymentMethods = await _unitOfWork.PaymentMethod.GetAllAsync(pagination: pagination);
+            return _mapper.Map<IEnumerable<PaymentMethodResponseDTO>>(paymentMethods);
         }
 
         public async Task<PaymentMethodResponseDTO> GetPaymentMethod(int id)
@@ -66,6 +88,14 @@ namespace BusinessLogic.Service
             if (!string.IsNullOrEmpty(paymentMethodRequestDTO.Description))
             {
                 paymentMethod.Description = paymentMethodRequestDTO.Description;
+            }
+            if (paymentMethodRequestDTO.ForMobile.HasValue)
+            {
+                paymentMethod.ForMobile = paymentMethodRequestDTO.ForMobile.Value;
+            }
+            if (paymentMethodRequestDTO.IsOnline.HasValue)
+            {
+                paymentMethod.IsOnline = paymentMethodRequestDTO.IsOnline.Value;
             }
             _unitOfWork.PaymentMethod.Update(paymentMethod);
             await _unitOfWork.SaveAsync();

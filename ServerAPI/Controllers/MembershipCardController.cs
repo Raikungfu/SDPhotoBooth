@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.MembershipCardDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,22 +12,26 @@ namespace ServerAPI.Controllers
     public class MembershipCardController : ControllerBase
     {
         private readonly IMembershipCardService _membershipCardService;
-        private readonly IUserService _userService;
         private readonly ILevelMembershipService _levelMembershipService;
-        private readonly IMapper _mapper;
         public MembershipCardController(IMembershipCardService membershipCardService, IMapper mapper, IUserService userService, ILevelMembershipService levelMembershipService)
         {
             _membershipCardService = membershipCardService;
-            _mapper = mapper;
-            _userService = userService;
             _levelMembershipService = levelMembershipService;
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllMembershipCards([FromQuery] PaginationParams pagination)
         {
-            var membershipCards = await _membershipCardService.GetAll();
-            return Ok(membershipCards);
+            try
+            {
+                var result = await _membershipCardService.GetAll(pagination);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
@@ -62,28 +67,6 @@ namespace ServerAPI.Controllers
             return Ok(membershipCards);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateMembershipCardRequestDTO dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await _userService.UserDetailById(dto.CustomerId);
-            if (user == null)
-                return NotFound($"User with ID {dto.CustomerId} not found.");
-
-            var level = await _levelMembershipService.GetLevelMembershipById(dto.LevelMemberShipId);
-            if (level == null)
-                return NotFound($"Level Membership with ID {dto.LevelMemberShipId} not found.");
-
-            dto.Points = level.Point ?? 0;
-            dto.Expired = DateTime.Now.AddMonths(level.Duration ?? 0);
-            dto.IsActive = true;
-
-            var membershipCard = await _membershipCardService.Create(dto);
-            return CreatedAtAction(nameof(GetById), new { id = membershipCard.Id }, membershipCard);
-        }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateMembershipCardRequestDTO dto)
@@ -92,46 +75,57 @@ namespace ServerAPI.Controllers
             if (existingCard == null)
                 return NotFound();
 
-            if (!string.IsNullOrEmpty(dto.CustomerId))
-            {
-                var user = await _userService.UserDetailById(dto.CustomerId);
-                if (user == null)
-                    return NotFound($"User with ID {dto.CustomerId} not found.");
-            }
-
             if (dto.LevelMemberShipId.HasValue)
             {
                 var level = await _levelMembershipService.GetLevelMembershipById(dto.LevelMemberShipId.Value);
                 if (level == null)
                     return NotFound($"Level Membership with ID {dto.LevelMemberShipId} not found.");
-
-                dto.Points = level.Point;
-                dto.Expired = DateTime.Now.AddMonths(level.Duration ?? 0);
-                dto.IsActive = true;
             }
 
-            if (dto.Points.HasValue)
+            if (dto.Points.HasValue && dto.Points < 0)
             {
-                if (dto.Points < 0)
-                    return BadRequest("Points cannot be negative.");
-
-                if (dto.Points > existingCard.LevelMemberShip.Point)
-                    return BadRequest("Points cannot exceed LevelMemberShip.");
+                return BadRequest("Points cannot be negative.");
             }
 
             var updatedCard = await _membershipCardService.Update(id, dto);
             return Ok(updatedCard);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPut("upgrade-level/{id}")]
+        public async Task<IActionResult> UpgradeLevel(int id, int levelId)
         {
-            var result = await _membershipCardService.Delete(id);
-            if (!result)
-            {
+            var existingCard = await _membershipCardService.GetById(id);
+            if (existingCard == null)
                 return NotFound();
-            }
-            return Ok();
+
+            if (!existingCard.IsActive)
+                return BadRequest("Cannot upgrade. Membership card is not active.");
+
+            var level = await _levelMembershipService.GetLevelMembershipById(levelId);
+            if (level == null)
+                return NotFound($"Level Membership with ID {levelId} not found.");
+
+            if (existingCard.LevelMemberShip.Id >= levelId)
+                return BadRequest($"Cannot upgrade. Target level {levelId} is not higher than current level {existingCard.LevelMemberShip.Id}.");
+
+            if (existingCard.Points < level.Point)
+                return BadRequest($"Insufficient points ({existingCard.Points}) to upgrade to level {levelId} (requires {level.Point}).");
+
+            var dto = new UpdateMembershipCardRequestDTO
+            {
+                LevelMemberShipId = levelId,
+                Points = existingCard.Points - level.Point
+            };
+
+            var updatedCard = await _membershipCardService.Update(id, dto);
+            return Ok(updatedCard);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _membershipCardService.GetCount();
+            return Ok(count);
         }
     }
 }

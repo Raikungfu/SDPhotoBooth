@@ -7,6 +7,7 @@ using BussinessObject.Models;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -24,10 +25,10 @@ namespace ServerAPI.Services
         private readonly string SendQueue;
         private readonly ConnectionFactory _factory;
         private readonly IHubContext<TranferPhotoHub> _hubContext;
-        private readonly IPhotoHistoryService photoHistoryService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
 
-        public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext, IPhotoHistoryService photoHistoryService)
+        public RabbitMqService(IConfiguration configuration, IHubContext<TranferPhotoHub> hubContext, IServiceScopeFactory serviceScopeFactory)
         {
             _factory = new ConnectionFactory
             {
@@ -37,7 +38,7 @@ namespace ServerAPI.Services
             _hubContext = hubContext;
             ReplyQueue = configuration["RabbitMq:ReplyQueue"];
             SendQueue = configuration["RabbitMq:SendQueue"];
-            this.photoHistoryService = photoHistoryService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle, string sessionCode)
@@ -107,9 +108,14 @@ namespace ServerAPI.Services
 
                     await _hubContext.Clients.Client(correlationId).SendAsync("ReceiveProcessedPhoto", processedImageUrl);
 
-                    if (!string.IsNullOrEmpty(sessionCode) && processedImageUrl.Length > 0)
+                    using (var scope = _serviceScopeFactory.CreateScope())
                     {
-                        await photoHistoryService.SaveUploadedPhotos(sessionCode, processedImageUrl.ToList(), photoStyleId);
+                        var photoHistoryService = scope.ServiceProvider.GetRequiredService<IPhotoHistoryService>();
+
+                        if (!string.IsNullOrEmpty(sessionCode) && processedImageUrl.Length > 0)
+                        {
+                            await photoHistoryService.SaveUploadedPhotos(sessionCode, processedImageUrl.ToList(), photoStyleId);
+                        }
                     }
                 }
 

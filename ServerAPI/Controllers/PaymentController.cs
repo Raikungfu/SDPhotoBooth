@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO.WalletDTO;
 using BusinessLogic.Service.IService;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,19 @@ namespace ServerAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> GetAllPayments()
+        public async Task<IActionResult> GetAllPayments([FromQuery] PaginationParams pagination)
         {
-            var payments = await _paymentService.GetAllPayments();
-
-            return Ok(payments);
+            try
+            {
+                var payments = await _paymentService.GetAllPayments(pagination);
+                return Ok(payments);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
         [HttpGet("mobile")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetPayment()
@@ -34,6 +42,13 @@ namespace ServerAPI.Controllers
             var payments = await _paymentService.GetPaymentByCusId(userId);
             
             return Ok(payments);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _paymentService.GetCount();
+            return Ok(count);
         }
 
     }

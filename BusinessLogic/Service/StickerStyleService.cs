@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -15,6 +16,12 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            var stickerStyles = await _unitOfWork.StickerStyle.GetAllAsync();
+            return stickerStyles.Count();
         }
         public async Task<StickerStyleResponseDTO> CreateStickerStyle(StickerStyleRequestDTO stickerStyleRequestDTO)
         {
@@ -32,17 +39,23 @@ namespace BusinessLogic.Service
             return _mapper.Map<StickerStyleResponseDTO>(stickerStyle);
         }
 
-        public async Task<IEnumerable<StickerStyleResponseDTO>> GetAllStickerStyles()
+        public async Task<IEnumerable<StickerStyleResponseDTO>> GetAllStickerStyles(PaginationParams? pagination)
         {
-            var stickerStyles = await _unitOfWork.StickerStyle.GetAllAsync(includeProperties: "Stickers");
+            var stickerStyles = await _unitOfWork.StickerStyle.GetAllAsync(
+                includeProperties: "Stickers",
+                pagination: pagination
+            );
+
             foreach (var style in stickerStyles)
             {
                 style.Stickers = style.Stickers
                     .Where(sticker => !sticker.IsDeleted)
                     .ToList();
             }
+
             return _mapper.Map<IEnumerable<StickerStyleResponseDTO>>(stickerStyles);
         }
+
 
         public async Task<StickerStyleResponseDTO> GetStickerStyleById(int id)
         {

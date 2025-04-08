@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -15,6 +16,10 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.Frame.CountAsync();
         }
         public async Task<FrameResponseDTO> CreateFrame(FrameRequestDTO frameRequestDTO)
         {
@@ -62,15 +67,20 @@ namespace BusinessLogic.Service
             return _mapper.Map<IEnumerable<FrameResponseDTO>>(frames);
         }
 
-        public async Task<IEnumerable<FrameResponseDTO>> GetFrames()
+        public async Task<IEnumerable<FrameResponseDTO>> GetFrames(PaginationParams? pagination)
         {
-            var frames = await _unitOfWork.Frame.GetAllAsync(includeProperties: "FrameStyle,Coordinates");
+            var frames = await _unitOfWork.Frame.GetAllAsync(
+                includeProperties: "FrameStyle,Coordinates",
+                pagination: pagination
+            );
+
             foreach (var frame in frames)
             {
                 frame.Coordinates = frame.Coordinates
-                    .Where(sticker => !sticker.IsDeleted)
+                    .Where(c => !c.IsDeleted)
                     .ToList();
             }
+
             return _mapper.Map<IEnumerable<FrameResponseDTO>>(frames);
         }
 

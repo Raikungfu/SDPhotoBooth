@@ -19,8 +19,6 @@ namespace DataAccess.Repository
             {
                 levelMembership.Name = obj.Name;
                 levelMembership.Description = obj.Description;
-                levelMembership.Price = obj.Price;
-                levelMembership.Duration = obj.Duration;
                 levelMembership.Point = obj.Point;
                 levelMembership.IsActive = obj.IsActive;
                 levelMembership.DiscountPercent = obj.DiscountPercent;
@@ -35,8 +33,6 @@ namespace DataAccess.Repository
             {
                 levelMembership.Name = obj.Name;
                 levelMembership.Description = obj.Description;
-                levelMembership.Price = obj.Price;
-                levelMembership.Duration = obj.Duration;
                 levelMembership.Point = obj.Point;
                 levelMembership.IsActive = obj.IsActive;
                 levelMembership.DiscountPercent = obj.DiscountPercent;

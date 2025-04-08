@@ -9,11 +9,6 @@ namespace BussinessObject.Models
         public string Description { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
-        public decimal? Price { get; set; }
-
-        public int? Duration { get; set; }
-
-        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public int? Point { get; set; } = 0;
 
         public bool IsActive { get; set; } = true;

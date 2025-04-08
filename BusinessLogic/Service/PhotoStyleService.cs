@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -14,6 +15,12 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            var photoStyles = await _unitOfWork.PhotoStyle.GetAllAsync();
+            return photoStyles.Count();
         }
         public async Task<PhotoStyleResponseDTO> CreatePhotoStyle(PhotoStyleRequestDTO photoStyle)
         {
@@ -42,11 +49,12 @@ namespace BusinessLogic.Service
             return _mapper.Map<PhotoStyleResponseDTO>(photoStyle);
         }
 
-        public async Task<IEnumerable<PhotoStyleResponseDTO>> GetAllPhotoStyles()
+        public async Task<IEnumerable<PhotoStyleResponseDTO>> GetAllPhotoStyles(PaginationParams? pagination)
         {
-            var photoStyles = await _unitOfWork.PhotoStyle.GetAllAsync();
+            var photoStyles = await _unitOfWork.PhotoStyle.GetAllAsync(pagination: pagination);
             return _mapper.Map<IEnumerable<PhotoStyleResponseDTO>>(photoStyles);
         }
+
 
         public async Task<PhotoStyleResponseDTO> GetPhotoStyleById(int id)
         {

@@ -3,9 +3,11 @@ using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
+using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
@@ -47,14 +49,17 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams pagination)
         {
-            var orders = await orderService.GetAllOrders();
-            if (orders == null)
+            try
             {
-                return NotFound();
+                var result = await orderService.GetAllOrders(pagination);
+                return Ok(result);
             }
-            return Ok(orders);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("mobile")]
@@ -399,6 +404,7 @@ namespace ServerAPI.Controllers
         {
             try
             {
+                ModelState.Remove("ConnectionId");
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -434,11 +440,13 @@ namespace ServerAPI.Controllers
                             Status = PaymentStatus.Success
                         });
 
-                        await orderService.UpdateOrderStatus(new OrderStatusRequestDTO
+                        var orderUpdate = await orderService.UpdateOrderStatus(new OrderStatusRequestDTO
                         {
                             OrderId = newOrder.Id,
                             Status = OrderStatus.Completed
                         });
+
+                        return Ok(orderUpdate);
                     }
                 }
                 else
@@ -608,6 +616,14 @@ namespace ServerAPI.Controllers
             }
             await orderService.DeleteOrder(id);
             return Ok();
+        }
+
+        [HttpGet("count")]
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await orderService.GetCount();
+            return Ok(count);
         }
     }
 }

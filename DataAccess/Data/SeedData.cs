@@ -47,7 +47,8 @@ public static class SeedData
                     new User { UserName = "phuongtbde160476", Email = "phuongtbde160476@fpt.edu.vn", PhoneNumber = "07774567894", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
                     new User { UserName = "trangdnhqe170154", Email = "trangdnhqe170154@fpt.edu.vn", PhoneNumber = "07774567895", Gender = BussinessObject.Enums.UserGender.Female, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
                     new User { UserName = "hienpnxqe170189", Email = "hienpnxqe170189@fpt.edu.vn", PhoneNumber = "07774567896", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "customer", Email = "customer@example.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
+                    new User { UserName = "customer", Email = "customer@example.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                    new User { UserName = "trang.doan.2003", Email = "trang.doan.2003@gmail.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
                 };
 
                 var roles = new Dictionary<string, string>
@@ -61,7 +62,8 @@ public static class SeedData
                     { "phuongtbde160476", "Customer" },
                     { "trangdnhqe170154", "Staff" },
                     { "hienpnxqe170189", "Customer" },
-                    { "customer", "Customer" }
+                    { "customer", "Customer" },
+                    { "trang.doan.2003", "Manager" }
                 };
 
                 foreach (var user in users)
@@ -79,7 +81,7 @@ public static class SeedData
             }
 
             var admin = await userManager.FindByNameAsync("admin1");
-            var manager = await userManager.FindByNameAsync("raikungfu98");
+            var manager = await userManager.FindByNameAsync("trang.doan.2003");
             var staff = await userManager.FindByNameAsync("trangdnhqe170154");
             var user1 = await userManager.FindByNameAsync("phuongtbde160476");
 
@@ -184,11 +186,11 @@ public static class SeedData
             if (!context.LevelMembership.Any())
             {
                 context.LevelMembership.AddRange(
-                    new LevelMembership { Id = 1, Name = "Basic", Description = "Basic membership level", Price = 0, Duration = 0, Point = 0, DiscountPercent = 0, MaxDiscount = 0, MinOrder = 0, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 2, Name = "Bronze", Description = "Bronze membership level", Price = 50000, Duration = 30, Point = 100, DiscountPercent = 0.05m, MaxDiscount = 50000, MinOrder = 100000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 3, Name = "Silver", Description = "Silver membership level", Price = 100000, Duration = 60, Point = 200, DiscountPercent = 0.10m, MaxDiscount = 100000, MinOrder = 150000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 4, Name = "Gold", Description = "Gold membership level", Price = 200000, Duration = 90, Point = 400, DiscountPercent = 0.15m, MaxDiscount = 150000, MinOrder = 200000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new LevelMembership { Id = 5, Name = "Platinum", Description = "Platinum membership level", Price = 300000, Duration = 120, Point = 600, DiscountPercent = 0.20m, MaxDiscount = 200000, MinOrder = 300000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    new LevelMembership { Id = 1, Name = "Basic", Description = "Basic membership level",  Point = 0, DiscountPercent = 0, MaxDiscount = 0, MinOrder = 0, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership { Id = 2, Name = "Bronze", Description = "Bronze membership level",  Point = 100, DiscountPercent = 0.05m, MaxDiscount = 50000, MinOrder = 100000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership {Id = 3, Name = "Silver", Description = "Silver membership level", Point = 200, DiscountPercent = 0.10m, MaxDiscount = 100000, MinOrder = 150000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership {Id = 4, Name = "Gold", Description = "Gold membership level", Point = 400, DiscountPercent = 0.15m, MaxDiscount = 150000, MinOrder = 200000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new LevelMembership {Id = 5, Name = "Platinum", Description = "Platinum membership level", Point = 600, DiscountPercent = 0.20m, MaxDiscount = 200000, MinOrder = 300000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
                 );
 
                 context.SaveChanges();
@@ -617,7 +619,6 @@ public static class SeedData
                         CustomerId = admin.Id,
                         LevelMemberShipId = 5, // Platinum
                         Points = 1000,
-                        Expired = DateTime.UtcNow.AddYears(1),
                         Description = "Admin's Platinum membership",
                         IsActive = true,
                         CreatedById = admin.Id,
@@ -629,7 +630,6 @@ public static class SeedData
                         CustomerId = manager.Id,
                         LevelMemberShipId = 4, // Gold
                         Points = 600,
-                        Expired = DateTime.UtcNow.AddYears(1),
                         Description = "Manager's Gold membership",
                         IsActive = true,
                         CreatedById = admin.Id,
@@ -641,7 +641,6 @@ public static class SeedData
                         CustomerId = staff.Id,
                         LevelMemberShipId = 3, // Silver
                         Points = 300,
-                        Expired = DateTime.UtcNow.AddYears(1),
                         Description = "Staff's Silver membership",
                         IsActive = true,
                         CreatedById = admin.Id,
@@ -653,7 +652,6 @@ public static class SeedData
                         CustomerId = user1.Id,
                         LevelMemberShipId = 2, // Bronze
                         Points = 100,
-                        Expired = DateTime.UtcNow.AddYears(1),
                         Description = "User's Bronze membership",
                         IsActive = true,
                         CreatedById = admin.Id,
@@ -821,7 +819,7 @@ public static class SeedData
 
             #endregion
 
-            #region Seed data for Order
+            #region Seed data for Deposit
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
 
             if (!context.Deposit.Any())

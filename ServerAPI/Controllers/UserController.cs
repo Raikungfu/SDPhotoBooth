@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
+using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -12,23 +13,31 @@ namespace ServerAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILocationService _locationService;
-        private readonly IMapper _mapper;
         public UserController(IUserService userService, IMapper mapper, ILocationService locationService)
         {
             _userService = userService;
-            _mapper = mapper;
             _locationService = locationService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
-            var users = await _userService.GetUsers();
-            if (users == null)
+            var count = await _userService.GetCount();
+            return Ok(count);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers([FromQuery] PaginationParams pagination)
+        {
+            try
             {
-                return NotFound();
+                var users = await _userService.GetUsers(pagination);
+                return Ok(users);
             }
-            return Ok(users);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("create")]

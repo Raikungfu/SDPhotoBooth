@@ -17,8 +17,6 @@ namespace DataAccess.Configurations
 
             builder.Property(lm => lm.Description).HasMaxLength(500);
 
-            builder.Property(lm => lm.Price).HasPrecision(18, 2);
-
             builder.HasMany(l => l.MembershipCards)
             .WithOne(m => m.LevelMemberShip)
             .HasForeignKey(m => m.LevelMemberShipId);

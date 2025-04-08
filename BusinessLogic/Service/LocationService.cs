@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.LocationDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -13,6 +14,11 @@ namespace BusinessLogic.Service
         public LocationService(IUnitOfWork unitOfWork, IMapper mapper) {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await _unitOfWork.Location.CountAsync();
         }
         public async Task<LocationResponseDTO> CreateLocation(LocationRequestDTO locationRequestDTO)
         {
@@ -31,12 +37,16 @@ namespace BusinessLogic.Service
             return id;
         }
 
-        public async Task<IEnumerable<LocationResponseDTO>> GetAllLocations()
+        public async Task<IEnumerable<LocationResponseDTO>> GetAllLocations(PaginationParams? pagination)
         {
-            var locations = await _unitOfWork.Location.GetAllAsync();
-            var locationResponseDTOs = _mapper.Map<IEnumerable<LocationResponseDTO>>(locations); 
-            return locationResponseDTOs;
+            var locations = await _unitOfWork.Location.GetAllAsync(
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<LocationResponseDTO>>(locations);
         }
+
+
 
         public async Task<LocationResponseDTO> GetLocation(int id)
         {

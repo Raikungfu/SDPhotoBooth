@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 
 namespace BusinessLogic.Service
@@ -15,6 +16,11 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+           return await _unitOfWork.PhotoHistory.CountAsync();
         }
 
         public async Task<string[]> GetListPhotos(int sessionId)
@@ -62,11 +68,14 @@ namespace BusinessLogic.Service
                 UpdatedAt = photoHistory.LastModified
             });
         }
-        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetAllPhotoHistory()
+        public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetAllPhotoHistory(PaginationParams? pagination)
         {
-            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle");
-            var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
-            return photoHistoriesResponseDTO;
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(
+                includeProperties: "Photos,Photos.PhotoStyle",
+                pagination: pagination
+            );
+
+            return _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
         }
 
         public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByCustomerIdAsync(string customerId)

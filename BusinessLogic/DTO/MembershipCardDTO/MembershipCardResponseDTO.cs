@@ -1,7 +1,4 @@
-﻿using BussinessObject.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using BussinessObject.Enums;
+﻿using BussinessObject.Enums;
 
 namespace BusinessLogic.DTO.MembershipCardDTO
 {
@@ -9,7 +6,6 @@ namespace BusinessLogic.DTO.MembershipCardDTO
     {
         public int Id { get; set; }
         public int Points { get; set; }
-        public DateTime Expired { get; set; }
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }

@@ -2,6 +2,7 @@
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
+using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,6 +16,12 @@ namespace BusinessLogic.Service
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<int> GetCount()
+        {
+            var typeSessionCodes = await _unitOfWork.TypeSession.GetAllAsync();
+            return typeSessionCodes.Count();
         }
         public async Task<TypeSessionResponseDTO> CreateTypeSessionCodeAsync(TypeSessionRequestDTO typeSessionCodeDTO)
         {
@@ -57,11 +64,10 @@ namespace BusinessLogic.Service
             return typeSessionCodeDTO;
         }
 
-        public async Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodesAsync()
+        public async Task<IEnumerable<TypeSessionResponseDTO>> GetTypeSessionCodesAsync(PaginationParams? pagination)
         {
-            var typeSessionCode = await _unitOfWork.TypeSession.GetAllAsync();
-            var typeSessionCodeDTO = _mapper.Map<IEnumerable<TypeSessionResponseDTO>>(typeSessionCode);
-            return typeSessionCodeDTO;
+            var typeSessionCode = await _unitOfWork.TypeSession.GetAllAsync(pagination: pagination);
+            return _mapper.Map<IEnumerable<TypeSessionResponseDTO>>(typeSessionCode);
         }
 
         public async Task<bool> UpdateTypeSessionCodeAsync(int id, TypeSessionRequestDTO typeSessionCodeDTO)
