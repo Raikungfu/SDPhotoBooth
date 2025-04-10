@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection.Emit;
 
 namespace DataAccess.Configurations
 {
@@ -19,6 +20,9 @@ namespace DataAccess.Configurations
             builder.HasOne(l => l.TypeSession)
             .WithMany(m => m.TypeSessionProducts)
             .HasForeignKey(m => m.TypeSessionId);
+
+            builder.HasIndex(x => x.ProductId)
+            .IsUnique();
         }
     }
 }

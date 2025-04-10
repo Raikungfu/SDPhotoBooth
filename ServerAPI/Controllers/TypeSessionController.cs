@@ -1,8 +1,10 @@
 ﻿using BusinessLogic.DTO.TypeSessionDTO;
+using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
+using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ServerAPI.Controllers
 {
@@ -11,9 +13,14 @@ namespace ServerAPI.Controllers
     public class TypeSessionController : ControllerBase
     {
         private readonly ITypeSessionService _typeSessionService;
-        public TypeSessionController(ITypeSessionService typeSessionService)
+        private readonly ITypeSessionProductService _typeSessionProductService;
+        private readonly ILevelMembershipService _levelMembershipService;
+        public TypeSessionController(ITypeSessionService typeSessionService, ITypeSessionProductService typeSessionProductService,
+            ILevelMembershipService levelMembershipService)
         {
             _typeSessionService = typeSessionService;
+            _typeSessionProductService = typeSessionProductService;
+            _levelMembershipService = levelMembershipService;
         }
 
         [HttpGet("count")]
@@ -71,6 +78,26 @@ namespace ServerAPI.Controllers
                 return BadRequest("TypeSession name already exists.");
             }
             var typeSession = await _typeSessionService.CreateTypeSessionCodeAsync(typeSessionRequestDTO);
+
+            if(typeSession.ForMobile)
+            {
+                //Create TypeSessionProduct
+                var levelMemberships = await _levelMembershipService.GetAllLevelMemberships(new PaginationParams());
+                var rand = new Random();
+
+                foreach (var levelMembership in levelMemberships)
+                {
+                    var typeSessionProduct = new TypeSessionProductCreateRequestDTO
+                    {
+                        Name = $"{typeSession.Name} - {levelMembership.Name}",
+                        ProductId = $"{typeSession.Name}-{levelMembership.Name}-{rand.Next(100000, 999999)}",
+                        TypeSessionId = typeSession.Id,
+                        LevelMembershipId = levelMembership.Id,
+                    };
+                    await _typeSessionProductService.CreateAsync(typeSessionProduct);
+                }
+            } 
+
             return Ok(typeSession);
         }
 
@@ -82,12 +109,10 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid data provided.");
             }
             var isExist = await _typeSessionService.GetTypeSessionCodeByIdAsync(id);
-            if (isExist != null)
-            {
-                var typeSession = await _typeSessionService.UpdateTypeSessionCodeAsync(id, typeSessionRequestDTO);
-                return Ok(typeSession);
-            }
-            return BadRequest("TypeSession name already exists.");
+            if (isExist == null)  return BadRequest("TypeSession name already exists.");
+
+            var typeSession = await _typeSessionService.UpdateTypeSessionCodeAsync(id, typeSessionRequestDTO);
+            return Ok(typeSession);
         }
 
         [HttpDelete("{id}")]

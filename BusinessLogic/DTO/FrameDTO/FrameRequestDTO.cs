@@ -19,5 +19,6 @@ namespace BusinessLogic.DTO.FrameDTO
         public int? FrameStyleId { get; set; }
 
         public int? SlotCount { get; set; }
+        public bool? ForMobile { get; set; }
     }
 }

@@ -213,5 +213,25 @@ namespace BusinessLogic.Service
 
             return totalUserStatic;
         }
+
+        public async Task<UserResponseDTO> UserDetailById(string Id)
+        {
+            var user = await _userManager.Users
+             .Include(u => u.MembershipCard)
+             .ThenInclude(m => m.LevelMemberShip)
+                .Include(u => u.Wallet)
+             .FirstOrDefaultAsync(u => u.Id == Id);
+            if (user == null)
+            {
+                return null;
+            }
+            var userDTO = _mapper.Map<UserResponseDTO>(user);
+            var roleOfUser = await _userManager.GetRolesAsync(user);
+            userDTO.Role = roleOfUser.FirstOrDefault() ?? "No Role";
+            userDTO.Location = user.LocationId.HasValue ? _mapper.Map<LocationResponseDTO>(await _locationService.GetLocation(user.LocationId.Value)) : null;
+            userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
+            userDTO.MembershipCard = _mapper.Map<MemberShipCardOnUserResponseDTO>(user.MembershipCard);
+            return userDTO;
+        }
     }
 }

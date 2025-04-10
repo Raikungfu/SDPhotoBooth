@@ -564,24 +564,33 @@ public static class SeedData
             if (!context.TypeSession.Any())
             {
                 context.TypeSession.AddRange(
-                    new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, Price = 1000, isPrinting = false, AbleTakenNumber = 5, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 2000, isPrinting = true, AbleTakenNumber = 3, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 5, Name = "Gói Cơ Bản", Description = "Gói dịch vụ in cơ bản", Duration = 30, Price = 5000, isPrinting = true, AbleTakenNumber = 10, CreatedAt = DateTime.Parse("2025-03-28T04:24:45.6577221"), LastModified = DateTime.Parse("2025-03-28T04:24:45.6577221"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 6, Name = "Gói Nâng Cao", Description = "Dịch vụ in chất lượng cao", Duration = 60, Price = 1000, isPrinting = true, AbleTakenNumber = 5, CreatedAt = DateTime.Parse("2025-03-28T04:24:57.935814"), LastModified = DateTime.Parse("2025-03-28T04:24:57.935814"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 7, Name = "Tư Vấn Thiết Kế", Description = "Hỗ trợ tư vấn và chỉnh sửa thiết kế", Duration = 45, Price = 3000, isPrinting = false, AbleTakenNumber = 3, CreatedAt = DateTime.Parse("2025-03-28T04:25:06.3817052"), LastModified = DateTime.Parse("2025-03-28T04:25:06.3817052"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 8, Name = "In Nhanh", Description = "Dịch vụ in nhanh lấy liền", Duration = 20, Price = 1000, isPrinting = true, AbleTakenNumber = 8, CreatedAt = DateTime.Parse("2025-03-28T04:25:15.7805502"), LastModified = DateTime.Parse("2025-03-28T04:25:15.7805502"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 9, Name = "In Màu", Description = "In màu chất lượng cao", Duration = 40, Price = 2000, isPrinting = true, AbleTakenNumber = 6, CreatedAt = DateTime.Parse("2025-03-28T04:25:23.9206205"), LastModified = DateTime.Parse("2025-03-28T04:25:23.9206205"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 10, Name = "Scan Tài Liệu", Description = "Scan tài liệu lưu trữ dạng số", Duration = 25, Price = 3000, isPrinting = false, AbleTakenNumber = 15, CreatedAt = DateTime.Parse("2025-03-28T04:25:29.5577387"), LastModified = DateTime.Parse("2025-03-28T04:25:29.5577387"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 11, Name = "Scan Hồ Sơ", Description = "Chuyển đổi hồ sơ giấy sang bản số", Duration = 30, Price = 4000, isPrinting = false, AbleTakenNumber = 10, CreatedAt = DateTime.Parse("2025-03-28T05:11:40.457483"), LastModified = DateTime.Parse("2025-03-28T05:11:40.457483"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 12, Name = "Scan Biểu Mẫu", Description = "Lưu trữ biểu mẫu hành chính", Duration = 20, Price = 5000, isPrinting = false, AbleTakenNumber = 12, CreatedAt = DateTime.Parse("2025-03-28T05:11:47.0305943"), LastModified = DateTime.Parse("2025-03-28T05:11:47.0305943"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 13, Name = "Scan Bài Giảng", Description = "Số hóa bài giảng dạng PDF", Duration = 40, Price = 1000, isPrinting = false, AbleTakenNumber = 8, CreatedAt = DateTime.Parse("2025-03-28T05:11:54.5815379"), LastModified = DateTime.Parse("2025-03-28T05:11:54.5815379"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 14, Name = "Scan Tạp Chí", Description = "Lưu trữ nội dung tạp chí", Duration = 35, Price = 2000, isPrinting = false, AbleTakenNumber = 6, CreatedAt = DateTime.Parse("2025-03-28T05:12:01.0023415"), LastModified = DateTime.Parse("2025-03-28T05:12:01.0023415"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 15, Name = "Scan Luận Văn", Description = "Chuyển luận văn thành bản mềm", Duration = 50, Price = 3000, isPrinting = false, AbleTakenNumber = 5, CreatedAt = DateTime.Parse("2025-03-28T05:12:07.5845421"), LastModified = DateTime.Parse("2025-03-28T05:12:07.5845421"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 16, Name = "Scan Tài Liệu Cũ", Description = "Số hóa tài liệu giấy cũ", Duration = 45, Price = 4000, isPrinting = false, AbleTakenNumber = 7, CreatedAt = DateTime.Parse("2025-03-28T05:12:13.2268526"), LastModified = DateTime.Parse("2025-03-28T05:12:13.2268526"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 17, Name = "Scan Sách", Description = "Scan toàn bộ nội dung sách", Duration = 60, Price = 6000, isPrinting = false, AbleTakenNumber = 4, CreatedAt = DateTime.Parse("2025-03-28T05:12:19.7889762"), LastModified = DateTime.Parse("2025-03-28T05:12:19.7889762"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 18, Name = "Scan Hợp Đồng", Description = "Chuyển hợp đồng sang file PDF", Duration = 30, Price = 3000, isPrinting = false, AbleTakenNumber = 9, CreatedAt = DateTime.Parse("2025-03-28T05:12:26.1047679"), LastModified = DateTime.Parse("2025-03-28T05:12:26.1047679"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 19, Name = "Scan Giấy Tờ Cá Nhân", Description = "Lưu trữ giấy tờ cá nhân dạng số", Duration = 15, Price = 2000, isPrinting = false, AbleTakenNumber = 20, CreatedAt = DateTime.Parse("2025-03-28T05:12:31.7729663"), LastModified = DateTime.Parse("2025-03-28T05:12:31.7729663"), CreatedById = admin.Id, LastModifiedById = admin.Id }
-                );
+                    new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, Price = 1000, isPrinting = false, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 2000, isPrinting = true, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 3, Name = "Gói Cơ Bản", Description = "Gói dịch vụ in cơ bản", Duration = 30, Price = 5000, isPrinting = true, AbleTakenNumber = 10, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:24:45.6577221"), LastModified = DateTime.Parse("2025-03-28T04:24:45.6577221"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 4, Name = "Gói Nâng Cao", Description = "Dịch vụ in chất lượng cao", Duration = 60, Price = 1000, isPrinting = true, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:24:57.935814"), LastModified = DateTime.Parse("2025-03-28T04:24:57.935814"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 5, Name = "Tư Vấn Thiết Kế", Description = "Hỗ trợ tư vấn và chỉnh sửa thiết kế", Duration = 45, Price = 3000, isPrinting = false, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:25:06.3817052"), LastModified = DateTime.Parse("2025-03-28T04:25:06.3817052"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 6, Name = "In Nhanh", Description = "Dịch vụ in nhanh lấy liền", Duration = 20, Price = 1000, isPrinting = true, AbleTakenNumber = 8, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:25:15.7805502"), LastModified = DateTime.Parse("2025-03-28T04:25:15.7805502"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 7, Name = "In Màu", Description = "In màu chất lượng cao", Duration = 40, Price = 2000, isPrinting = true, AbleTakenNumber = 6, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:25:23.9206205"), LastModified = DateTime.Parse("2025-03-28T04:25:23.9206205"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 8, Name = "Scan Tài Liệu", Description = "Scan tài liệu lưu trữ dạng số", Duration = 25, Price = 3000, isPrinting = false, AbleTakenNumber = 15, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:25:29.5577387"), LastModified = DateTime.Parse("2025-03-28T04:25:29.5577387"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 9, Name = "Scan Hồ Sơ", Description = "Chuyển đổi hồ sơ giấy sang bản số", Duration = 30, Price = 4000, isPrinting = false, AbleTakenNumber = 10, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:11:40.457483"), LastModified = DateTime.Parse("2025-03-28T05:11:40.457483"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 10, Name = "Scan Biểu Mẫu", Description = "Lưu trữ biểu mẫu hành chính", Duration = 20, Price = 5000, isPrinting = false, AbleTakenNumber = 12, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:11:47.0305943"), LastModified = DateTime.Parse("2025-03-28T05:11:47.0305943"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 11, Name = "Scan Bài Giảng", Description = "Số hóa bài giảng dạng PDF", Duration = 40, Price = 1000, isPrinting = false, AbleTakenNumber = 8, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:11:54.5815379"), LastModified = DateTime.Parse("2025-03-28T05:11:54.5815379"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 12, Name = "Scan Tạp Chí", Description = "Lưu trữ nội dung tạp chí", Duration = 35, Price = 2000, isPrinting = false, AbleTakenNumber = 6, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:01.0023415"), LastModified = DateTime.Parse("2025-03-28T05:12:01.0023415"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 13, Name = "Scan Luận Văn", Description = "Chuyển luận văn thành bản mềm", Duration = 50, Price = 3000, isPrinting = false, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:07.5845421"), LastModified = DateTime.Parse("2025-03-28T05:12:07.5845421"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 14, Name = "Scan Tài Liệu Cũ", Description = "Số hóa tài liệu giấy cũ", Duration = 45, Price = 4000, isPrinting = false, AbleTakenNumber = 7, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:13.2268526"), LastModified = DateTime.Parse("2025-03-28T05:12:13.2268526"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 15, Name = "Scan Sách", Description = "Scan toàn bộ nội dung sách", Duration = 60, Price = 6000, isPrinting = false, AbleTakenNumber = 4, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:19.7889762"), LastModified = DateTime.Parse("2025-03-28T05:12:19.7889762"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 16, Name = "Scan Hợp Đồng", Description = "Chuyển hợp đồng sang file PDF", Duration = 30, Price = 3000, isPrinting = false, AbleTakenNumber = 9, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:26.1047679"), LastModified = DateTime.Parse("2025-03-28T05:12:26.1047679"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 17, Name = "Scan Giấy Tờ Cá Nhân", Description = "Lưu trữ giấy tờ cá nhân dạng số", Duration = 15, Price = 2000, isPrinting = false, AbleTakenNumber = 20, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T05:12:31.7729663"), LastModified = DateTime.Parse("2025-03-28T05:12:31.7729663"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 18, Name = "Tư Vấn In Ấn", Description = "Tư vấn lựa chọn loại in phù hợp", Duration = 20, Price = 1000, isPrinting = false, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:00:00"), LastModified = DateTime.Parse("2025-03-30T08:00:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 19, Name = "Chỉnh Sửa File", Description = "Chỉnh sửa file trước khi in", Duration = 30, Price = 2000, isPrinting = false, AbleTakenNumber = 4, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:01:00"), LastModified = DateTime.Parse("2025-03-30T08:01:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 20, Name = "Thiết Kế Poster", Description = "Thiết kế áp phích theo yêu cầu", Duration = 45, Price = 4000, isPrinting = false, AbleTakenNumber = 3, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:02:00"), LastModified = DateTime.Parse("2025-03-30T08:02:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 21, Name = "Thiết Kế Namecard", Description = "Tạo thiết kế danh thiếp", Duration = 25, Price = 1500, isPrinting = false, AbleTakenNumber = 6, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:03:00"), LastModified = DateTime.Parse("2025-03-30T08:03:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 22, Name = "Thiết Kế Tờ Rơi", Description = "Thiết kế brochure, tờ rơi quảng cáo", Duration = 35, Price = 3500, isPrinting = false, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:04:00"), LastModified = DateTime.Parse("2025-03-30T08:04:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 23, Name = "Tư Vấn Layout", Description = "Tư vấn sắp xếp nội dung in", Duration = 20, Price = 1000, isPrinting = false, AbleTakenNumber = 7, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:05:00"), LastModified = DateTime.Parse("2025-03-30T08:05:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 24, Name = "Chụp Hình Sản Phẩm", Description = "Chụp ảnh sản phẩm chuyên nghiệp", Duration = 60, Price = 6000, isPrinting = false, AbleTakenNumber = 2, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:06:00"), LastModified = DateTime.Parse("2025-03-30T08:06:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 25, Name = "Dựng Video Ngắn", Description = "Tạo video quảng cáo ngắn", Duration = 90, Price = 8000, isPrinting = false, AbleTakenNumber = 2, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:07:00"), LastModified = DateTime.Parse("2025-03-30T08:07:00"), CreatedById = admin.Id, LastModifiedById = admin.Id }
+
+                    );
 
                 context.SaveChanges();
             }
@@ -664,6 +673,41 @@ public static class SeedData
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] OFF");
 
+            #endregion
+
+            #region Seed data for TypeSessionProduct
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] ON");
+            context.Database.ExecuteSqlRaw("DELETE FROM [TypeSessionProduct]");
+
+            if (!context.TypeSessionProduct.Any())
+            {
+                var typeSessionProducts = new List<TypeSessionProduct>();
+                int idCounter = 1;
+                var rand = new Random();
+
+                for (int typeSessionId = 1; typeSessionId <= 17; typeSessionId++)
+                {
+                    var typeSession = context.TypeSession.Find(typeSessionId);
+                    for (int levelMembershipId = 1; levelMembershipId <= 5; levelMembershipId++)
+                    {
+                        var levelMembership = context.LevelMembership.Find(levelMembershipId);
+                        typeSessionProducts.Add(new TypeSessionProduct
+                        {
+                            Id = idCounter++,
+                            Name = $"{typeSession.Name} - {levelMembership.Name}",
+                            TypeSessionId = typeSessionId,
+                            LevelMembershipId = levelMembershipId,
+                            ProductId = $"{typeSession.Name}-{levelMembership.Name}-{rand.Next(100000,999999)}",
+                            CreatedById = admin.Id,
+                            LastModifiedById = admin.Id
+                        });
+                    }
+                }
+
+                context.TypeSessionProduct.AddRange(typeSessionProducts);
+                context.SaveChanges();
+            }
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] OFF");
             #endregion
 
             #region Seed data for Order
@@ -847,7 +891,6 @@ public static class SeedData
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
 
             #endregion
-
 
             #region Seed data for Payment
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");

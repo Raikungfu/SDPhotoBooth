@@ -18,6 +18,7 @@ using BusinessLogic.DTO.StickerDTO;
 using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
+using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.DTO.WalletDTO;
 using BussinessObject.Models;
@@ -169,6 +170,10 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<WalletRequestDTO, Wallet>();
             CreateMap<Wallet, WalletResponseDTO>();
+
+
+            CreateMap<TypeSessionProductCreateRequestDTO, TypeSessionProduct>();
+            CreateMap<TypeSessionProduct, TypeSessionProductResponseDTO>();
         }
     }
 }

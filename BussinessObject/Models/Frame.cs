@@ -18,6 +18,8 @@ namespace BussinessObject.Models
         [Range(1, int.MaxValue, ErrorMessage = "SlotCount must be at least 1.")]
         public int SlotCount { get; set; }
 
+        public bool? ForMobile { get; set; } = false;
+
         [ForeignKey("FrameStyleId")]
         public virtual FrameStyle FrameStyle { get; set; }
 

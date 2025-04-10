@@ -43,6 +43,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<IDepositService, DepositService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<ITypeSessionProductService, TypeSessionProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<RabbitMqService>();

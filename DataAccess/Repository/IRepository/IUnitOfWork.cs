@@ -24,6 +24,7 @@
         ILevelMembershipRepository LevelMembership { get; }
         IMembershipCardRepository MembershipCard { get; }
         IWalletRepository Wallet { get; }
+        ITypeSessionProductRepository TypeSessionProduct { get; }
         void Save();
         Task SaveAsync();
     }

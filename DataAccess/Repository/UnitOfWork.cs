@@ -32,6 +32,7 @@ namespace DataAccess.Repository
             LevelMembership = new LevelMembershipRepository(_db);
             MembershipCard = new MembershipCardRepository(_db);
             Wallet = new WalletRepository(_db);
+            TypeSessionProduct = new TypeSessionProductRepository(_db);
         }
         public IBoothRepository Booth { get; private set; }
         public ICouponRepository Coupon { get; private set; }
@@ -55,6 +56,7 @@ namespace DataAccess.Repository
         public ILevelMembershipRepository LevelMembership { get; private set; }
         public IMembershipCardRepository MembershipCard { get; private set; }
         public IWalletRepository Wallet { get; private set; }
+        public ITypeSessionProductRepository TypeSessionProduct { get; private set; }
 
         public void Dispose()
         {

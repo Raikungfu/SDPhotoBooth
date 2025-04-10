@@ -83,6 +83,40 @@ namespace BusinessLogic.Service
                 }
                 typeSessionCode.Name = typeSessionCodeDTO.Name;
             }
+            if (typeSessionCodeDTO.ForMobile.HasValue)
+            {
+                if (typeSessionCodeDTO.ForMobile == false)
+                {
+                    var typeSessionProducts = await _unitOfWork.TypeSessionProduct.GetAllAsync(s => s.TypeSessionId == id);
+                    foreach (var typeSessionProduct in typeSessionProducts)
+                    {
+                        _unitOfWork.TypeSessionProduct.Remove(id: typeSessionProduct.Id);
+                    }
+                    typeSessionCode.ForMobile = typeSessionCodeDTO.ForMobile.Value;
+                }
+                else
+                {
+                    var typeSessionProducts = await _unitOfWork.TypeSessionProduct.GetAllAsync(s => s.TypeSessionId == id);
+                    if (!typeSessionProducts.Any())
+                    {
+                        var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync();
+                        var rand = new Random();
+                        foreach (var levelMembership in levelMemberships)
+                        {
+                            var typeSessionProduct = new TypeSessionProduct
+                            {
+                                Name = $"{typeSessionCode.Name} - {levelMembership.Name}",
+                                ProductId = $"{typeSessionCode.Name}-{levelMembership.Name}-{rand.Next(100000, 999999)}",
+                                TypeSessionId = typeSessionCode.Id,
+                                LevelMembershipId = levelMembership.Id,
+                            };
+                            await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
+                            await _unitOfWork.SaveAsync();
+                        }
+                        typeSessionCode.ForMobile = typeSessionCodeDTO.ForMobile.Value;
+                    }
+                }
+            }
 
             typeSessionCode.Description = typeSessionCodeDTO.Description ?? typeSessionCode.Description;
             typeSessionCode.Duration = typeSessionCodeDTO.Duration ?? typeSessionCode.Duration;
@@ -94,6 +128,5 @@ namespace BusinessLogic.Service
             await _unitOfWork.SaveAsync();
             return true;
         }
-
     }
 }

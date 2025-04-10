@@ -13,7 +13,7 @@ namespace BussinessObject.Models
         public string? Name { get; set; }
 
         [Required]
-        public string ProductId { get; set; }
+        public string ProductId { get; set; } 
 
         [Required]
         public int LevelMembershipId { get; set; }

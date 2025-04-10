@@ -10,6 +10,7 @@ namespace BusinessLogic.DTO.FrameDTO
         public string FrameUrl { get; set; }
         public string FrameStyleName { get; set; }
         public int SlotCount { get; set; }
+        public bool? ForMobile { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? LastModified { get; set; }
         public string? CreatedById { get; set; }

@@ -43,6 +43,7 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest("Invalid Frame Style");
             }
+            if(!form.ForMobile.HasValue) form.ForMobile = false;
 
             var uploadedUrl = await _firebaseService.UploadImageAsync(
             form.FrameFile.OpenReadStream(),
