@@ -2,7 +2,6 @@
 
 namespace BussinessObject.Models
 {
-
     public class TypeSession : BaseEntity
     {
         [Required]
@@ -26,5 +25,6 @@ namespace BussinessObject.Models
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
+        public virtual ICollection<TypeSessionProduct> TypeSessionProducts { get; set; } = new List<TypeSessionProduct>();
     }
 }

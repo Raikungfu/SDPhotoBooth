@@ -6,6 +6,7 @@ namespace BussinessObject.Models
     public class LevelMembership : BaseEntity
     {
         public string Name { get; set; }
+
         public string Description { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
@@ -20,5 +21,7 @@ namespace BussinessObject.Models
         public decimal? MinOrder { get; set; }
 
         public virtual ICollection<MembershipCard> MembershipCards { get; set; } = new List<MembershipCard>();
+
+        public virtual ICollection<TypeSessionProduct> TypeSessionProducts { get; set; } = new List<TypeSessionProduct>();
     }
 }

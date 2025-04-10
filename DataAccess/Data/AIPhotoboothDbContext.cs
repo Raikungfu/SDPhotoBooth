@@ -36,6 +36,8 @@ namespace DataAccess.Data
         public DbSet<StickerStyle> StickerStyle { get; set; }
         public DbSet<Sticker> Sticker { get; set; }
 
+        public DbSet<TypeSessionProduct> TypeSessionProduct { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

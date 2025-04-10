@@ -4,6 +4,7 @@ using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ServerAPI.Controllers
 {
@@ -49,6 +50,18 @@ namespace ServerAPI.Controllers
         public async Task<IActionResult> GetByCustomerId(string customerId)
         {
             var membershipCard = await _membershipCardService.GetByCustomerId(customerId);
+            if (membershipCard == null)
+            {
+                return NotFound();
+            }
+            return Ok(membershipCard);
+        }
+
+        [HttpGet("mobile")]
+        public async Task<IActionResult> GetForCus()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var membershipCard = await _membershipCardService.GetByCustomerId(userId);
             if (membershipCard == null)
             {
                 return NotFound();

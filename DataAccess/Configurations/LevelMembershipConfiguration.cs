@@ -28,6 +28,10 @@ namespace DataAccess.Configurations
             builder.HasOne(b => b.LastModifiedBy)
                 .WithMany(l => l.LastModifiedLevelMemberships)
                 .HasForeignKey(b => b.LastModifiedById);
+
+            builder.HasMany(b => b.TypeSessionProducts)
+                .WithOne(l => l.LevelMembership)
+                .HasForeignKey(b => b.LevelMembershipId);
         }
     }
 }
