@@ -1,10 +1,10 @@
-﻿using BusinessLogic.DTO.TypeSessionDTO;
+﻿using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
-using BussinessObject.Models;
+using BusinessLogic.Utils;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ServerAPI.Controllers
 {
@@ -15,12 +15,14 @@ namespace ServerAPI.Controllers
         private readonly ITypeSessionService _typeSessionService;
         private readonly ITypeSessionProductService _typeSessionProductService;
         private readonly ILevelMembershipService _levelMembershipService;
+        private readonly ICouponService _couponService;
         public TypeSessionController(ITypeSessionService typeSessionService, ITypeSessionProductService typeSessionProductService,
-            ILevelMembershipService levelMembershipService)
+            ILevelMembershipService levelMembershipService, ICouponService couponService)
         {
             _typeSessionService = typeSessionService;
             _typeSessionProductService = typeSessionProductService;
             _levelMembershipService = levelMembershipService;
+            _couponService = couponService;
         }
 
         [HttpGet("count")]
@@ -83,16 +85,41 @@ namespace ServerAPI.Controllers
             {
                 //Create TypeSessionProduct
                 var levelMemberships = await _levelMembershipService.GetAllLevelMemberships(new PaginationParams());
-                var rand = new Random();
+                var coupons = await _couponService.GetCoupons(new PaginationParams());
 
-                foreach (var levelMembership in levelMemberships)
+                var validCoupons = new List<CouponResponseDTO>();
+                foreach (var c in coupons)
+                {
+                    try
+                    {
+                        _couponService.ValidateCoupon(c, typeSession.Price);
+                        validCoupons.Add(c);
+                    }
+                    catch { }
+                }
+
+
+                foreach (var level in levelMemberships)
                 {
                     var typeSessionProduct = new TypeSessionProductCreateRequestDTO
                     {
-                        Name = $"{typeSession.Name} - {levelMembership.Name}",
-                        ProductId = $"{typeSession.Name}-{levelMembership.Name}-{rand.Next(100000, 999999)}",
+                        Name = $"{typeSession.Name}_{level.Name}", 
+                        ProductId = $"{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(level.Name)}", 
                         TypeSessionId = typeSession.Id,
-                        LevelMembershipId = levelMembership.Id,
+                        LevelMembershipId = level.Id
+                    };
+
+                    await _typeSessionProductService.CreateAsync(typeSessionProduct);
+                }
+
+                foreach (var coupon in validCoupons)
+                {
+                    var typeSessionProduct = new TypeSessionProductCreateRequestDTO
+                    {
+                        Name = $"{typeSession.Name}_{coupon.Name}", 
+                        ProductId = $"{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
+                        TypeSessionId = typeSession.Id,
+                        CouponId = coupon.Id
                     };
                     await _typeSessionProductService.CreateAsync(typeSessionProduct);
                 }
@@ -122,6 +149,11 @@ namespace ServerAPI.Controllers
             if (!result)
             {
                 return NotFound();
+            }
+            var typeSessionProducts = await _typeSessionProductService.GetByTypeSessionIdAsync(id);
+            foreach (var typeSessionProduct in typeSessionProducts)
+            {
+                await _typeSessionProductService.DeleteAsync(typeSessionProduct.Id);
             }
             return Ok();
         }

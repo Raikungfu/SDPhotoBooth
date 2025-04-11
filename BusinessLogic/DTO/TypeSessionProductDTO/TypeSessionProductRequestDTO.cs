@@ -7,9 +7,9 @@ namespace BusinessLogic.DTO.TypeSessionProductDTO
         public string? Name { get; set; }
         [Required]
         public string ProductId { get; set; }
-        [Required]
-        public int LevelMembershipId { get; set; }
+        public int? LevelMembershipId { get; set; }
         public int TypeSessionId { get; set; }
+        public int? CouponId { get; set; }
     }
 
     public class TypeSessionProductUpdateRequestDTO
@@ -18,5 +18,6 @@ namespace BusinessLogic.DTO.TypeSessionProductDTO
         public string? ProductId { get; set; }
         public int? LevelMembershipId { get; set; }
         public int? TypeSessionId { get; set; }
+        public int? CouponId { get; set; }
     }
 }

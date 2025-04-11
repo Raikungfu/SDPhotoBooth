@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
@@ -11,11 +13,13 @@ namespace BusinessLogic.Service
     public class TypeSessionService : ITypeSessionService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICouponService _couponService;
         private readonly IMapper _mapper;
-        public TypeSessionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public TypeSessionService(IUnitOfWork unitOfWork, IMapper mapper, ICouponService couponService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _couponService = couponService;
         }
 
         public async Task<int> GetCount()
@@ -100,19 +104,46 @@ namespace BusinessLogic.Service
                     if (!typeSessionProducts.Any())
                     {
                         var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync();
-                        var rand = new Random();
-                        foreach (var levelMembership in levelMemberships)
+                        var coupons = await _couponService.GetCoupons(new PaginationParams());
+
+                        var validCoupons = new List<CouponResponseDTO>();
+                        foreach (var c in coupons)
+                        {
+                            try
+                            {
+                                _couponService.ValidateCoupon(c, typeSessionCode.Price);
+                                validCoupons.Add(c);
+                            }
+                            catch { }
+                        }
+
+                        foreach (var level in levelMemberships)
                         {
                             var typeSessionProduct = new TypeSessionProduct
                             {
-                                Name = $"{typeSessionCode.Name} - {levelMembership.Name}",
-                                ProductId = $"{typeSessionCode.Name}-{levelMembership.Name}-{rand.Next(100000, 999999)}",
+                                Name = $"{typeSessionCode.Name}_{level.Name}", 
+                                ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(level.Name)}", 
                                 TypeSessionId = typeSessionCode.Id,
-                                LevelMembershipId = levelMembership.Id,
+                                LevelMembershipId = level.Id
                             };
                             await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
                             await _unitOfWork.SaveAsync();
                         }
+
+
+                        foreach (var coupon in validCoupons)
+                        {
+                            var typeSessionProduct = new TypeSessionProduct
+                            {
+                                Name = $"{typeSessionCode.Name}_{coupon.Name}",
+                                ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
+                                TypeSessionId = typeSessionCode.Id,
+                                CouponId = coupon.Id
+                            };
+                            await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
+                            await _unitOfWork.SaveAsync();
+                        }
+
                         typeSessionCode.ForMobile = typeSessionCodeDTO.ForMobile.Value;
                     }
                 }

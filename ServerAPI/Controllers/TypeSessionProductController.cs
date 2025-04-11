@@ -16,13 +16,14 @@ namespace ServerAPI.Controllers
     {
         private readonly ITypeSessionProductService _typeSessionProductService;
         private readonly IMembershipCardService _membershipCardService;
-        private readonly ITypeSessionService _typeSessionService;
+        private readonly ICouponService _couponService;
         public TypeSessionProductController(ITypeSessionProductService typeSessionProductService,
-             IMembershipCardService membershipCardService, ITypeSessionService typeSessionService)
+             IMembershipCardService membershipCardService,
+             ICouponService couponService)
         {
             _typeSessionProductService = typeSessionProductService;
             _membershipCardService = membershipCardService;
-            _typeSessionService = typeSessionService;
+            _couponService = couponService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams? pagination)
@@ -62,6 +63,7 @@ namespace ServerAPI.Controllers
 
             var typeSessionProducts = await _typeSessionProductService.GetByLevelMembershipIdAsync(re.LevelMemberShip.Id);
 
+
             if(typeSessionProducts == null)
             {
                 return NotFound();
@@ -71,7 +73,24 @@ namespace ServerAPI.Controllers
 
         }
 
-        
+        [HttpGet("coupon")]
+        public async Task<IActionResult> GetByCouponAndTypeSessionId([FromQuery] string coupon, [FromQuery] int typeSessionId)
+        {
+            var isExistCoupon = await _couponService.GetCoupon(coupon);
+            if (isExistCoupon == null)
+            {
+                return NotFound("Coupon not found");
+            }
+            var typeSessionProducts = await _typeSessionProductService.GetByCouponAndTypeSessionIdAsync(isExistCoupon.Id, typeSessionId);
+            if (typeSessionProducts == null)
+            {
+                return NotFound("Type session product not found");
+            }
+           
+            return Ok(typeSessionProducts);
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] TypeSessionProductUpdateRequestDTO typeSessionProduct)
         {

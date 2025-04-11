@@ -1,5 +1,9 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.TypeSessionDTO;
+using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
+using BussinessObject.Enums;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +15,13 @@ namespace ServerAPI.Controllers
     public class CouponController : ControllerBase
     {
         private readonly ICouponService _couponService;
-        public CouponController(ICouponService couponService)
+        private readonly ITypeSessionService _typeSessionService;
+        private readonly ITypeSessionProductService _typeSessionProductService;
+        public CouponController(ICouponService couponService, ITypeSessionService typeSessionService, ITypeSessionProductService typeSessionProductService)
         {
             _couponService = couponService;
+            _typeSessionService = typeSessionService;
+            _typeSessionProductService = typeSessionProductService;
         }
 
         [HttpGet("count")]
@@ -74,6 +82,34 @@ namespace ServerAPI.Controllers
                 return StatusCode(StatusCodes.Status409Conflict, "Coupon already exists");
             }
             var coupon = await _couponService.CreateCoupon(couponRequestDTO);
+
+            //Create TypeSessionProduct
+            var typeSession = await _typeSessionService.GetTypeSessionCodesAsync(new PaginationParams());
+            var validTypeSession = new List<TypeSessionResponseDTO>();
+            foreach (var ts in typeSession)
+            {
+                if (ts.ForMobile)
+                {
+                    try
+                    {
+                        _couponService.ValidateCoupon(coupon, ts.Price);
+                        validTypeSession.Add(ts);
+                    }
+                    catch { }
+                }
+            }
+            foreach (var ts in validTypeSession)
+            {
+                var typeSessionProduct = new TypeSessionProductCreateRequestDTO
+                {
+                    Name = $"{ts.Name}_{coupon.Name}", 
+                    ProductId = $"{ProductIdHelper.Normalize(ts.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
+                    TypeSessionId = ts.Id,
+                    CouponId = coupon.Id
+                };
+                
+                await _typeSessionProductService.CreateAsync(typeSessionProduct);
+            }
             return Ok(coupon);
         }
 
@@ -102,6 +138,12 @@ namespace ServerAPI.Controllers
                 return NotFound();
             }
             var isDeleted = await _couponService.DeleteCoupon(id);
+            var alltypeSessionProducts = await _typeSessionProductService.GetAllAsync(new PaginationParams());
+            var typeSessionProducts = alltypeSessionProducts.Where(x => x.CouponId == id).ToList();
+            foreach (var item in typeSessionProducts)
+            {
+                await _typeSessionProductService.DeleteAsync(item.Id);
+            }
             return Ok(isDeleted);
         }
     }

@@ -41,6 +41,7 @@ namespace BussinessObject.Models
         public bool IsActive { get; set; } = true;
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<TypeSessionProduct> TypeSessionProducts { get; set; } = new List<TypeSessionProduct>();
     }
 
 }

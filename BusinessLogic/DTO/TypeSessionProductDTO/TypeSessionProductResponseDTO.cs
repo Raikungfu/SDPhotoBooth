@@ -6,7 +6,7 @@ namespace BusinessLogic.DTO.TypeSessionProductDTO
 {
     public class TypeSessionProductResponseDTO
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string? Name { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? LastModified { get; set; }
@@ -15,6 +15,7 @@ namespace BusinessLogic.DTO.TypeSessionProductDTO
         public string? ProductId { get; set; }
         public int? LevelMembershipId { get; set; }
         public int? TypeSessionId { get; set; }
+        public int? CouponId { get; set; }
         public LevelMembershipResponseDTO? LevelMembership { get; set; }
 
         public TypeSessionResponseDTO typeSession { get; set; }

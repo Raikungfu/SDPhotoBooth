@@ -10,6 +10,7 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetByTypeSessionIdAsync(int typeSessionId);
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetByProductIdAsync(string productId);
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetByLevelMembershipIdAsync(int levelMembershipId);
+        Task<IEnumerable<TypeSessionProductResponseDTO>> GetByCouponAndTypeSessionIdAsync(int couponId, int typeSessionId);
         Task<TypeSessionProductResponseDTO> CreateAsync(TypeSessionProductCreateRequestDTO typeSessionProduct);
         Task<TypeSessionProductResponseDTO> UpdateAsync(int id, TypeSessionProductUpdateRequestDTO typeSessionProduct);
         Task<bool> DeleteAsync(int id);

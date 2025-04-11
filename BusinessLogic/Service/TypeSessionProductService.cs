@@ -46,6 +46,13 @@ namespace BusinessLogic.Service
             return typeSessionProductDTOs;
         }
 
+        public async Task<IEnumerable<TypeSessionProductResponseDTO>> GetByCouponAndTypeSessionIdAsync(int couponId, int typeSessionId)
+        {
+            var typeSessionProducts = await _unitOfWork.TypeSessionProduct.GetAllAsync(s => s.CouponId == couponId && s.TypeSessionId == typeSessionId);
+            var typeSessionProductDTOs = _mapper.Map<IEnumerable<TypeSessionProductResponseDTO>>(typeSessionProducts);
+            return typeSessionProductDTOs;
+        }
+
         public async Task<TypeSessionProductResponseDTO> GetByIdAsync(int id)
         {
             var typeSessionProduct = await _unitOfWork.TypeSessionProduct.GetFirstOrDefaultAsync(s => s.Id == id);

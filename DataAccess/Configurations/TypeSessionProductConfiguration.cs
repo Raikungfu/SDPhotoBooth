@@ -21,8 +21,6 @@ namespace DataAccess.Configurations
             .WithMany(m => m.TypeSessionProducts)
             .HasForeignKey(m => m.TypeSessionId);
 
-            builder.HasIndex(x => x.ProductId)
-            .IsUnique();
         }
     }
 }
