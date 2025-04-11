@@ -18,5 +18,8 @@ namespace BusinessLogic.DTO.DepositDTO
         public DepositStatus Status { get; set; } = DepositStatus.Pending;
         public string? PaymentMethodName { get; set; }
         public string? WalletName { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime LastModified { get; set; }
     }
 }

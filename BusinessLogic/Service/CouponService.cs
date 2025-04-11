@@ -137,14 +137,25 @@ namespace BusinessLogic.Service
             return couponResponseDTO;
         }
 
-        public bool IsValidCoupon(CouponResponseDTO coupon, decimal price)
+        public void ValidateCoupon(CouponResponseDTO coupon, decimal price)
         {
-            return (coupon.StartDate == null || coupon.StartDate <= DateTime.Now)
-                && (coupon.EndDate == null || coupon.EndDate >= DateTime.Now)
-                && (coupon.MaxUse == null || coupon.MaxUse > coupon.UsedAmount)
-                && (coupon.MinOrder == null || coupon.MinOrder <= price)
-                && coupon.IsActive
-                && !coupon.IsDeleted;
+            if (coupon.StartDate != null && coupon.StartDate > DateTime.Now)
+                throw new Exception("The coupon is not yet valid.");
+
+            if (coupon.EndDate != null && coupon.EndDate < DateTime.Now)
+                throw new Exception("The coupon has expired.");
+
+            if (coupon.MaxUse != null && coupon.MaxUse <= coupon.UsedAmount)
+                throw new Exception("The coupon usage limit has been reached.");
+
+            if (coupon.MinOrder != null && coupon.MinOrder > price)
+                throw new Exception($"A minimum order of {coupon.MinOrder:#,##0} is required to apply this coupon.");
+
+            if (!coupon.IsActive)
+                throw new Exception("The coupon is currently inactive.");
+
+            if (coupon.IsDeleted)
+                throw new Exception("The coupon does not exist.");
         }
     }
 }

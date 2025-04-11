@@ -8,6 +8,8 @@ using ServerAPI.Services;
 using Azure.Core;
 using BusinessLogic.DTO.WalletDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.DTO.MembershipCardDTO;
+using BusinessLogic.Service;
 
 namespace ServerAPI.Controllers
 {
@@ -20,14 +22,16 @@ namespace ServerAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWalletService _walletService;
+        private readonly IMembershipCardService _membershipCardService;
 
-        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IConfiguration configuration, IWalletService _walletService)
+        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IConfiguration configuration, IWalletService _walletService, IMembershipCardService membershipCardService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _roleManager = roleManager;
             this._walletService = _walletService;
+            _membershipCardService = membershipCardService;
         }
 
         [HttpPost("google/callback")]
@@ -102,8 +106,15 @@ namespace ServerAPI.Controllers
                     }
 
                     await _userManager.AddToRoleAsync(newUser, UserType.Customer.ToString());
-
                     await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+
+                    await _membershipCardService.Create(new CreateMembershipCardRequestDTO()
+                    {
+                        CustomerId = newUser.Id,
+                        LevelMemberShipId = 1,
+                        Points = 0,
+                        IsActive = true
+                    });
 
                     return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(newUser.Id, newUser.UserName, UserType.Customer, _configuration["Jwt:PrivateKey"]) });
                 }

@@ -12,7 +12,7 @@ namespace BusinessLogic.Service.IService
         Task<CouponResponseDTO> CreateCoupon(CouponRequestDTO couponRequestDTO);
         Task<CouponResponseDTO> UpdateCoupon(int id, CouponRequestDTO couponRequestDTO);
         Task<bool> DeleteCoupon(int id);
-        bool IsValidCoupon(CouponResponseDTO coupon, decimal price);
+        void ValidateCoupon(CouponResponseDTO coupon, decimal price);
         Task<int> GetCouponCount();
     }
 }

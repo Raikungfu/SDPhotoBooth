@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.MembershipCardDTO;
+using BusinessLogic.DTO.WalletDTO;
+using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
+using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +67,13 @@ namespace ServerAPI.Controllers
             var membershipCard = await _membershipCardService.GetByCustomerId(userId);
             if (membershipCard == null)
             {
-                return NotFound();
+                membershipCard = await _membershipCardService.Create(new CreateMembershipCardRequestDTO()
+                {
+                    CustomerId = userId,
+                    LevelMemberShipId = 1,
+                    Points = 0,
+                    IsActive = true
+                });
             }
             return Ok(membershipCard);
         }
