@@ -6,6 +6,7 @@ namespace BusinessLogic.Service.IService
     public interface ITypeSessionProductService
     {
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetAllAsync(PaginationParams? pagination);
+        Task<IEnumerable<TypeSessionProductResponseDTO>> GetAllIncludeAsync();
         Task<TypeSessionProductResponseDTO> GetByIdAsync(int id);
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetByTypeSessionIdAsync(int typeSessionId);
         Task<IEnumerable<TypeSessionProductResponseDTO>> GetByProductIdAsync(string productId);

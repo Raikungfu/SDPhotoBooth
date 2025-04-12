@@ -11,6 +11,7 @@ using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
+using ServerAPI.Services.IService;
 using StackExchange.Redis;
 using System.Security.Claims;
 
@@ -187,9 +188,6 @@ namespace ServerAPI.Controllers
                 var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
                 if (typeSession == null) return BadRequest("Invalid type session.");
 
-                var (error, _, _) = await ApplyCouponIfAny(order, typeSession);
-                if (error != null) return error;
-
                 var newOrder = await orderService.CreateOrder(order);
 
                 var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
@@ -263,8 +261,8 @@ namespace ServerAPI.Controllers
             if (customer != null)
                 order.CustomerId = customer.Id;
 
-            var (error, _, _) = await ApplyCouponIfAny(order, typeSession);
-            if (error != null) return error;
+            var (error, _, _) = await couponService.ApplyCouponIfAny(order, typeSession);
+            if (error != null) throw new Exception(error);
 
             if (!paymentMethod.IsOnline)
                 order.Status = OrderStatus.Completed;
@@ -325,50 +323,15 @@ namespace ServerAPI.Controllers
             if (typeSession == null)
                 return BadRequest("Invalid session.");
 
-            var (error, updatedOrder, validCoupon) = await ApplyCouponIfAny(order, typeSession);
+            var (error, updatedOrder, validCoupon) = await couponService.ApplyCouponIfAny(order, typeSession);
             if (error != null)
-                return error;
+                throw new Exception(error);
 
             return Ok(new
             {
                 Order = updatedOrder,
                 Coupon = validCoupon
             });
-        }
-
-        private async Task<(IActionResult? error, OrderRequestDTO order, CouponResponseDTO? coupon)> ApplyCouponIfAny(OrderRequestDTO order, TypeSessionResponseDTO typeSession)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(order.CouponCode))
-                {
-                    order.Amount = typeSession.Price;
-                    return (null, order, null);
-                }
-
-                var coupon = await couponService.GetCoupon(order.CouponCode);
-                if (coupon == null)
-                {
-                    return (BadRequest("Invalid coupon code."), order, null);
-                }
-
-                couponService.ValidateCoupon(coupon, typeSession.Price);
-
-                order.CouponId = coupon.Id;
-                var discount = Math.Max(0m,
-                    coupon.Discount.GetValueOrDefault() +
-                    (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
-
-                order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
-                    ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
-                    : Math.Max(0, typeSession.Price - discount);
-
-                return (null, order, coupon);
-            }
-            catch (Exception e)
-            {
-                return (BadRequest(e.Message), order, null);
-            }
         }
 
 

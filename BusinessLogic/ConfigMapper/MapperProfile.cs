@@ -3,6 +3,7 @@ using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.DepositDTO;
+using BusinessLogic.DTO.ExportProductDTO;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.DTO.LevelMembershipDTO;
 using BusinessLogic.DTO.LocationDTO;
@@ -174,6 +175,11 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<TypeSessionProductCreateRequestDTO, TypeSessionProduct>();
             CreateMap<TypeSessionProduct, TypeSessionProductResponseDTO>();
+
+            CreateMap<TypeSessionProductResponseDTO, ExportProductResponseDTO>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.typeSession.Description))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.typeSession != null ? $"VN;{(long)((src.typeSession.Price - (src.Discount ?? 0)) * 1000000)}" : null));
         }
     }
 }

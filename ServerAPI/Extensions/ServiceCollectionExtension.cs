@@ -7,7 +7,9 @@ using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using ServerAPI.Service;
 using ServerAPI.Services;
+using ServerAPI.Services.IService;
 
 
 namespace ServerAPI.Extensions
@@ -50,6 +52,7 @@ namespace ServerAPI.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
             services.AddScoped<IPayOSService, PayOSService>();
+            services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IPhotoHistoryService, PhotoHistoryService>();
 
             return services;

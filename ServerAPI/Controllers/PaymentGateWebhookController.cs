@@ -13,6 +13,7 @@ using Net.payOS.Types;
 using Newtonsoft.Json;
 using ServerAPI.Helpers;
 using ServerAPI.Services;
+using ServerAPI.Services.IService;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -113,11 +114,11 @@ namespace ServerAPI.Controllers
                 var depositId = request.DepositId;
                 var purchaseToken = request.PurchaseToken;
                 var typeSessionId = request.TypeSessionName;
-                //var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
-                //if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
-                //{
-                //    return BadRequest(new { code = "20", desc = "Invalid purchase" });
-                //}
+                var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
+                if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
+                {
+                    return BadRequest(new { code = "20", desc = "Invalid purchase" });
+                }
 
                 if (orderCode.HasValue)
                 {

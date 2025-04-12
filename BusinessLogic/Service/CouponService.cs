@@ -157,5 +157,40 @@ namespace BusinessLogic.Service
             if (coupon.IsDeleted)
                 throw new Exception("The coupon does not exist.");
         }
+
+        public async Task<(string? error, OrderRequestDTO order, CouponResponseDTO? coupon)> ApplyCouponIfAny(OrderRequestDTO order, TypeSessionResponseDTO typeSession)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(order.CouponCode))
+                {
+                    order.Amount = typeSession.Price;
+                    return (null, order, null);
+                }
+
+                var coupon = await GetCoupon(order.CouponCode);
+                if (coupon == null)
+                {
+                    return ("Invalid coupon code.", order, null);
+                }
+
+                ValidateCoupon(coupon, typeSession.Price);
+
+                order.CouponId = coupon.Id;
+                var discount = Math.Max(0m,
+                    coupon.Discount.GetValueOrDefault() +
+                    (typeSession.Price * coupon.DiscountPercent.GetValueOrDefault()));
+
+                order.Amount = (coupon.MaxDiscount.HasValue && coupon.MaxDiscount > 0)
+                    ? Math.Max(0, typeSession.Price - Math.Min(discount, (decimal)coupon.MaxDiscount.Value))
+                    : Math.Max(0, typeSession.Price - discount);
+
+                return (null, order, coupon);
+            }
+            catch (Exception e)
+            {
+                return (e.Message, order, null);
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace ServerAPI.Helpers
     public class GoogleTokenHelper
     {
         private static string GoogleScope = "https://www.googleapis.com/auth/androidpublisher";
-        private static string CredentialPath = "Key/google-service.json";
+        private static string CredentialPath = "Key/sd-photobooth-452212-20ba22c87361.json";
 
         public static async Task<GoogleJsonWebSignature.Payload?> VerifyAccessTokenAsync(string idToken, string googleWebClientId, string googleMobileClientId)
         {

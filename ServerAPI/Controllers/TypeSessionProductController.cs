@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.ExportProductDTO;
 using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
@@ -6,6 +7,7 @@ using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ServerAPI.Services.IService;
 using System.Security.Claims;
 
 namespace ServerAPI.Controllers
@@ -17,13 +19,18 @@ namespace ServerAPI.Controllers
         private readonly ITypeSessionProductService _typeSessionProductService;
         private readonly IMembershipCardService _membershipCardService;
         private readonly ICouponService _couponService;
+        private readonly IExportService _exportService;
+        private readonly IMapper _mapper;
         public TypeSessionProductController(ITypeSessionProductService typeSessionProductService,
              IMembershipCardService membershipCardService,
-             ICouponService couponService)
+             ICouponService couponService,
+             IExportService exportService, IMapper mapper)
         {
             _typeSessionProductService = typeSessionProductService;
             _membershipCardService = membershipCardService;
             _couponService = couponService;
+            _exportService = exportService;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams? pagination)
@@ -113,5 +120,22 @@ namespace ServerAPI.Controllers
             }
             return NoContent();
         }
+
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportCsv()
+        {
+            var typeSessionProduct = await _typeSessionProductService.GetAllIncludeAsync();
+            if (typeSessionProduct == null)
+            {
+                return NotFound();
+            }
+
+            var products = _mapper.Map<IEnumerable<ExportProductResponseDTO>>(typeSessionProduct);
+
+            var csvBytes = _exportService.ExportProductsToCsv(products);
+
+            return File(csvBytes, "text/csv", "products.csv");
+        }
+
     }
 }
