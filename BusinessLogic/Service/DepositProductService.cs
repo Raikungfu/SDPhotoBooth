@@ -46,12 +46,6 @@ namespace BusinessLogic.Service
 
         }
 
-        public async Task<IEnumerable<DepositProductResponseDTO>> GetAllIncludeAsync()
-        {
-            var depositProducts = await _unitOfWork.DepositProduct.GetAllAsync(includeProperties: "LevelMembership,Deposit,Coupon");
-            var depositProductDTOs = _mapper.Map<IEnumerable<DepositProductResponseDTO>>(depositProducts);
-            return depositProductDTOs;
-        }
 
         public async Task<DepositProductResponseDTO> GetByIdAsync(int id)
         {
@@ -62,14 +56,6 @@ namespace BusinessLogic.Service
             }
             var depositProductDTO = _mapper.Map<DepositProductResponseDTO>(depositProduct);
             return depositProductDTO;
-        }
-
-        
-        public async Task<IEnumerable<DepositProductResponseDTO>> GetByProductIdAsync(string productId)
-        {
-            var depositProducts = await _unitOfWork.DepositProduct.GetAllAsync(s => s.ProductId == productId, includeProperties: "LevelMembership,Deposit");
-            var depositProductDTOs = _mapper.Map<IEnumerable<DepositProductResponseDTO>>(depositProducts);
-            return depositProductDTOs;
         }
 
     }

@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.DTO.ExportProductDTO;
-using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services.IService;
-using System.Security.Claims;
 
 namespace ServerAPI.Controllers
 {
@@ -16,17 +13,12 @@ namespace ServerAPI.Controllers
     public class DepositProductController : ControllerBase
     {
         private readonly IDepositProductService _depositProductService;
-        private readonly IMembershipCardService _membershipCardService;
-        private readonly ICouponService _couponService;
         private readonly IExportService _exportService;
         private readonly IMapper _mapper;
         public DepositProductController(IDepositProductService depositProductService,
-             IMembershipCardService membershipCardService, IExportService exportService, IMapper mapper,
-             ICouponService couponService)
+            IExportService exportService, IMapper mapper)
         {
             _depositProductService = depositProductService;
-            _membershipCardService = membershipCardService;
-            _couponService = couponService;
             _exportService = exportService;
             _mapper = mapper;
         }
@@ -60,16 +52,31 @@ namespace ServerAPI.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] DepositProductCreateRequestDTO depositProductRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var depositProduct = await _depositProductService.CreateAsync(depositProductRequest);
+            if (depositProduct == null)
+            {
+                return BadRequest("Failed to create deposit product");
+            }
+            return Ok(depositProduct);
+        }
+
         [HttpGet("export")]
         public async Task<IActionResult> ExportCsv()
         {
-            var typeSessionProduct = await _depositProductService.GetAllIncludeAsync();
-            if (typeSessionProduct == null)
+            var depositProduct = await _depositProductService.GetAllAsync(new PaginationParams());
+            if (depositProduct == null)
             {
                 return NotFound();
             }
 
-            var products = _mapper.Map<IEnumerable<ExportProductResponseDTO>>(typeSessionProduct);
+            var products = _mapper.Map<IEnumerable<ExportProductResponseDTO>>(depositProduct);
 
             var csvBytes = _exportService.ExportProductsToCsv(products);
 

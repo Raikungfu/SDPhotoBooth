@@ -129,26 +129,6 @@ namespace ServerAPI.Controllers
                 await _typeSessionProductService.CreateAsync(typeSessionProduct);
             }
 
-            // Filter deposit
-            var deposits = await _depositService.GetAllDeposits(new PaginationParams());
-            var validDeposits = new List<DepositResponseDTO>();
-            foreach (var deposit in deposits)
-            {
-                _couponService.ValidateCoupon(coupon, deposit.Amount);
-                validDeposits.Add(deposit);
-            }
-            foreach (var deposit in validDeposits)
-            {
-                var depositProduct = new DepositProductCreateRequestDTO
-                {
-                    Name = $"{deposit.Amount}_{coupon.Name}",
-                    ProductId = $"{deposit.Amount}_{ProductIdHelper.Normalize(coupon.Name)}",
-                    DepositId = deposit.Id,
-                    CouponId = coupon.Id
-                };
-                await _depositProductService.CreateAsync(depositProduct);
-            }
-
             return Ok(coupon);
         }
 

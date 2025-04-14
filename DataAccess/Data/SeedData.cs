@@ -700,7 +700,6 @@ public static class SeedData
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] OFF");
             #endregion
 
-
             #region Seed data for Order
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
 
@@ -854,6 +853,22 @@ public static class SeedData
 
             #endregion
 
+            #region Seed data for DepositProduct
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] ON");
+            if (!context.DepositProduct.Any())
+            {
+                context.DepositProduct.AddRange(
+                new DepositProduct { Id = 1, Name = "Deposit_1", Description = "Description_1", AmountAdd = 2000, ProductId = "Product_1", Price = 20000 },
+                new DepositProduct { Id = 2, Name = "Deposit_2", Description = "Description_2", AmountAdd = 1500, ProductId = "Product_2", Price = 15000 },
+                new DepositProduct { Id = 3, Name = "Deposit_3", Description = "Description_3", AmountAdd = 1200, ProductId = "Product_3", Price = 12000 },
+                new DepositProduct { Id = 4, Name = "Deposit_4", Description = "Description_4", ProductId = "Product_4", Price = 10000 },
+                new DepositProduct { Id = 5, Name = "Deposit_5", Description = "Description_5", AmountAdd = 1000, ProductId = "Product_5", Price = 10000 }
+            );
+                context.SaveChanges();
+            }
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] OFF");
+            #endregion
+
             #region Seed data for Deposit
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
 
@@ -866,6 +881,7 @@ public static class SeedData
                         WalletId = 1,
                         Amount = 20000,
                         Status = DepositStatus.Success,
+                        DepositProductId = 1,
                     },
                     new Deposit
                     {
@@ -873,6 +889,7 @@ public static class SeedData
                         WalletId = 1,
                         Amount = 10000,
                         Status = DepositStatus.Success,
+                        DepositProductId = 2,
                     },
                     new Deposit
                     {
@@ -880,6 +897,7 @@ public static class SeedData
                         WalletId = 1,
                         Amount = 5000,
                         Status = DepositStatus.Success,
+                        DepositProductId = 3,
                     },
                     new Deposit
                     {
@@ -887,6 +905,7 @@ public static class SeedData
                         WalletId = 1,
                         Amount = 10000,
                         Status = DepositStatus.Success,
+                        DepositProductId = 4,
                     },
                     new Deposit
                     {
@@ -894,6 +913,7 @@ public static class SeedData
                         WalletId = 2,
                         Amount = 20000,
                         Status = DepositStatus.Success,
+                        DepositProductId = 1,
                     }
                 );
 

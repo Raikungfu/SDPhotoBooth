@@ -7,7 +7,6 @@ namespace BusinessLogic.Service.IService
     public interface IDepositProductService
     {
         Task<IEnumerable<DepositProductResponseDTO>> GetAllAsync(PaginationParams? pagination);
-        Task<IEnumerable<DepositProductResponseDTO>> GetAllIncludeAsync();
         Task<DepositProductResponseDTO> GetByIdAsync(int id);
         Task<DepositProductResponseDTO> CreateAsync(DepositProductCreateRequestDTO depositProduct);
         Task<bool> DeleteAsync(int id);
