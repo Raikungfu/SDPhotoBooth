@@ -187,8 +187,8 @@ namespace BusinessLogic.ConfigMapper
 
             CreateMap<DepositProductResponseDTO, ExportProductResponseDTO>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Deposit.Amount))
-                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Deposit != null ? $"VN;{(long)((src.Deposit.Amount - (src.Discount ?? 0)) * 1000000)}" : null));
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price != null ? $"VN;{(long)(src.Price * 1000000)}" : null));
         }
     }
 }

@@ -7,19 +7,16 @@ namespace BussinessObject.Models
     {
         public string? Name { get; set; }
 
+        public string? Description { get; set; }
+
         [Required]
         public string ProductId { get; set; }
 
-        public int? CouponId { get; set; }
-        [ForeignKey("CouponId")]
-        public virtual Coupon Coupon { get; set; }
+        [Required]
+        public decimal Price { get; set; }
 
-        public int? LevelMembershipId { get; set; }
-        [ForeignKey("LevelMembershipId")]
-        public virtual LevelMembership LevelMembership { get; set; }
+        public decimal? AmountAdd { get; set; }
 
-        public int DepositId { get; set; }
-        [ForeignKey("DepositId")]
-        public virtual Deposit Deposit { get; set; }
+        public IEnumerable<Deposit>? Deposits { get; set; }
     }
 }

@@ -9,7 +9,6 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<DepositResponseDTO>> GetAllDeposits(PaginationParams? pagination);
         Task<IEnumerable<DepositResponseDTO>> GetDepositsByCusId(string id);
         Task<DepositResponseDTO> CreateDeposit(DepositRequestDTO depositRequestDTO, string userId);
-        Task<DepositResponseDTO> UpdateDeposit(int id, DepositRequestDTO depositRequestDTO);
         Task<DepositResponseDTO> UpdateDepositStatusById(int id, DepositStatus depositStatus);
         Task<DepositResponseDTO> DeleteDeposit(int id);
         Task<int> GetCount();

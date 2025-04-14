@@ -26,6 +26,11 @@ namespace DataAccess.Configurations
                 .WithMany(c => c.Deposits)
                 .HasForeignKey(c => c.WalletId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.DepositProduct)
+                .WithMany(c => c.Deposits)
+                .HasForeignKey(c => c.DepositProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -49,67 +49,6 @@ namespace ServerAPI.Controllers
             return Ok(depositProduct);
         }
 
-        [HttpGet("GetByDepositId/{depositId}")]
-        public async Task<IActionResult> GetByDepositId(int depositId)
-        {
-            var depositProducts = await _depositProductService.GetByDepositIdAsync(depositId);
-            if (depositProducts == null)
-            {
-                return NotFound();
-            }
-            return Ok(depositProducts);
-        }
-
-        [HttpGet("mobile")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> GetForMobile()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-            var membershipCard = await _membershipCardService.GetByCustomerId(userId);
-            if (membershipCard == null)
-            {
-                return NotFound();
-            }
-            var depositProducts = await _depositProductService.GetByLevelMembershipIdAsync(membershipCard.LevelMemberShip.Id);
-            return Ok(depositProducts);
-        }
-
-        [HttpGet("coupon")]
-        public async Task<IActionResult> GetByCouponAndDepositId([FromQuery] string coupon, [FromQuery] int depositId)
-        {
-            var couponDetails = await _couponService.GetCoupon(coupon);
-            if (couponDetails == null)
-            {
-                return NotFound();
-            }
-            var depositProducts = await _depositProductService.GetByCouponAndDepositIdAsync(couponDetails.Id, depositId);
-            if (depositProducts == null)
-            {
-                return NotFound();
-            }
-            return Ok(depositProducts);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] DepositProductUpdateRequestDTO depositProduct)
-        {
-            var isExistDepositProduct = await _depositProductService.GetByIdAsync(id);
-            if (isExistDepositProduct == null)
-            {
-                return NotFound();
-            }
-            var updatedDepositProduct = await _depositProductService.UpdateAsync(id, depositProduct);
-            if (updatedDepositProduct == null)
-            {
-                return BadRequest("Failed to update deposit product");
-            }
-            return Ok(updatedDepositProduct);
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -10,17 +10,24 @@ namespace DataAccess.Configurations
         {
             builder.Property(lm => lm.Name).HasMaxLength(100);
 
-            builder.HasOne(l => l.Deposit)
-            .WithMany(m => m.DepositProducts)
-            .HasForeignKey(m => m.DepositId);
+            builder.Property(lm => lm.Description).HasMaxLength(500);
 
-            builder.HasOne(l => l.LevelMembership)
-                .WithMany(m => m.DepositProducts)
-                .HasForeignKey(m => m.LevelMembershipId);
+            builder.Property(lm => lm.ProductId)
+                .IsRequired()
+                .HasMaxLength(50);
 
-            builder.HasOne(b => b.Coupon)
-                .WithMany(l => l.DepositProducts)
-                .HasForeignKey(b => b.CouponId);
+            builder.Property(lm => lm.Price)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
+
+            builder.Property(lm => lm.AmountAdd)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
+
+            builder.HasMany(lm => lm.Deposits)
+                .WithOne(lm => lm.DepositProduct)
+                .HasForeignKey(lm => lm.DepositProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

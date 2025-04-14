@@ -35,6 +35,7 @@ namespace BusinessLogic.Service
             {
                 return null;
             }
+
             var depositObj = _mapper.Map<Deposit>(depositRequestDTO);
 
             depositObj.WalletId = wallet.Id;
@@ -69,22 +70,6 @@ namespace BusinessLogic.Service
         {
             var deposits = await _unitOfWork.Deposit.GetAllAsync(pagination: pagination);
             return _mapper.Map<IEnumerable<DepositResponseDTO>>(deposits);
-        }
-
-        public async Task<DepositResponseDTO> UpdateDeposit(int id, DepositRequestDTO depositRequestDTO)
-        {
-            var deposit = await _unitOfWork.Deposit.GetFirstOrDefaultAsync(t => t.Id == id);
-            if (deposit == null)
-            {
-                return null;
-            }
-
-            deposit.Amount = depositRequestDTO.Amount;
-            deposit.Status = depositRequestDTO.Status;
-
-            _unitOfWork.Deposit.Update(deposit);
-            await _unitOfWork.SaveAsync();
-            return _mapper.Map<DepositResponseDTO>(deposit);
         }
 
         public async Task<DepositResponseDTO> UpdateDepositStatusById(int id, DepositStatus depositStatus)

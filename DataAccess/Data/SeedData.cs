@@ -904,55 +904,6 @@ public static class SeedData
 
             #endregion
 
-            #region Seed data for DepositProduct
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] ON");
-            if (!context.DepositProduct.Any())
-            {
-                var depositProducts = new List<DepositProduct>();
-                int idCounter = 1;
-
-                for (int depositId = 1; depositId <= 5; depositId++)
-                {
-                    var deposit = context.Deposit.Find(depositId);
-
-                    for (int levelMembershipId = 1; levelMembershipId <= 5; levelMembershipId++)
-                    {
-                        var levelMembership = context.LevelMembership.Find(levelMembershipId);
-                        depositProducts.Add(new DepositProduct
-                        {
-                            Id = idCounter++,
-                            Name = $"{deposit.Amount}_{levelMembership.Name}",
-                            DepositId = depositId,
-                            LevelMembershipId = levelMembershipId,
-                            ProductId = Normalize($"{deposit.Amount}_{levelMembership.Name}"),
-                            CreatedById = admin.Id,
-                            LastModifiedById = admin.Id
-                        });
-                       
-                    }
-
-                    for (int couponId = 1; couponId <= 10; couponId++)
-                    {
-                        var coupon = context.Coupon.Find(couponId);
-                        depositProducts.Add(new DepositProduct
-                        {
-                            Id = idCounter++,
-                            Name = $"{deposit.Amount}_{coupon.Name}",
-                            DepositId = depositId,
-                            CouponId = couponId,
-                            ProductId = Normalize($"{deposit.Amount}_{coupon.Name}"),
-                            CreatedById = admin.Id,
-                            LastModifiedById = admin.Id
-                        });
-                    }
-                }
-
-                context.DepositProduct.AddRange(depositProducts);
-                context.SaveChanges();
-            }
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] OFF");
-            #endregion
-
             #region Seed data for Payment
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
 

@@ -18,8 +18,12 @@ namespace BussinessObject.Models
 
         public virtual Payment Payment { get; set; }
 
+        public int DepositProductId { get; set; }
+
         [ForeignKey("WalletId")]
         public virtual Wallet Wallet { get; set; } = null!;
-        public virtual ICollection<DepositProduct> DepositProducts { get; set; } = new List<DepositProduct>();
+
+        [ForeignKey("DepositProductId")]
+        public virtual DepositProduct DepositProduct { get; set; }
     }
 }
