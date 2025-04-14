@@ -42,6 +42,8 @@ namespace BussinessObject.Models
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
         public virtual ICollection<TypeSessionProduct> TypeSessionProducts { get; set; } = new List<TypeSessionProduct>();
+
+        public virtual ICollection<DepositProduct> DepositProducts { get; set; } = new List<DepositProduct>();
     }
 
 }

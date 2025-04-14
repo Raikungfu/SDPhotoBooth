@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
+using BusinessLogic.DTO.DepositDTO;
+using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
@@ -16,12 +18,17 @@ namespace ServerAPI.Controllers
     {
         private readonly ICouponService _couponService;
         private readonly ITypeSessionService _typeSessionService;
+        private readonly IDepositService _depositService;
         private readonly ITypeSessionProductService _typeSessionProductService;
-        public CouponController(ICouponService couponService, ITypeSessionService typeSessionService, ITypeSessionProductService typeSessionProductService)
+        private readonly IDepositProductService _depositProductService;
+        public CouponController(ICouponService couponService, ITypeSessionService typeSessionService, 
+            ITypeSessionProductService typeSessionProductService, IDepositService depositService, IDepositProductService depositProductService)
         {
             _couponService = couponService;
             _typeSessionService = typeSessionService;
             _typeSessionProductService = typeSessionProductService;
+            _depositService = depositService;
+            _depositProductService = depositProductService;
         }
 
         [HttpGet("count")]
@@ -76,6 +83,15 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            bool hasDiscount = couponRequestDTO.Discount.HasValue;
+            bool hasDiscountPercent = couponRequestDTO.DiscountPercent.HasValue;
+
+            if ((hasDiscount && hasDiscountPercent) || (!hasDiscount && !hasDiscountPercent))
+            {
+                return BadRequest("Must provide either 'Discount' or 'DiscountPercent', but not both.");
+            }
+
             var isExist = await _couponService.GetCoupon(couponRequestDTO.Code);
             if (isExist != null)
             {
@@ -85,6 +101,8 @@ namespace ServerAPI.Controllers
 
             //Create TypeSessionProduct
             var typeSession = await _typeSessionService.GetTypeSessionCodesAsync(new PaginationParams());
+
+            // Filter type session for mobile
             var validTypeSession = new List<TypeSessionResponseDTO>();
             foreach (var ts in typeSession)
             {
@@ -110,6 +128,27 @@ namespace ServerAPI.Controllers
                 
                 await _typeSessionProductService.CreateAsync(typeSessionProduct);
             }
+
+            // Filter deposit
+            var deposits = await _depositService.GetAllDeposits(new PaginationParams());
+            var validDeposits = new List<DepositResponseDTO>();
+            foreach (var deposit in deposits)
+            {
+                _couponService.ValidateCoupon(coupon, deposit.Amount);
+                validDeposits.Add(deposit);
+            }
+            foreach (var deposit in validDeposits)
+            {
+                var depositProduct = new DepositProductCreateRequestDTO
+                {
+                    Name = $"{deposit.Amount}_{coupon.Name}",
+                    ProductId = $"{deposit.Amount}_{ProductIdHelper.Normalize(coupon.Name)}",
+                    DepositId = deposit.Id,
+                    CouponId = coupon.Id
+                };
+                await _depositProductService.CreateAsync(depositProduct);
+            }
+
             return Ok(coupon);
         }
 
@@ -120,6 +159,15 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            bool hasDiscount = couponRequestDTO.Discount.HasValue;
+            bool hasDiscountPercent = couponRequestDTO.DiscountPercent.HasValue;
+
+            if ((hasDiscount && hasDiscountPercent) || (!hasDiscount && !hasDiscountPercent))
+            {
+                return BadRequest("Must provide either 'Discount' or 'DiscountPercent', but not both.");
+            }
+
             var isExist = await _couponService.GetCouponById(id);
             if (isExist == null)
             {

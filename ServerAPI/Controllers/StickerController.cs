@@ -85,7 +85,7 @@ namespace ServerAPI.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] 
         public async Task<ActionResult<StickerResponseDTO>> GetSticker(int id)
         {
             var sticker = await _stickerService.GetStickerById(id);
