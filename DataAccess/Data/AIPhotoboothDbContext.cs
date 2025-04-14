@@ -37,6 +37,8 @@ namespace DataAccess.Data
         public DbSet<Sticker> Sticker { get; set; }
 
         public DbSet<TypeSessionProduct> TypeSessionProduct { get; set; }
+        public DbSet<DepositProduct> DepositProduct { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

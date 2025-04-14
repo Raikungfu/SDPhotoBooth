@@ -3,6 +3,7 @@ using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.CouponDTO;
 using BusinessLogic.DTO.DepositDTO;
+using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.DTO.ExportProductDTO;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.DTO.LevelMembershipDTO;
@@ -176,10 +177,18 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<TypeSessionProductCreateRequestDTO, TypeSessionProduct>();
             CreateMap<TypeSessionProduct, TypeSessionProductResponseDTO>();
 
+            CreateMap<DepositProductCreateRequestDTO,  DepositProduct>();
+            CreateMap<DepositProduct, DepositProductResponseDTO>();
+
             CreateMap<TypeSessionProductResponseDTO, ExportProductResponseDTO>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.typeSession.Description))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.typeSession != null ? $"VN;{(long)((src.typeSession.Price - (src.Discount ?? 0)) * 1000000)}" : null));
+
+            CreateMap<DepositProductResponseDTO, ExportProductResponseDTO>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Deposit.Amount))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Deposit != null ? $"VN;{(long)((src.Deposit.Amount - (src.Discount ?? 0)) * 1000000)}" : null));
         }
     }
 }

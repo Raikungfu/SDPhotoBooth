@@ -20,5 +20,6 @@ namespace BussinessObject.Models
 
         [ForeignKey("WalletId")]
         public virtual Wallet Wallet { get; set; } = null!;
+        public virtual ICollection<DepositProduct> DepositProducts { get; set; } = new List<DepositProduct>();
     }
 }

@@ -152,16 +152,16 @@ public static class SeedData
             if (!context.Coupon.Any())
             {
                 context.Coupon.AddRange(
-                    new Coupon { Id = 1, Name = "New Year Deal", Code = "NY2025", Description = "New Year 2025 promotion", Discount = 50000, DiscountPercent = 0.10m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 2, Name = "Spring Sale", Code = "SPRING25", Description = "Spring discount", Discount = 30000, DiscountPercent = 0.05m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 150000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 3, Name = "Summer Heat", Code = "SUMMERHEAT", Description = "Hot summer deal", Discount = 40000, DiscountPercent = 0.07m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 180000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 4, Name = "Back to School", Code = "SCHOOL25", Description = "School season sale", Discount = 25000, DiscountPercent = 0.08m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 120000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 5, Name = "Autumn Bonus", Code = "AUTUMN22", Description = "Fall special offer", Discount = 22000, DiscountPercent = 0.06m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 130000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Black Friday 50% OFF", Discount = 100000, DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 250000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday sale", Discount = 75000, DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 220000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 8, Name = "Xmas Cheer", Code = "XMAS2025", Description = "Christmas discount", Discount = 90000, DiscountPercent = 0.40m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 9, Name = "Birthday Gift", Code = "BIRTHDAY", Description = "Special birthday offer", Discount = 60000, DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 150000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 10, Name = "Flash Sale", Code = "FLASH2025", Description = "Limited time discount", Discount = 35000, DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 140000, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    new Coupon { Id = 1, Name = "New Year Deal", Code = "NY2025", Description = "New Year 2025 promotion", Discount = 5000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 2, Name = "Spring Sale", Code = "SPRING25", Description = "Spring discount", Discount = 3000,  StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 15000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 3, Name = "Summer Heat", Code = "SUMMERHEAT", Description = "Hot summer deal", Discount = 4000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 4, Name = "Back to School", Code = "SCHOOL25", Description = "School season sale", Discount = 2500, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 12000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 5, Name = "Autumn Bonus", Code = "AUTUMN22", Description = "Fall special offer", Discount = 2200, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 13000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Black Friday 50% OFF", DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday sale",  DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 20000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 8, Name = "Xmas Cheer", Code = "XMAS2025", Description = "Christmas discount",    StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 9, Name = "Birthday Gift", Code = "BIRTHDAY", Description = "Special birthday offer",  DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 5000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 10, Name = "Flash Sale", Code = "FLASH2025", Description = "Limited time discount", DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 4000, CreatedById = admin.Id, LastModifiedById = admin.Id }
                 );
 
                 context.SaveChanges();
@@ -556,7 +556,7 @@ public static class SeedData
             {
                 context.TypeSession.AddRange(
                     new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, Price = 10000, isPrinting = false, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 2000, isPrinting = true, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 20000, isPrinting = true, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
                     new TypeSession { Id = 3, Name = "Basic Package", Description = "Basic printing service package", Duration = 30, Price = 50000, isPrinting = true, AbleTakenNumber = 10, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:24:45.6577221"), LastModified = DateTime.Parse("2025-03-28T04:24:45.6577221"), CreatedById = admin.Id, LastModifiedById = admin.Id },
                     new TypeSession { Id = 4, Name = "Printing Consultation", Description = "Consultation for suitable printing type", Duration = 20, Price = 10000, isPrinting = false, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:00:00"), LastModified = DateTime.Parse("2025-03-30T08:00:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
                     new TypeSession { Id = 5, Name = "File Editing", Description = "Edit files before printing", Duration = 30, Price = 20000, isPrinting = false, AbleTakenNumber = 4, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:01:00"), LastModified = DateTime.Parse("2025-03-30T08:01:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
@@ -579,10 +579,10 @@ public static class SeedData
             if (!context.Wallet.Any())
             {
                 context.Wallet.AddRange(
-                    new Wallet { Id = 1, CustomerId = admin.Id, Balance = 500000, IsLocked = false },
+                    new Wallet { Id = 1, CustomerId = user1.Id, Balance = 500000, IsLocked = false },
                     new Wallet { Id = 2, CustomerId = manager.Id, Balance = 350000, IsLocked = false },
                     new Wallet { Id = 3, CustomerId = staff.Id, Balance = 200000, IsLocked = false },
-                    new Wallet { Id = 4, CustomerId = user1.Id, Balance = 100000, IsLocked = false }
+                    new Wallet { Id = 4, CustomerId = admin.Id, Balance = 100000, IsLocked = false }
                 );
 
                 context.SaveChanges();
@@ -652,7 +652,6 @@ public static class SeedData
 
             #region Seed data for TypeSessionProduct
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] ON");
-            context.Database.ExecuteSqlRaw("DELETE FROM [TypeSessionProduct]");
 
             if (!context.TypeSessionProduct.Any())
             {
@@ -700,6 +699,7 @@ public static class SeedData
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] OFF");
             #endregion
+
 
             #region Seed data for Order
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
@@ -864,14 +864,35 @@ public static class SeedData
                     {
                         Id = 1,
                         WalletId = 1,
-                        Amount = 100000,
+                        Amount = 20000,
                         Status = DepositStatus.Success,
                     },
                     new Deposit
                     {
                         Id = 2,
+                        WalletId = 1,
+                        Amount = 10000,
+                        Status = DepositStatus.Success,
+                    },
+                    new Deposit
+                    {
+                        Id = 3,
+                        WalletId = 1,
+                        Amount = 5000,
+                        Status = DepositStatus.Success,
+                    },
+                    new Deposit
+                    {
+                        Id = 4,
+                        WalletId = 1,
+                        Amount = 10000,
+                        Status = DepositStatus.Success,
+                    },
+                    new Deposit
+                    {
+                        Id = 5,
                         WalletId = 2,
-                        Amount = 100000,
+                        Amount = 20000,
                         Status = DepositStatus.Success,
                     }
                 );
@@ -881,6 +902,55 @@ public static class SeedData
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
 
+            #endregion
+
+            #region Seed data for DepositProduct
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] ON");
+            if (!context.DepositProduct.Any())
+            {
+                var depositProducts = new List<DepositProduct>();
+                int idCounter = 1;
+
+                for (int depositId = 1; depositId <= 5; depositId++)
+                {
+                    var deposit = context.Deposit.Find(depositId);
+
+                    for (int levelMembershipId = 1; levelMembershipId <= 5; levelMembershipId++)
+                    {
+                        var levelMembership = context.LevelMembership.Find(levelMembershipId);
+                        depositProducts.Add(new DepositProduct
+                        {
+                            Id = idCounter++,
+                            Name = $"{deposit.Amount}_{levelMembership.Name}",
+                            DepositId = depositId,
+                            LevelMembershipId = levelMembershipId,
+                            ProductId = Normalize($"{deposit.Amount}_{levelMembership.Name}"),
+                            CreatedById = admin.Id,
+                            LastModifiedById = admin.Id
+                        });
+                       
+                    }
+
+                    for (int couponId = 1; couponId <= 10; couponId++)
+                    {
+                        var coupon = context.Coupon.Find(couponId);
+                        depositProducts.Add(new DepositProduct
+                        {
+                            Id = idCounter++,
+                            Name = $"{deposit.Amount}_{coupon.Name}",
+                            DepositId = depositId,
+                            CouponId = couponId,
+                            ProductId = Normalize($"{deposit.Amount}_{coupon.Name}"),
+                            CreatedById = admin.Id,
+                            LastModifiedById = admin.Id
+                        });
+                    }
+                }
+
+                context.DepositProduct.AddRange(depositProducts);
+                context.SaveChanges();
+            }
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] OFF");
             #endregion
 
             #region Seed data for Payment
