@@ -5,7 +5,7 @@ namespace BussinessObject.Models
 {
     public class DepositProduct : BaseEntity
     {
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         public string? Description { get; set; }
 
@@ -15,7 +15,7 @@ namespace BussinessObject.Models
         [Required]
         public decimal Price { get; set; }
 
-        public decimal? AmountAdd { get; set; }
+        public decimal AmountAdd { get; set; }
 
         public IEnumerable<Deposit>? Deposits { get; set; }
     }

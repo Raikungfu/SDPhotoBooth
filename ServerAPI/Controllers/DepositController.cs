@@ -1,21 +1,16 @@
 ﻿using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.DTO.PaymentDTO;
-using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
-using BussinessObject.Enums;
-using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ServerAPI.Services;
-using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DepositController : ControllerBase
     {
         private readonly IDepositService _depositService;
@@ -74,6 +69,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles ="Manager, Customer")]
         public async Task<IActionResult> GetDeposits([FromQuery] PaginationParams pagination)
         {
             try
@@ -88,6 +84,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Manager, Customer")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _depositService.GetCount();
@@ -95,6 +92,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("mobile")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetDepositsByCusId()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

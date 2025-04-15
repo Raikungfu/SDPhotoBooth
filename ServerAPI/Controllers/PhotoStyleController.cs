@@ -2,13 +2,14 @@
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class PhotoStyleController : ControllerBase
     {
         private readonly IPhotoStyleService _photoStyleService;
@@ -74,6 +75,11 @@ namespace ServerAPI.Controllers
             {
                 var imageUrl = await _firebaseService.UploadImageAsync(form.ImageUrl.OpenReadStream(), form.ImageUrl.FileName, form.ImageUrl.ContentType);
                 photoStyleRequestDTO.ImageUrl = imageUrl;
+            }
+
+            if (string.IsNullOrEmpty(form.Prompt) || string.IsNullOrEmpty(form.NegativePrompt))
+            {
+                return BadRequest("Prompt and Negative Prompt is required");
             }
 
             var photoStyle = await _photoStyleService.CreatePhotoStyle(photoStyleRequestDTO);

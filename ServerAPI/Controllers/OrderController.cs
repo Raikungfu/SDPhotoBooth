@@ -1,18 +1,12 @@
-﻿using BusinessLogic.DTO.CouponDTO;
-using BusinessLogic.DTO.OrderDTO;
+﻿using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.DTO.TransactionDTO;
-using BusinessLogic.DTO.TypeSessionDTO;
-using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
-using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServerAPI.Services;
 using ServerAPI.Services.IService;
-using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace ServerAPI.Controllers
@@ -49,6 +43,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Staff")]
         public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams pagination)
         {
             try
@@ -159,6 +154,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("desktop")]
+        [Authorize(Roles = "Manager,Staff")]
         public async Task<IActionResult> CreateOrderDesktop([FromBody] OrderRequestDTO order)
         {
             try
@@ -317,6 +313,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("apply-coupon")]
+        [Authorize(Roles = "Manager,Staff,Customer")]
         public async Task<IActionResult> ApplyCoupon([FromBody] OrderRequestDTO order)
         {
             var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);

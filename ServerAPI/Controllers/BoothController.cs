@@ -1,12 +1,14 @@
 ﻿using BusinessLogic.DTO.BoothDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Manager")]
     public class BoothController : ControllerBase
     {
         private readonly IBoothService _boothService;

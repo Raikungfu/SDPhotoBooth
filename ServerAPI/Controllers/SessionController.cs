@@ -2,13 +2,14 @@
 using BusinessLogic.DTO.SessionCodeDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Staff, Manager")]
     public class SessionController : ControllerBase
     {
         private readonly ISessionService _sessionService;
@@ -74,6 +75,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpPost("use-session")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UseSession([FromBody] SessionRequestDTO request)
         {
             var session = await _sessionService.GetSessionByCode(request.Code);

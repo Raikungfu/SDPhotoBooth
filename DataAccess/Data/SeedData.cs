@@ -80,6 +80,82 @@ public static class SeedData
                         throw new Exception($"Failed to create user {user.Email}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                     }
                 }
+
+                //Dummy Data
+                int counter = 100;
+
+                for (int i = 1; i <= 10; i++)
+                {
+                    var user = new User
+                    {
+                        UserName = $"admin_gen_{i}",
+                        Email = $"admin_gen_{i}@example.com",
+                        PhoneNumber = $"090000{counter++:D3}",
+                        Gender = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+
+                    var result = await userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(user, "Admin");
+                }
+
+                for (int i = 1; i <= 10; i++)
+                {
+                    var user = new User
+                    {
+                        UserName = $"manager_gen_{i}",
+                        Email = $"manager_gen_{i}@example.com",
+                        PhoneNumber = $"090000{counter++:D3}",
+                        Gender = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+
+                    var result = await userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(user, "Manager");
+                }
+
+                for (int i = 1; i <= 10; i++)
+                {
+                    var user = new User
+                    {
+                        UserName = $"staff_gen_{i}",
+                        Email = $"staff_gen_{i}@example.com",
+                        PhoneNumber = $"090000{counter++:D3}",
+                        Gender = BussinessObject.Enums.UserGender.Female,
+                        CreatedAt = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+
+                    var result = await userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(user, "Staff");
+                }
+
+                for (int i = 1; i <= 10; i++)
+                {
+                    var user = new User
+                    {
+                        UserName = $"customer_gen_{i}",
+                        Email = $"customer_gen_{i}@example.com",
+                        PhoneNumber = $"090000{counter++:D3}",
+                        Gender = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+
+                    var result = await userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                        await userManager.AddToRoleAsync(user, "Customer");
+                }
+
             }
 
             var admin = await userManager.FindByNameAsync("admin1");
@@ -858,11 +934,11 @@ public static class SeedData
             if (!context.DepositProduct.Any())
             {
                 context.DepositProduct.AddRange(
-                new DepositProduct { Id = 1, Name = "Deposit_1", Description = "Description_1", AmountAdd = 2000, ProductId = "Product_1", Price = 20000 },
-                new DepositProduct { Id = 2, Name = "Deposit_2", Description = "Description_2", AmountAdd = 1500, ProductId = "Product_2", Price = 15000 },
-                new DepositProduct { Id = 3, Name = "Deposit_3", Description = "Description_3", AmountAdd = 1200, ProductId = "Product_3", Price = 12000 },
-                new DepositProduct { Id = 4, Name = "Deposit_4", Description = "Description_4", ProductId = "Product_4", Price = 10000 },
-                new DepositProduct { Id = 5, Name = "Deposit_5", Description = "Description_5", AmountAdd = 1000, ProductId = "Product_5", Price = 10000 }
+                new DepositProduct { Id = 1, Name = "Nạp 20 nghìn", Description = "Giá 20 nghìn kèm khuyến mãi 10%", AmountAdd = 2000, ProductId = "product_deposit_1", Price = 20000 },
+                new DepositProduct { Id = 2, Name = "Nạp 15 nghìn", Description = "Giá 15 nghìn kèm khuyến mãi 10%", AmountAdd = 1500, ProductId = "product_deposit_2", Price = 15000 },
+                new DepositProduct { Id = 3, Name = "Nạp 12 nghìn", Description = "Giá 12 nghìn kèm khuyến mãi 10%", AmountAdd = 1200, ProductId = "product_deposit_3", Price = 12000 },
+                new DepositProduct { Id = 4, Name = "Nạp 10 nghìn", Description = "Giá 10 nghìn", AmountAdd = 0, ProductId = "product_deposit_4", Price = 10000 },
+                new DepositProduct { Id = 5, Name = "Nạp 17 nghìn", Description = "Giá 17 nghìn kèm khuyến mãi 10%", AmountAdd = 1700, ProductId = "product_deposit_5", Price = 17000 }
             );
                 context.SaveChanges();
             }

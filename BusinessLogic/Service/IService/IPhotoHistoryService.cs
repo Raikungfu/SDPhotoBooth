@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTO.PhotoHistoryDTO;
+﻿using BusinessLogic.DTO.PhotoDTO;
+using BusinessLogic.DTO.PhotoHistoryDTO;
 using DataAccess.Extensions.Pagination;
 
 namespace BusinessLogic.Service.IService
@@ -18,6 +19,6 @@ namespace BusinessLogic.Service.IService
         Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode);
         Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls, int PhotoStyleId = 1);
         Task<int> GetCount();
-
+        Task<IEnumerable<PhotoResponseDTO>> GetPhotoHistoryByIdAsync(int photoHistoryId);
     }
 }

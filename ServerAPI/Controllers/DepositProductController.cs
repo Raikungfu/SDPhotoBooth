@@ -3,6 +3,7 @@ using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.DTO.ExportProductDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services.IService;
 
@@ -10,6 +11,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class DepositProductController : ControllerBase
     {
         private readonly IDepositProductService _depositProductService;
@@ -21,6 +23,13 @@ namespace ServerAPI.Controllers
             _depositProductService = depositProductService;
             _exportService = exportService;
             _mapper = mapper;
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _depositProductService.CountAsync();
+            return Ok(count);
         }
 
         [HttpGet]
@@ -60,6 +69,7 @@ namespace ServerAPI.Controllers
                 return BadRequest(ModelState);
             }
             var depositProduct = await _depositProductService.CreateAsync(depositProductRequest);
+
             if (depositProduct == null)
             {
                 return BadRequest("Failed to create deposit product");

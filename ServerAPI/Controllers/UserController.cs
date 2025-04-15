@@ -2,7 +2,10 @@
 using BusinessLogic.DTO.UserDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
+using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
@@ -12,35 +15,53 @@ namespace ServerAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly UserManager<User> _userManager;
         private readonly ILocationService _locationService;
-        public UserController(IUserService userService, IMapper mapper, ILocationService locationService)
+        public UserController(IUserService userService, IMapper mapper, ILocationService locationService, UserManager<User> userManager)
         {
             _userService = userService;
             _locationService = locationService;
+            _userManager = userManager;
         }
 
-        [HttpGet("count")]
-        public async Task<IActionResult> GetCount()
+        [HttpGet("manager")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllManagers([FromQuery] PaginationParams? filter)
         {
-            var count = await _userService.GetCount();
-            return Ok(count);
+            var (data, totalCount) = await _userService.GetAllManager(filter);
+            return Ok(new
+            {
+                Data = data,
+                TotalCount = totalCount
+            });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery] PaginationParams pagination)
+        [HttpGet("staff")]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> GetAllStaffs([FromQuery] PaginationParams? filter)
         {
-            try
+            var (data, totalCount) = await _userService.GetAllStaff(filter);
+            return Ok(new
             {
-                var users = await _userService.GetUsers(pagination);
-                return Ok(users);
-            }
-            catch (ArgumentException ex)
+                Data = data,
+                TotalCount = totalCount
+            });
+        }
+
+        [HttpGet("customer")]
+        [Authorize(Roles = "Manager, Staff")]
+        public async Task<IActionResult> GetAllCustomers([FromQuery] PaginationParams? filter)
+        {
+            var (data, totalCount) = await _userService.GetAllCustomer(filter);
+            return Ok(new
             {
-                return BadRequest(ex.Message);
-            }
+                Data = data,
+                TotalCount = totalCount
+            });
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin, Manager, Staff")]
         public async Task<IActionResult> Create([FromBody] UserRequestDTO userRequestDTO)
         {
             var user = await _userService.CreateUser(userRequestDTO);
@@ -52,21 +73,43 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("update-ban-status")]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> UpdateBanStatus([FromQuery] string email, [FromQuery] bool isBanned)
         {
-            var user = isBanned
-                ? await _userService.BanUser(email)
-                : await _userService.UnbanUser(email);
+            var requester = await _userManager.GetUserAsync(User);
+            var requesterRole = (await _userManager.GetRolesAsync(requester)).FirstOrDefault();
 
-            if (user == null)
+            var targetUser = await _userService.UserDetail(email);
+            if (targetUser == null)
+                return NotFound("User not found.");
+
+            var targetRole = targetUser.Role;
+
+            // Manager can only ban/unban Customer
+            if (requesterRole == "Manager" && targetRole == "Customer")
             {
-                return NotFound();
+                var result = isBanned
+                    ? await _userService.BanUser(email)
+                    : await _userService.UnbanUser(email);
+                return Ok(result);
             }
-            return Ok(user);
+
+            // Admin can ban/unban Manager or Staff
+            if (requesterRole == "Admin" && (targetRole == "Manager" || targetRole == "Staff"))
+            {
+                var result = isBanned
+                    ? await _userService.BanUser(email)
+                    : await _userService.UnbanUser(email);
+                return Ok(result);
+            }
+
+            return Forbid(); 
         }
 
 
+
         [HttpGet("detail")]
+        [Authorize(Roles = "Admin, Manager, Staff")]
         public async Task<IActionResult> UserDetail([FromQuery] string email)
         {
             var user = await _userService.UserDetail(email);
@@ -78,6 +121,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("change-role")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChangeRole([FromQuery] string email, [FromQuery] UserType role)
         {
             var isExistUser = await _userService.UserDetail(email);
@@ -90,6 +134,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("staff/move-location")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> MoveLocation([FromQuery] string email, [FromQuery] int locationId)
         {
             var isExistUser = await _userService.UserDetail(email);

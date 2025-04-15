@@ -11,9 +11,11 @@ namespace BusinessLogic.DTO.CouponDTO
         public string? Description { get; set; }
         [StringLength(50)]
         public string? Code { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "DiscountPercent must be at least 1.")]
+
+        [Range(0, int.MaxValue)]
         public decimal? Discount { get; set; }
-        [Range(0, 1)]
+
+        [Range(0, 1, ErrorMessage = "DiscountPercent must be between 0 and 1.")]
         public decimal? DiscountPercent { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

@@ -2,12 +2,14 @@
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FrameController : ControllerBase
     {
         private readonly IFrameService _frameService;
@@ -24,6 +26,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateFrame([FromForm] FrameWithFormFileDTO form)
         {
@@ -58,6 +61,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFrame(int id)
         {
             var isDeleted = await _frameService.DeleteFrame(id);
@@ -69,6 +73,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> GetFrame(int id)
         {
             var frame = await _frameService.GetFrame(id);
@@ -80,6 +85,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> GetFrames([FromQuery] PaginationParams pagination)
         {
             try
@@ -94,6 +100,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("frame-style/{frameStyleId:int}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> GetFrameByFrameStyleId(int frameStyleId)
         {
             var frames = await _frameService.GetFrameByFrameStyleId(frameStyleId);
@@ -101,6 +108,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateFrame(int id, [FromForm] FrameWithFormFileDTO form)
         {
@@ -140,6 +148,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("by-name/{frameName}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> SearchFrame(string frameName)
         {
             var frames = await _frameService.SearchFrame(frameName);
@@ -147,6 +156,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _frameService.GetCount();

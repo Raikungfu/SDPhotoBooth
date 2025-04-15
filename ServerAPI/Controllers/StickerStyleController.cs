@@ -1,12 +1,14 @@
 ﻿using BusinessLogic.DTO.StickerStyleDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StickerStyleController : ControllerBase
     {
         private readonly IStickerStyleService _stickerStyleService;

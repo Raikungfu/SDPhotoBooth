@@ -10,6 +10,7 @@ namespace ServerAPI.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PhotoHistoryController : ControllerBase
     {
         private readonly IPhotoHistoryService _photoHistoryService;
@@ -21,14 +22,9 @@ namespace ServerAPI.Controllers
             _firebaseService = firebaseService;
         }
 
-        [HttpGet("count")]
-        public async Task<IActionResult> GetCount()
-        {
-            var count = await _photoHistoryService.GetCount();
-            return Ok(count);
-        }
 
         [HttpGet("{sessionCode}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Get(string sessionCode)
         {
             var photos = await _photoHistoryService.GetListPhotosFromSessionCode(sessionCode);
@@ -40,6 +36,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Get(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -52,6 +49,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetListPhotoHistoryAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -59,13 +57,28 @@ namespace ServerAPI.Controllers
             return Ok(photoHistories);
         }
 
+        [HttpGet("count")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _photoHistoryService.GetCount();
+            return Ok(count);
+        }
+
         [HttpGet("manage/all")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetAllPhotoHistory([FromQuery] PaginationParams pagination)
         {
             try
             {
                 var photoHistories = await _photoHistoryService.GetAllPhotoHistory(pagination);
-                return Ok(photoHistories);
+                var totalCount = await _photoHistoryService.GetCount();
+
+                return Ok(new
+                {
+                    Data = photoHistories,
+                    TotalCount = totalCount
+                });
             }
             catch (ArgumentException ex)
             {
@@ -75,6 +88,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("manage/customer/{customerId}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetPhotoHistoryByCustomerIdAsync(string customerId)
         {
             var photoHistories = await _photoHistoryService.GetPhotoHistoryByCustomerIdAsync(customerId);
@@ -82,6 +96,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("manage/booth/{boothId}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetPhotoHistoryByBoothIdAsync(int boothId)
         {
             var photoHistories = await _photoHistoryService.GetPhotoHistoryByBoothIdAsync(boothId);
@@ -89,6 +104,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("manage/location/{locationId}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetPhotoHistoryByLocationIdAsync(int locationId)
         {
             var photoHistories = await _photoHistoryService.GetPhotoHistoryByLocationIdAsync(locationId);
@@ -96,6 +112,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("manage/session/{sessionCode}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetPhotoHistoryBySessionCodeAsync(string sessionCode)
         {
             var photoHistory = await _photoHistoryService.GetPhotoHistoryBySessionCodeAsync(sessionCode);
@@ -106,7 +123,21 @@ namespace ServerAPI.Controllers
             return Ok(photoHistory);
         }
 
+
+        [HttpGet("manage/photo/{photoHistoryId}")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GetPhotoHistoryByIdAsync(int photoHistoryId)
+        {
+            var photoHistory = await _photoHistoryService.GetPhotoHistoryByIdAsync(photoHistoryId);
+            if (photoHistory == null)
+            {
+                return NotFound();
+            }
+            return Ok(photoHistory);
+        }
+
         [HttpPost("upload")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UploadPhotos([FromForm] PhotoHistoryRequestDTO request)
         {
             if (request.PhotoPaths == null || !request.PhotoPaths.Any() || string.IsNullOrEmpty(request.SessionCode))
@@ -144,6 +175,7 @@ namespace ServerAPI.Controllers
         }
 
 
+        [Authorize(Roles = "Customer")]
         [HttpPost("upload-url")]
         public async Task<IActionResult> UploadUrlPhotos([FromBody] PhotoHistoryUrlRequestDTO request)
         {

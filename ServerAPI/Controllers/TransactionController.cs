@@ -20,6 +20,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCount()
         {
             var count = await transactionService.GetCount();

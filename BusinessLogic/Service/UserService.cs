@@ -44,10 +44,6 @@ namespace BusinessLogic.Service
         public async Task<UserResponseDTO> BanUser(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return null;
-            }
             user.IsBanned = true;
             await _userManager.UpdateAsync(user);
             return _mapper.Map<UserResponseDTO>(user);
@@ -56,10 +52,6 @@ namespace BusinessLogic.Service
         public async Task<UserResponseDTO> UnbanUser(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return null;
-            }
             user.IsBanned = false;
             await _userManager.UpdateAsync(user);
             return _mapper.Map<UserResponseDTO>(user);
@@ -108,9 +100,89 @@ namespace BusinessLogic.Service
             return userDTO;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> GetUsers(PaginationParams? pagination)
+        public async Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllManager(PaginationParams? pagination)
         {
+            var managers = await _userManager.GetUsersInRoleAsync("Manager");
+            var totalCount = managers.Count;
+
+            var query = managers.AsQueryable();
+
+            if (pagination != null)
+            {
+                var (isPaged, pageNumber, pageSize) = pagination.Validate();
+                if (isPaged)
+                {
+                    query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                }
+            }
+
+            var data = query.Select(u => new UserResponseDTO
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                UserName = u.UserName,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                Gender = u.Gender,
+                BirthDate = u.BirthDate,
+                Avatar = u.Avatar,
+                Role = "Manager",
+                IsBanned = u.IsBanned
+            });
+
+            return (data.ToList(), totalCount);
+        }
+        public async Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllStaff(PaginationParams? pagination)
+        {
+            var staffList = await _userManager.GetUsersInRoleAsync("Staff");
+            var totalCount = staffList.Count;
+
+            var query = staffList.AsQueryable();
+            if (pagination != null)
+            {
+                var (isPaged, pageNumber, pageSize) = pagination.Validate();
+                if (isPaged)
+                {
+                    query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                }
+            }
+
+            var users = query.ToList();
+
+            foreach (var user in users)
+            {
+                if (user.LocationId.HasValue)
+                {
+                    var locationEntity = await _locationService.GetLocation(user.LocationId.Value);
+                    user.Location = _mapper.Map<Location>(locationEntity);
+                }
+            }
+
+            var data = users.Select(u => new UserResponseDTO
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                UserName = u.UserName,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                Gender = u.Gender,
+                BirthDate = u.BirthDate,
+                Avatar = u.Avatar,
+                Role = "Staff",
+                IsBanned = u.IsBanned,
+                Location = _mapper.Map<LocationResponseDTO>(u.Location)
+            });
+
+            return (data.ToList(), totalCount);
+        }
+        public async Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllCustomer(PaginationParams? pagination)
+        {
+            var customers = await _userManager.GetUsersInRoleAsync("Customer");
+            var customerIds = customers.Select(c => c.Id).ToList();
+            var totalCount = customerIds.Count;
+
             var query = _userManager.Users
+                .Where(u => customerIds.Contains(u.Id))
                 .Include(u => u.Wallet)
                 .Include(u => u.MembershipCard)
                     .ThenInclude(m => m.LevelMemberShip)
@@ -127,23 +199,7 @@ namespace BusinessLogic.Service
 
             var users = await query.ToListAsync();
 
-            foreach (var user in users)
-            {
-                if (user.LocationId != null)
-                {
-                    var locationEntity = await _locationService.GetLocation(user.LocationId.Value);
-                    user.Location = _mapper.Map<Location>(locationEntity);
-                }
-            }
-
-            var userRoles = new Dictionary<string, string?>();
-            foreach (var user in users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                userRoles[user.Id] = roles.FirstOrDefault();
-            }
-
-            return users.Select(u => new UserResponseDTO
+            var data = users.Select(u => new UserResponseDTO
             {
                 Id = u.Id,
                 FullName = u.FullName,
@@ -153,12 +209,13 @@ namespace BusinessLogic.Service
                 Gender = u.Gender,
                 BirthDate = u.BirthDate,
                 Avatar = u.Avatar,
-                Role = userRoles.GetValueOrDefault(u.Id),
+                Role = "Customer",
                 IsBanned = u.IsBanned,
-                Location = _mapper.Map<LocationResponseDTO>(u.Location),
                 Wallet = _mapper.Map<WalletResponseDTO>(u.Wallet),
                 MembershipCard = _mapper.Map<MemberShipCardOnUserResponseDTO>(u.MembershipCard)
-            }).ToList();
+            });
+
+            return (data.ToList(), totalCount);
         }
 
 
