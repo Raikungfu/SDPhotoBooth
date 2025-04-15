@@ -1,6 +1,4 @@
-﻿using BusinessLogic.DTO.ImageProcessingDTO;
-using BusinessLogic.DTO.PhotoHistoryDTO;
-using BusinessLogic.DTO.PhotoStyleDTO;
+﻿using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.DTO.RabbitMQDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
@@ -65,6 +63,7 @@ namespace ServerAPI.Services
                 negativePrompt = photoStyle.NegativePrompt,
                 controlnets = photoStyle.Controlnets,
                 numImagesPerGen = photoStyle.NumImagesPerGen,
+                numInferenceSteps = photoStyle.NumInferenceSteps,
                 guidanceScale = photoStyle.GuidanceScale,
                 strength = photoStyle.Strength,
                 faceImage = photoStyle.FaceImage,

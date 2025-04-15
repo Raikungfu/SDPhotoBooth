@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using ServerAPI.Services;
-using BusinessLogic.DTO.ImageProcessingDTO;
 
 namespace ServerAPI.Hubs
 {

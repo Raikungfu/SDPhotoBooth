@@ -27,7 +27,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize("Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllTransactions([FromQuery] PaginationParams pagination)
         {
             try
