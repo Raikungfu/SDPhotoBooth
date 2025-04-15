@@ -73,7 +73,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "Admin, Customer")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<StickerResponseDTO>>> GetAllStickers([FromQuery] PaginationParams pagination)
         {
             try

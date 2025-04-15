@@ -154,7 +154,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("desktop")]
-        [Authorize(Roles = "Manager,Staff")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateOrderDesktop([FromBody] OrderRequestDTO order)
         {
             try

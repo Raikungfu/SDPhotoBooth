@@ -35,6 +35,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] PaginationParams pagination)
         {
             try

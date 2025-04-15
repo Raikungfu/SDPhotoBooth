@@ -30,11 +30,36 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhotoStyleResponseDTO>>> GetAllPhotoStyles([FromQuery] PaginationParams pagination)
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<PhotoStyleResponseDTO>>> GetAllPhotoStyles()
+        {
+            try
+            {
+                var photoStyles = await _photoStyleService.GetAllPhotoStyles(null);
+
+                var result = photoStyles.Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.Description,
+                    x.ImageUrl,
+                }).ToList();
+
+                return Ok(result); 
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message); 
+            }
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<ActionResult<IEnumerable<PhotoStyleResponseDTO>>> GetAllPhotoStylesFor([FromQuery] PaginationParams pagination)
         {
             try
             {
                 var photoStyles = await _photoStyleService.GetAllPhotoStyles(pagination);
+
                 return Ok(photoStyles);
             }
             catch (ArgumentException ex)
@@ -44,7 +69,7 @@ namespace ServerAPI.Controllers
         }
 
 
-        [HttpGet("{id:int}")]
+            [HttpGet("{id:int}")]
         public async Task<ActionResult<PhotoStyleResponseDTO>> GetPhotoStyle(int id)
         {
             var photoStyle = await _photoStyleService.GetPhotoStyleById(id);
