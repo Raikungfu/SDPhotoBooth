@@ -16,6 +16,7 @@ namespace ServerAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class IdentityController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -38,6 +39,7 @@ namespace ServerAPI.Controllers
             _firebaseService = firebaseService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -70,7 +72,6 @@ namespace ServerAPI.Controllers
             return Unauthorized();
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -95,7 +96,6 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("profile")]
-        [Authorize]
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -109,7 +109,6 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("change-password")]
-        [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -168,7 +167,6 @@ namespace ServerAPI.Controllers
 
         [HttpPut("update-avatar")]
         [Consumes("multipart/form-data")]
-        [Authorize]
         public async Task<IActionResult> UpdateAvatar([FromForm] UpdateAvatarRequest request)
         {
             var avatar = request.Avatar;
@@ -191,6 +189,7 @@ namespace ServerAPI.Controllers
         }
 
 
+        [AllowAnonymous]
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDTO request)
         {
@@ -210,7 +209,7 @@ namespace ServerAPI.Controllers
             return Ok(new { message = "Reset password link has been sent to your email" });
         }
 
-
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
         {

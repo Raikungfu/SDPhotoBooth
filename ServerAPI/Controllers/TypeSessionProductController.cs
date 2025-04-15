@@ -14,6 +14,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class TypeSessionProductController : ControllerBase
     {
         private readonly ITypeSessionProductService _typeSessionProductService;
@@ -32,6 +33,14 @@ namespace ServerAPI.Controllers
             _exportService = exportService;
             _mapper = mapper;
         }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _typeSessionProductService.CountAsync();
+            return Ok(count);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams? pagination)
         {

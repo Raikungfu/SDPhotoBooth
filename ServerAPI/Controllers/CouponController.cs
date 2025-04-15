@@ -1,34 +1,28 @@
 ﻿using BusinessLogic.DTO.CouponDTO;
-using BusinessLogic.DTO.DepositDTO;
-using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.DTO.TypeSessionDTO;
 using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
-using BussinessObject.Enums;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class CouponController : ControllerBase
     {
         private readonly ICouponService _couponService;
         private readonly ITypeSessionService _typeSessionService;
-        private readonly IDepositService _depositService;
         private readonly ITypeSessionProductService _typeSessionProductService;
-        private readonly IDepositProductService _depositProductService;
         public CouponController(ICouponService couponService, ITypeSessionService typeSessionService, 
-            ITypeSessionProductService typeSessionProductService, IDepositService depositService, IDepositProductService depositProductService)
+            ITypeSessionProductService typeSessionProductService)
         {
             _couponService = couponService;
             _typeSessionService = typeSessionService;
             _typeSessionProductService = typeSessionProductService;
-            _depositService = depositService;
-            _depositProductService = depositProductService;
         }
 
         [HttpGet("count")]
@@ -84,13 +78,29 @@ namespace ServerAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            bool hasDiscount = couponRequestDTO.Discount.HasValue;
-            bool hasDiscountPercent = couponRequestDTO.DiscountPercent.HasValue;
+            #region Check  discount and discount percent
+            var discount = couponRequestDTO.Discount ?? 0;
+            var discountPercent = couponRequestDTO.DiscountPercent ?? 0;
 
-            if ((hasDiscount && hasDiscountPercent) || (!hasDiscount && !hasDiscountPercent))
+            bool hasDiscount = discount > 0;
+            bool hasDiscountPercent = discountPercent > 0;
+
+            if (!hasDiscount && !hasDiscountPercent)
             {
-                return BadRequest("Must provide either 'Discount' or 'DiscountPercent', but not both.");
+                return BadRequest("Phải nhập một trong hai: 'Discount' hoặc 'DiscountPercent' với giá trị lớn hơn 0.");
             }
+
+            if (hasDiscount && hasDiscountPercent)
+            {
+                return BadRequest("Chỉ được nhập một trong hai: 'Discount' hoặc 'DiscountPercent'.");
+            }
+
+            if (discount < 0 || discountPercent < 0)
+            {
+                return BadRequest("'Discount' và 'DiscountPercent' không được nhỏ hơn 0.");
+            }
+
+            #endregion
 
             var isExist = await _couponService.GetCoupon(couponRequestDTO.Code);
             if (isExist != null)

@@ -1,13 +1,6 @@
-﻿using BusinessLogic.DTO.ImageProcessingDTO;
-using BusinessLogic.Service.IService;
-using BusinessLogic.Utils;
-using BussinessObject.Models;
-using Microsoft.AspNetCore.Http;
+﻿using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using ServerAPI.Hubs;
 using ServerAPI.Services;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ServerAPI.Controllers
 {

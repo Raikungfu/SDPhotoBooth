@@ -1,12 +1,14 @@
 ﻿using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class FrameStyleController : ControllerBase
     {
         private readonly IFrameStyleService _frameStyleService;

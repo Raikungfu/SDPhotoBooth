@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BusinessLogic.Service.IService;
-using BusinessLogic.DTO.SendEmailDTO;
+﻿using BusinessLogic.Service.IService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {

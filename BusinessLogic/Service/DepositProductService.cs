@@ -16,11 +16,21 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        public async Task<int> CountAsync()
+        {
+            return await _unitOfWork.DepositProduct.CountAsync();
+        }
         public async Task<DepositProductResponseDTO> CreateAsync(DepositProductCreateRequestDTO depositProduct)
         {
             var depositProductEntity = _mapper.Map<DepositProduct>(depositProduct);
+            depositProductEntity.ProductId = "";
             await _unitOfWork.DepositProduct.AddAsync(depositProductEntity);
             await _unitOfWork.SaveAsync();
+
+            depositProductEntity.ProductId = $"product_deposit_{depositProductEntity.Id}";
+            await _unitOfWork.DepositProduct.UpdateAsync(depositProductEntity);
+            await _unitOfWork.SaveAsync();
+
             var depositProductDTO = _mapper.Map<DepositProductResponseDTO>(depositProductEntity);
             return depositProductDTO;
         }

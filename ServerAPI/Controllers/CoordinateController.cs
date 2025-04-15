@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CoordinateController : ControllerBase
     {
         private readonly ICoordinateService _coordinateService;

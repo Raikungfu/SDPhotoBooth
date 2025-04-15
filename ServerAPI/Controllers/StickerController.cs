@@ -1,12 +1,14 @@
 ﻿using BusinessLogic.DTO.StickerDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 { 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StickerController : ControllerBase
     {
         private readonly IStickerService _stickerService;
@@ -71,6 +73,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<ActionResult<IEnumerable<StickerResponseDTO>>> GetAllStickers([FromQuery] PaginationParams pagination)
         {
             try

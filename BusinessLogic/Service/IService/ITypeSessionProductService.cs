@@ -15,5 +15,6 @@ namespace BusinessLogic.Service.IService
         Task<TypeSessionProductResponseDTO> CreateAsync(TypeSessionProductCreateRequestDTO typeSessionProduct);
         Task<TypeSessionProductResponseDTO> UpdateAsync(int id, TypeSessionProductUpdateRequestDTO typeSessionProduct);
         Task<bool> DeleteAsync(int id);
+        Task<int> CountAsync();
     }
 }

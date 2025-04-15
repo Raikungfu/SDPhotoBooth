@@ -1,8 +1,6 @@
-﻿using BusinessLogic.DTO.WalletDTO;
-using BusinessLogic.Service.IService;
+﻿using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -45,6 +43,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _paymentService.GetCount();

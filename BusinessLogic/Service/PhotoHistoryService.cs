@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.PhotoDTO;
 using BusinessLogic.DTO.PhotoHistoryDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
@@ -71,7 +72,6 @@ namespace BusinessLogic.Service
         public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetAllPhotoHistory(PaginationParams? pagination)
         {
             var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(
-                includeProperties: "Photos,Photos.PhotoStyle",
                 pagination: pagination
             );
 
@@ -80,26 +80,26 @@ namespace BusinessLogic.Service
 
         public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByCustomerIdAsync(string customerId)
         {
-            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle", filter: o => o.CustomerId == customerId);
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(filter: o => o.CustomerId == customerId);
             var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
             return photoHistoriesResponseDTO;
         }
         public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByBoothIdAsync(int boothId)
         {
-            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle", filter: o => o.BoothId == boothId);
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(filter: o => o.BoothId == boothId);
             var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
             return photoHistoriesResponseDTO;
         }
         public async Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByLocationIdAsync(int locationId)
         {
-            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Photos,Photos.PhotoStyle,Booth,Booth.Location", filter: o => o.Booth.LocationId == locationId);
+            var photoHistories = await _unitOfWork.PhotoHistory.GetAllAsync(includeProperties: "Booth,Booth.Location", filter: o => o.Booth.LocationId == locationId);
             var photoHistoriesResponseDTO = _mapper.Map<IEnumerable<PhotoHistoryResponseDTO>>(photoHistories);
             return photoHistoriesResponseDTO;
         }
 
         public async Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode)
         {
-            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Photos,Photos.PhotoStyle,Session", filter: o => o.Session.Code == sessionCode);
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Session", filter: o => o.Session.Code == sessionCode);
             if (photoHistory == null)
             {
                 return null;
@@ -144,6 +144,28 @@ namespace BusinessLogic.Service
             _unitOfWork.PhotoHistory.Update(photoHistory);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+
+        public async Task<IEnumerable<PhotoResponseDTO>> GetPhotoHistoryByIdAsync(int photoHistoryId)
+        {
+            var photoHistory =await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(
+                filter: o => o.Id == photoHistoryId,
+                includeProperties: "Photos,Photos.PhotoStyle"
+            );
+            if (photoHistory == null)
+            {
+                return null;
+            }
+            var photoResponseDTOs = new List<PhotoResponseDTO>();
+            foreach (var photo in photoHistory.Photos)
+            {
+                photoResponseDTOs.Add(new PhotoResponseDTO
+                {
+                    Url = photo.Url,
+                    PhotoStyleName = photo.PhotoStyle.Name
+                });
+            }
+            return photoResponseDTOs;
         }
     }
 }

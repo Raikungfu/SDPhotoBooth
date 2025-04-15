@@ -17,6 +17,10 @@ namespace BusinessLogic.Service
             _mapper = mapper;
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _unitOfWork.TypeSessionProduct.CountAsync();
+        }
         public async Task<TypeSessionProductResponseDTO> CreateAsync(TypeSessionProductCreateRequestDTO typeSessionProduct)
         {
             var typeSessionProductEntity = _mapper.Map<TypeSessionProduct>(typeSessionProduct);

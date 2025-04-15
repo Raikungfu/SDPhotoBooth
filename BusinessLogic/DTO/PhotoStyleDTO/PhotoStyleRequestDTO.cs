@@ -23,9 +23,9 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
         [MaxLength(100)]
         public string? Description { get; set; }
 
-        public string Prompt { get; set; }
+        public string? Prompt { get; set; }
 
-        public string NegativePrompt { get; set; }
+        public string? NegativePrompt { get; set; }
 
         public string? Controlnets { get; set; }
 

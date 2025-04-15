@@ -8,6 +8,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PaymentMethodController : ControllerBase
     {
         private readonly IPaymentMethodService _paymentMethodService;
@@ -17,6 +18,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _paymentMethodService.GetCount();
@@ -24,6 +26,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get([FromQuery] PaginationParams pagination)
         {
             try
@@ -39,6 +42,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("all/destop")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllForDestop()
         {
             var paymentMethods = await _paymentMethodService.GetAllFor(false, true);
@@ -46,6 +50,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all/mobile")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllForMobile()
         {
             var paymentMethods = await _paymentMethodService.GetAllFor(true, null);
@@ -53,6 +58,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("all/web")]
+        [Authorize(Roles = "Manager, Staff")]
         public async Task<IActionResult> GetAllForWeb()
         {
             var paymentMethods = await _paymentMethodService.GetAllFor(false, null);
@@ -61,6 +67,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
         {
             var paymentMethod = await _paymentMethodService.GetPaymentMethod(id);
@@ -72,6 +79,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("by-name/{paymentMethodName}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(string paymentMethodName)
         {
             var paymentMethod = await _paymentMethodService.GetPaymentMethod(paymentMethodName);
@@ -83,6 +91,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post([FromBody] PaymentMethodRequestDTO paymentMethodRequestDTO)
         {
             if (paymentMethodRequestDTO == null)
@@ -94,6 +103,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Put(int id, [FromBody] PaymentMethodRequestDTO paymentMethodRequestDTO)
         {
             if (paymentMethodRequestDTO == null)
@@ -105,6 +115,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0)

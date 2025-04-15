@@ -1,12 +1,12 @@
 ﻿using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Manager")]
     [ApiController]
     public class DashboardController : ControllerBase
     {

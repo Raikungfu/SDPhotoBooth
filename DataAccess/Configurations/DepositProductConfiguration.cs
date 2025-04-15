@@ -9,6 +9,8 @@ namespace DataAccess.Configurations
         public void Configure(EntityTypeBuilder<DepositProduct> builder)
         {
             builder.Property(lm => lm.Name).HasMaxLength(100);
+            builder.Property(lm => lm.Name).IsRequired();
+            builder.HasIndex(lm => lm.Name).IsUnique();
 
             builder.Property(lm => lm.Description).HasMaxLength(500);
 

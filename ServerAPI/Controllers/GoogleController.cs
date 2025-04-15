@@ -1,20 +1,19 @@
-﻿using BussinessObject.Models;
+﻿using BusinessLogic.DTO.MembershipCardDTO;
+using BusinessLogic.DTO.WalletDTO;
+using BusinessLogic.Service.IService;
+using BussinessObject.Enums;
+using BussinessObject.Models;
+using BussinessObject.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Helpers;
-using BussinessObject.ViewModels;
-using BussinessObject.Enums;
-using ServerAPI.Services;
-using Azure.Core;
-using BusinessLogic.DTO.WalletDTO;
-using BusinessLogic.Service.IService;
-using BusinessLogic.DTO.MembershipCardDTO;
-using BusinessLogic.Service;
 
 namespace ServerAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;

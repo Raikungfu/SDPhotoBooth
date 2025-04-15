@@ -4,12 +4,14 @@ using BusinessLogic.DTO.TypeSessionProductDTO;
 using BusinessLogic.Service.IService;
 using BusinessLogic.Utils;
 using DataAccess.Extensions.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class TypeSessionController : ControllerBase
     {
         private readonly ITypeSessionService _typeSessionService;

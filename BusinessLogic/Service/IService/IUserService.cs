@@ -7,7 +7,9 @@ namespace BusinessLogic.Service.IService
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserResponseDTO>> GetUsers(PaginationParams? pagination);
+        Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllManager(PaginationParams? pagination);
+        Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllStaff(PaginationParams? pagination);
+        Task<(IEnumerable<UserResponseDTO> Data, int TotalCount)> GetAllCustomer(PaginationParams? pagination);
         Task<UserResponseDTO> CreateUser(UserRequestDTO userRequestDTO);
         Task<UserResponseDTO> BanUser(string email);
         Task<UserResponseDTO> UnbanUser(string email);

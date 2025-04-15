@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.MembershipCardDTO;
-using BusinessLogic.DTO.WalletDTO;
-using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
-using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -13,6 +10,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Staff")]
     public class MembershipCardController : ControllerBase
     {
         private readonly IMembershipCardService _membershipCardService;
@@ -61,6 +59,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("mobile")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetForCus()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
