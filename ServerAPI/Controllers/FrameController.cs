@@ -73,7 +73,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = "Admin, Customer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFrame(int id)
         {
             var frame = await _frameService.GetFrame(id);
@@ -85,7 +85,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Customer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFrames([FromQuery] PaginationParams pagination)
         {
             try

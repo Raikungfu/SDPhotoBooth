@@ -113,6 +113,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("upgrade-level/{id}")]
+        [Authorize(Roles ="Staff, Customer")]
         public async Task<IActionResult> UpgradeLevel(int id, int levelId)
         {
             var existingCard = await _membershipCardService.GetById(id);

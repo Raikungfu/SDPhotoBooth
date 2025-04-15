@@ -69,7 +69,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles ="Manager, Customer")]
+        [Authorize(Roles ="Manager")]
         public async Task<IActionResult> GetDeposits([FromQuery] PaginationParams pagination)
         {
             try
@@ -84,7 +84,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
-        [Authorize(Roles = "Manager, Customer")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _depositService.GetCount();

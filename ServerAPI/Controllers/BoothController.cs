@@ -17,6 +17,9 @@ namespace ServerAPI.Controllers
             _boothService = boothService;
         }
 
+        //get ra booth da tao cuar th dang dapj 
+
+
         [HttpGet]
         public async Task<IActionResult> GetBooths([FromQuery] PaginationParams pagination)
         {

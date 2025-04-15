@@ -63,6 +63,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("{orderCode}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(long orderCode)
         {
             var session = await _sessionService.CreateSession(orderCode);
@@ -75,7 +76,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpPost("use-session")]
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         public async Task<IActionResult> UseSession([FromBody] SessionRequestDTO request)
         {
             var session = await _sessionService.GetSessionByCode(request.Code);

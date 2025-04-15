@@ -33,6 +33,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Customer")]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams? pagination)
         {
             var depositProducts = await _depositProductService.GetAllAsync(pagination);

@@ -137,7 +137,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost("upload")]
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         public async Task<IActionResult> UploadPhotos([FromForm] PhotoHistoryRequestDTO request)
         {
             if (request.PhotoPaths == null || !request.PhotoPaths.Any() || string.IsNullOrEmpty(request.SessionCode))
@@ -175,7 +175,7 @@ namespace ServerAPI.Controllers
         }
 
 
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpPost("upload-url")]
         public async Task<IActionResult> UploadUrlPhotos([FromBody] PhotoHistoryUrlRequestDTO request)
         {
