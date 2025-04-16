@@ -21,6 +21,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Staff,Customer")]
         public async Task<IActionResult> GetLevelMemberships([FromQuery] PaginationParams pagination)
         {
             try
@@ -35,6 +36,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> GetLevelMembership(int id)
         {
             var levelMembership = await _levelMembershipService.GetLevelMembershipById(id);
@@ -84,6 +86,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _levelMembershipService.GetCount();

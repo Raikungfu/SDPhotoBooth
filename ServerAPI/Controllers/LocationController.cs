@@ -25,6 +25,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager. Admin")]
         public async Task<IActionResult> GetLocations([FromQuery] PaginationParams pagination)
         {
             try
