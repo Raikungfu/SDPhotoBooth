@@ -84,17 +84,71 @@ namespace BusinessLogic.Service
                 return null;
             }
             var photoStyleObj = await _unitOfWork.PhotoStyle.GetFirstOrDefaultAsync(t => t.Id == id);
-            photoStyleObj.Name = photoStyle.Name;
-            photoStyleObj.Description = photoStyle.Description;
-            photoStyleObj.ImageUrl = photoStyle.ImageUrl;
-            photoStyleObj.Prompt = photoStyle.Prompt;
-            photoStyleObj.NegativePrompt = photoStyle.NegativePrompt;
-            photoStyleObj.Controlnets = photoStyle.Controlnets;
-            photoStyleObj.NumImagesPerGen = photoStyle.NumImagesPerGen;
-            photoStyleObj.BackgroundColor = photoStyle.BackgroundColor;
-            photoStyleObj.Height = photoStyle.Height;
-            photoStyleObj.Width = photoStyle.Width;
-            photoStyleObj.Mode = photoStyle.Mode;
+            if(!string.IsNullOrEmpty(photoStyle.Name))
+            {
+                photoStyleObj.Name = photoStyle.Name;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.Description))
+            {
+                photoStyleObj.Description = photoStyle.Description;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.ImageUrl))
+            {
+                photoStyleObj.ImageUrl = photoStyle.ImageUrl;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.Prompt))
+            {
+                photoStyleObj.Prompt = photoStyle.Prompt;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.NegativePrompt))
+            {
+                photoStyleObj.NegativePrompt = photoStyle.NegativePrompt;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.Controlnets))
+            {
+                photoStyleObj.Controlnets = photoStyle.Controlnets;
+            }
+            if (photoStyle.NumImagesPerGen != null)
+            {
+                photoStyleObj.NumImagesPerGen = photoStyle.NumImagesPerGen;
+            }
+            if (!string.IsNullOrEmpty(photoStyle.BackgroundColor))
+            {
+                photoStyleObj.BackgroundColor = photoStyle.BackgroundColor;
+            }
+            if (photoStyle.Height != null)
+            {
+                photoStyleObj.Height = photoStyle.Height;
+            }
+            if (photoStyle.Width != null)
+            {
+                photoStyleObj.Width = photoStyle.Width;
+            }
+            if (photoStyle.Mode != null)
+            {
+                photoStyleObj.Mode = photoStyle.Mode;
+            }
+            if (photoStyle.NumInferenceSteps != null)
+            {
+                photoStyleObj.NumInferenceSteps = photoStyle.NumInferenceSteps;
+            }
+            if (photoStyle.GuidanceScale != null)
+            {
+                photoStyleObj.GuidanceScale = photoStyle.GuidanceScale;
+            }
+            if (photoStyle.Strength != null)
+            {
+                photoStyleObj.Strength = photoStyle.Strength;
+            }
+            if (photoStyle.FaceImage != null)
+            {
+                photoStyleObj.FaceImage = photoStyle.FaceImage;
+            }
+            if (photoStyle.BackgroundRemover != null)
+            {
+                photoStyleObj.BackgroundRemover = photoStyle.BackgroundRemover;
+            }
+
             try
             {
                 _unitOfWork.PhotoStyle.Update(photoStyleObj);

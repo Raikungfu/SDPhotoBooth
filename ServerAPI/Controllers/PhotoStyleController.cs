@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.PhotoStyleDTO;
 using BusinessLogic.Service.IService;
+using BussinessObject.Enums;
 using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -95,6 +96,11 @@ namespace ServerAPI.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<PhotoStyleResponseDTO>> CreatePhotoStyle([FromForm] PhotostyleWithFormFileRequestDTO form)
         {
+            if(string.IsNullOrEmpty(form.Name)) return BadRequest("Name is required");
+
+            if(form.NumImagesPerGen == null) form.NumImagesPerGen = 6;
+            if(form.Mode == null) form.Mode = InpaintMode.None;
+
             var photoStyleRequestDTO = _mapper.Map<PhotoStyleRequestDTO>(form);
             if (form.ImageUrl != null && form.ImageUrl.Length != 0)
             {
@@ -135,6 +141,7 @@ namespace ServerAPI.Controllers
                 return NotFound();
             }
             var dto = _mapper.Map<PhotoStyleRequestDTO>(form);
+            
             if (form.ImageUrl != null && form.ImageUrl.Length != 0)
             {
                 var imageUrl = await _firebaseService.UploadImageAsync(form.ImageUrl.OpenReadStream(), form.ImageUrl.FileName, form.ImageUrl.ContentType);

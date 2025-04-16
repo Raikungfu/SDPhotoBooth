@@ -16,9 +16,8 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
 
     public class BasePhotoStyleDTO 
     {
-        [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [MaxLength(100)]
         public string? Description { get; set; }
@@ -29,7 +28,7 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
 
         public string? Controlnets { get; set; }
 
-        public int? NumImagesPerGen { get; set; } = 6;
+        public int? NumImagesPerGen { get; set; }
 
         public string? BackgroundColor { get; set; }
 
@@ -37,7 +36,7 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
 
         public int? Width { get; set; }
 
-        public InpaintMode? Mode { get; set; } = InpaintMode.None;
+        public InpaintMode? Mode { get; set; } 
 
         public int? NumInferenceSteps { get; set; }
         public double? GuidanceScale { get; set; }
