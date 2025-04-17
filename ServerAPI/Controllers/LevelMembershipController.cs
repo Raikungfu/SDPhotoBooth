@@ -9,7 +9,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class LevelMembershipController : ControllerBase
     {
         private readonly ILevelMembershipService _levelMembershipService;
@@ -47,7 +46,9 @@ namespace ServerAPI.Controllers
             return Ok(levelMembership);
         }
 
+    
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateLevelMembership([FromBody] CreateLevelMembershipRequestDTO levelMembershipRequestDTO)
         {
             if (!ModelState.IsValid)
@@ -59,6 +60,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateLevelMembership(int id, [FromBody] UpdateLevelMembershipRequestDTO levelMembershipRequestDTO)
         {
             if (!ModelState.IsValid)
@@ -75,6 +77,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteLevelMembership(int id)
         {
             var result = await _levelMembershipService.DeleteLevelMembership(id);

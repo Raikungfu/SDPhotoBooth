@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
 using BussinessObject.Models;
@@ -10,12 +11,14 @@ namespace BusinessLogic.Service
     public class FrameService : IFrameService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICoordinateService _coordinateService;
         private readonly IMapper _mapper;
 
-        public FrameService(IUnitOfWork unitOfWork, IMapper mapper)
+        public FrameService(IUnitOfWork unitOfWork, IMapper mapper, ICoordinateService coordinateService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _coordinateService = coordinateService;
         }
         public async Task<int> GetCount()
         {
@@ -115,6 +118,31 @@ namespace BusinessLogic.Service
             {
                 frame.SlotCount = frameRequestDTO.SlotCount.Value;
             }
+            if(frameRequestDTO.ForMobile.HasValue)
+            {
+                frame.ForMobile = frameRequestDTO.ForMobile.Value;
+            }
+            if (frameRequestDTO.CoordinateDTOs != null && frameRequestDTO.CoordinateDTOs.Any())
+            {
+                bool result = await _coordinateService.DeleteAllCoordinatesByFrameId(frame.Id);
+                if (!result)
+                {
+                    throw new Exception("Failed to delete coordinates");
+                }
+                foreach (var coordinate in frameRequestDTO.CoordinateDTOs)
+                {
+                    var coordinateRequestDTO = new CoordinateRequestDTO
+                    {
+                        FrameId = frame.Id,
+                        X = coordinate.X,
+                        Y = coordinate.Y,
+                        Width = coordinate.Width,
+                        Height = coordinate.Height
+                    };
+                    await _coordinateService.CreateCoordinate(coordinateRequestDTO);
+                }
+            }
+
             await _unitOfWork.SaveAsync();
             return _mapper.Map<FrameResponseDTO>(frame);
         }

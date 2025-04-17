@@ -16,6 +16,22 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<bool> DeleteAllCoordinatesByFrameId(int frameId)
+        {
+            var coordinates = await _unitOfWork.Coordinate.GetAllAsync(c => c.FrameId == frameId);
+            if (coordinates == null || !coordinates.Any())
+            {
+                return false;
+            }
+            foreach (var coordinate in coordinates)
+            {
+                _unitOfWork.Coordinate.Remove(coordinate);
+            }
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
         public async Task<CoordinateResponseDTO> CreateCoordinate(CoordinateRequestDTO coordinate)
         {
             var coordinateObj = _mapper.Map<Coordinate>(coordinate);

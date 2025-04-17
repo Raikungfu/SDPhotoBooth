@@ -33,6 +33,12 @@ namespace ServerAPI.Middlewares
                         var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
                         var currentUser = await userService.UserDetailById(userId);
+                        if(currentUser == null)
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            return;
+                        }
+
                         var currentRole = currentUser.Role;
 
                         var tokenRole = jwtToken?.Claims?.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;

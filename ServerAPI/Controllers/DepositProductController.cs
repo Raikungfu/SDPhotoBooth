@@ -11,7 +11,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
     public class DepositProductController : ControllerBase
     {
         private readonly IDepositProductService _depositProductService;
@@ -26,6 +25,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _depositProductService.CountAsync();
@@ -41,6 +41,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetById(int id)
         {
             var depositProduct = await _depositProductService.GetByIdAsync(id);
@@ -52,6 +53,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var isDeleted = await _depositProductService.DeleteAsync(id);
@@ -63,6 +65,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create([FromBody] DepositProductCreateRequestDTO depositProductRequest)
         {
             if (!ModelState.IsValid)
@@ -79,6 +82,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("export")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> ExportCsv()
         {
             var depositProduct = await _depositProductService.GetAllAsync(new PaginationParams());

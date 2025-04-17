@@ -10,7 +10,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Staff")]
     public class MembershipCardController : ControllerBase
     {
         private readonly IMembershipCardService _membershipCardService;
@@ -23,6 +22,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetAllMembershipCards([FromQuery] PaginationParams pagination)
         {
             try
@@ -37,6 +37,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetById(int id)
         {
             var membershipCard = await _membershipCardService.GetById(id);
@@ -48,6 +49,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("customer/{customerId}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetByCustomerId(string customerId)
         {
             var membershipCard = await _membershipCardService.GetByCustomerId(customerId);
@@ -78,6 +80,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("level/{levelMembershipId}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetByLevelMembershipId(int levelMembershipId)
         {
             var membershipCards = await _membershipCardService.GetByLevelMembershipId(levelMembershipId);
@@ -90,6 +93,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateMembershipCardRequestDTO dto)
         {
             var existingCard = await _membershipCardService.GetById(id);
@@ -144,6 +148,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _membershipCardService.GetCount();

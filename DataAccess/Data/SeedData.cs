@@ -549,7 +549,7 @@ public static class SeedData
                         Id = 10,
                         Name = "Cyberpunk", 
                         Description = "Futuristic cyberpunk aesthetic with neon lights and high-tech details.",
-                        ImageUrl = "https://techwearstorm.com/cdn/shop/files/cyberpunk-techwearstorm-14.webp",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/cyberpunk.webp19c68ca8-c452-4ce0-97cd-061d18a957dc?alt=media",
                         Prompt = "Futuristic cyberpunk aesthetic, neon lights, high-tech details, glowing cityscape, cybernetic enhancements.",
                         NegativePrompt = "low contrast, dull colors, historical elements, medieval designs, washed-out lighting.",
                         Controlnets = "depth, canny", 
@@ -572,7 +572,7 @@ public static class SeedData
                         Id = 11,
                         Name = "Watercolor Painting",
                         Description = "Soft and elegant watercolor painting with delicate brush strokes.",
-                        ImageUrl = "https://images.stockcake.com/public/2/7/8/278d43d3-77ec-4aa3-b4ea-6ae292a706fb_large/dancing-through-mist-stockcake.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Watercolor.jpge2aa55c6-9cc2-4bcc-a6e5-7cdf5385c5b0?alt=media",
                         Prompt = "Soft and elegant watercolor painting, delicate brush strokes, smooth color blending, artistic expression.",
                         NegativePrompt = "pixelated edges, harsh shadows, digital artifacts, rigid outlines, unrealistic proportions.",
                         Controlnets = "pose, depth", // softedge,scribble -> pose, depth
@@ -595,7 +595,7 @@ public static class SeedData
                         Id = 12,
                         Name = "Black & White Classic",
                         Description = "Timeless black and white portrait with deep contrast and classic lighting.",
-                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_3py34SENuvKrCNTcP7Gn8ss7MyUXGYF9fA&s",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/blackwhite.jpg5d9c012c-d715-4fb8-8970-e8b5b5af7ff2?alt=media",
                         Prompt = "Timeless black and white portrait, deep contrast, classic lighting, elegant composition.",
                         NegativePrompt = "grainy texture, washed-out details, weak contrast, digital noise, unbalanced lighting.",
                         Controlnets = "pose, canny", //depth, canny -> pose,canny
@@ -616,9 +616,9 @@ public static class SeedData
                     new PhotoStyle
                     {
                         Id = 13,
-                        Name = "Oil Painting", //anime
+                        Name = "Oil Painting",
                         Description = "Rich and textured oil painting style with thick brush strokes.",
-                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTROHzxiGPY3o4Uv7OxGSSzbmWEF9jrRbgS0Q&s",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/oilpaint.jpgf9e0162a-2c9d-45e0-a70b-87d2f9f3c7b1?alt=media",
                         Prompt = "Rich and textured oil painting style, thick brush strokes, deep color saturation, artistic rendering.",
                         NegativePrompt = "flat colors, digital sharpness, pixelation, unrealistic lighting, blurred edges.",
                         Controlnets = "pose, canny", //scribble, softedge -> pose, canny

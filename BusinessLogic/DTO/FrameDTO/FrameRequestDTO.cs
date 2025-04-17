@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessLogic.DTO.CoordinateDTO;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLogic.DTO.FrameDTO
@@ -20,5 +21,21 @@ namespace BusinessLogic.DTO.FrameDTO
 
         public int? SlotCount { get; set; }
         public bool? ForMobile { get; set; }
+        public ICollection<CoordinateOnFrameRequestDTO>? CoordinateDTOs { get; set; }
+    }
+
+    public class CoordinateOnFrameRequestDTO
+    {
+        [Required]
+        public int X { get; set; }
+
+        [Required]
+        public int Y { get; set; }
+
+        [Required]
+        public int Width { get; set; }
+
+        [Required]
+        public int Height { get; set; }
     }
 }

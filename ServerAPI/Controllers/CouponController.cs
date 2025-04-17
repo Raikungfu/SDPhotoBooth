@@ -150,13 +150,28 @@ namespace ServerAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            bool hasDiscount = couponRequestDTO.Discount.HasValue;
-            bool hasDiscountPercent = couponRequestDTO.DiscountPercent.HasValue;
+            bool hasDiscountDTO = couponRequestDTO.Discount.HasValue;
+            bool hasDiscountPercentDTO = couponRequestDTO.DiscountPercent.HasValue;
 
-            if ((hasDiscount && hasDiscountPercent) || (!hasDiscount && !hasDiscountPercent))
+            if (hasDiscountDTO && hasDiscountPercentDTO)
             {
-                return BadRequest("Must provide either 'Discount' or 'DiscountPercent', but not both.");
+                if (couponRequestDTO.Discount.Value < 0 || couponRequestDTO.DiscountPercent.Value < 0)
+                    return BadRequest("Discount and DiscountPercent must not be less than 0.");
+                if (couponRequestDTO.Discount.Value > 0 && couponRequestDTO.DiscountPercent.Value > 0)
+                    return BadRequest("Only one of 'Discount' or 'DiscountPercent' can be provided.");
+                if (couponRequestDTO.Discount.Value == 0 && couponRequestDTO.DiscountPercent.Value == 0)
+                    return BadRequest("Either 'Discount' or 'DiscountPercent' must be greater than 0.");
             }
+
+            if (hasDiscountDTO && couponRequestDTO.Discount.Value <= 0)
+                return BadRequest("'Discount' must be greater than 0.");
+
+            if (hasDiscountPercentDTO && couponRequestDTO.DiscountPercent.Value <= 0)
+                return BadRequest("'DiscountPercent' must be greater than 0.");
+
+            couponRequestDTO.DiscountPercent = hasDiscountDTO ? 0 : couponRequestDTO.DiscountPercent;
+            couponRequestDTO.Discount = hasDiscountPercentDTO ? 0 : couponRequestDTO.Discount;
+
 
             var isExist = await _couponService.GetCouponById(id);
             if (isExist == null)
