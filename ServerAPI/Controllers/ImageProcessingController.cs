@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Service.IService;
+﻿using BusinessLogic.DTO.ImageProcessingDTO;
+using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Services;
 
