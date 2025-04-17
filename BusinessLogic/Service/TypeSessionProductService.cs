@@ -108,14 +108,6 @@ namespace BusinessLogic.Service
             {
                 typeSessionProductEntity.ProductId = typeSessionProduct.ProductId;
             }
-            if (typeSessionProduct.LevelMembershipId.HasValue)
-            {
-                typeSessionProductEntity.LevelMembershipId = typeSessionProduct.LevelMembershipId.Value;
-            }
-            if (typeSessionProduct.TypeSessionId.HasValue)
-            {
-                typeSessionProductEntity.TypeSessionId = typeSessionProduct.TypeSessionId.Value;
-            }
 
             await _unitOfWork.TypeSessionProduct.UpdateAsync(typeSessionProductEntity);
             await _unitOfWork.SaveAsync();

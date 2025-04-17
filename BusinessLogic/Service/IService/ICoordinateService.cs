@@ -9,5 +9,6 @@ namespace BusinessLogic.Service.IService
         Task<CoordinateResponseDTO> CreateCoordinate(CoordinateRequestDTO coordinate);
         Task<CoordinateResponseDTO> UpdateCoordinate(int id, UpdateCoordinateDTO coordinate);
         Task<CoordinateResponseDTO> DeleteCoordinate(int id);
+        Task<bool> DeleteAllCoordinatesByFrameId(int frameId);
     }
 }

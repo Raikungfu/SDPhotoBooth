@@ -14,7 +14,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
     public class TypeSessionProductController : ControllerBase
     {
         private readonly ITypeSessionProductService _typeSessionProductService;
@@ -115,6 +114,7 @@ namespace ServerAPI.Controllers
             {
                 return NotFound();
             }
+             
             var updatedTypeSessionProduct = await _typeSessionProductService.UpdateAsync(id, typeSessionProduct);
             return Ok(updatedTypeSessionProduct);
         }

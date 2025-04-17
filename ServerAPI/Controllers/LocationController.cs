@@ -8,7 +8,7 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;
@@ -18,6 +18,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("count")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCount()
         {
             var count = await _locationService.GetCount();
@@ -25,7 +26,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager. Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> GetLocations([FromQuery] PaginationParams pagination)
         {
             try
@@ -41,6 +42,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetById(int id)
         {
             var location = await _locationService.GetLocation(id);
@@ -52,6 +54,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("by-location/{locationName}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetByName(string locationName)
         {
             var location = await _locationService.GetLocation(locationName);
@@ -64,6 +67,7 @@ namespace ServerAPI.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Post([FromBody] LocationRequestDTO locationRequestDTO)
         {
             if (locationRequestDTO == null)
@@ -75,6 +79,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Put(int id, [FromBody] LocationRequestDTO locationRequestDTO)
         {
             if (id <= 0 || locationRequestDTO == null)
@@ -91,6 +96,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0)

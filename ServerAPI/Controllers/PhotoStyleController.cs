@@ -101,16 +101,16 @@ namespace ServerAPI.Controllers
             if(form.NumImagesPerGen == null) form.NumImagesPerGen = 6;
             if(form.Mode == null) form.Mode = InpaintMode.None;
 
+            if (string.IsNullOrEmpty(form.Prompt) || string.IsNullOrEmpty(form.NegativePrompt))
+            {
+                return BadRequest("Prompt and Negative Prompt is required");
+            }
+
             var photoStyleRequestDTO = _mapper.Map<PhotoStyleRequestDTO>(form);
             if (form.ImageUrl != null && form.ImageUrl.Length != 0)
             {
                 var imageUrl = await _firebaseService.UploadImageAsync(form.ImageUrl.OpenReadStream(), form.ImageUrl.FileName, form.ImageUrl.ContentType);
                 photoStyleRequestDTO.ImageUrl = imageUrl;
-            }
-
-            if (string.IsNullOrEmpty(form.Prompt) || string.IsNullOrEmpty(form.NegativePrompt))
-            {
-                return BadRequest("Prompt and Negative Prompt is required");
             }
 
             var photoStyle = await _photoStyleService.CreatePhotoStyle(photoStyleRequestDTO);

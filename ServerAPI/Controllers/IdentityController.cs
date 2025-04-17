@@ -162,7 +162,7 @@ namespace ServerAPI.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(new { message = "Profile updated successfully" });
+            return Ok(result);
         }
 
         [HttpPut("update-avatar")]

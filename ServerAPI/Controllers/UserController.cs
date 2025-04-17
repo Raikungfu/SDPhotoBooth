@@ -7,6 +7,7 @@ using DataAccess.Extensions.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace ServerAPI.Controllers
 {
@@ -112,13 +113,33 @@ namespace ServerAPI.Controllers
         [Authorize(Roles = "Admin, Manager, Staff")]
         public async Task<IActionResult> UserDetail([FromQuery] string email)
         {
-            var user = await _userService.UserDetail(email);
-            if (user == null)
+            var requester = await _userManager.GetUserAsync(User);
+            var requesterRole = (await _userManager.GetRolesAsync(requester)).FirstOrDefault();
+
+            var targetUser = await _userService.UserDetail(email);
+            if (targetUser == null)
+                return NotFound("User not found.");
+
+            var targetRole = targetUser.Role;
+
+            // Staff can only view Customer details
+            if (requesterRole == "Staff" && targetRole == "Customer")
             {
-                return NotFound();
+                return Ok(targetUser);
             }
-            return Ok(user);
+            // Manager can view Customer and Staff details
+            else if (requesterRole == "Manager" && (targetRole == "Customer" || targetRole == "Staff"))
+            {
+                return Ok(targetUser);
+            }
+            // Admin can only view Manager and Staff details
+            else if (requesterRole == "Admin" && (targetRole == "Manager" || targetRole == "Staff"))
+            {
+                return Ok(targetUser);
+            }
+            return Forbid();
         }
+
 
         [HttpPost("change-role")]
         [Authorize(Roles = "Admin")]
