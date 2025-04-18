@@ -12,12 +12,14 @@ namespace ServerAPI.Controllers
         private readonly RabbitMqService _rabbitService;
         private readonly FirebaseService _firebaseService;
         private readonly IPhotoStyleService _photoStyleService;
+        private readonly ISessionService _sessionService;
 
-        public ImageProcessingController(RabbitMqService rabbitService, FirebaseService firebaseService, IPhotoStyleService photoStyleService)
+        public ImageProcessingController(RabbitMqService rabbitService, FirebaseService firebaseService, IPhotoStyleService photoStyleService, ISessionService sessionService)
         {
             _rabbitService = rabbitService;
             _firebaseService = firebaseService;
             _photoStyleService = photoStyleService;
+            _sessionService = sessionService;
         }
 
         [HttpPost]
@@ -27,6 +29,18 @@ namespace ServerAPI.Controllers
             if (request.image == null || request.image.Length == 0)
             {
                 return BadRequest("No image uploaded.");
+            }
+
+            if (string.IsNullOrEmpty(request.connectionId) || string.IsNullOrEmpty(request.sessionCode))
+            {
+                return BadRequest("Connection ID and session code are required.");
+            }
+
+            var session = await _sessionService.UpdateSessionAbleTaken(request.sessionCode);
+
+            if (session == null)
+            {
+                return BadRequest("Session not found or already taken.");
             }
 
             string firebaseUrl;

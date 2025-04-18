@@ -12,8 +12,6 @@ namespace DataAccess.Configurations
 
             builder.Property(ts => ts.Description).HasMaxLength(500);
 
-            builder.Property(ts => ts.isPrinting).IsRequired().HasDefaultValue(true);
-
             builder.Property(lm => lm.Price).HasPrecision(18, 2);
 
             builder.Property(lm => lm.AbleTakenNumber).IsRequired();

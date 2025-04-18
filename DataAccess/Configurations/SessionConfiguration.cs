@@ -11,6 +11,8 @@ namespace DataAccess.Configurations
             builder.HasIndex(o => o.Code)
                 .IsUnique();
 
+            builder.Property(lm => lm.AbleTakenNumber).IsRequired();
+
             builder.HasOne(o => o.Order)
                 .WithOne(o => o.Session)
                 .HasForeignKey<Session>(o => o.OrderId)

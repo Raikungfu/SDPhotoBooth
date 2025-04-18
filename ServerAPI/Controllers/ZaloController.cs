@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServerAPI.Utilities;
 
 namespace ServerAPI.Controllers
 {
@@ -17,18 +18,18 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("send-photobooth-via-zalo")]
-        public async Task<IActionResult> SendPhotoBoothViaZalo([FromQuery] string phone, [FromQuery] string sessionCode, [FromQuery] string fullName)
+        public async Task<IActionResult> SendPhotoBoothViaZalo([FromQuery] string sessionCode)
         {
             try
             {
-                if (string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(sessionCode))
+                if (string.IsNullOrEmpty(sessionCode))
                 {
                     return BadRequest("Phone and sessionCode are required.");
                 }
 
                 var photoUrls = await photoHistoryService.GetListPhotosFromSessionCode(sessionCode);
 
-                string photoUrlsString = string.Join("\n", photoUrls);
+                string photoUrlsString = string.Join("\n", await UrlShortenerHelper.ShortenUrlsParallel(photoUrls));
 
                 return Ok(new { photoUrls = photoUrlsString });
             }

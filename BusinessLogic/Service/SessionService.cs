@@ -48,6 +48,7 @@ namespace BusinessLogic.Service
 
             var newSession = new Session();
             newSession.OrderId = order.Id;
+            newSession.AbleTakenNumber = order.TypeSession.AbleTakenNumber;
 
             await _unitOfWork.Session.AddAsync(newSession);
             await _unitOfWork.SaveAsync();
@@ -111,6 +112,20 @@ namespace BusinessLogic.Service
                 }
             }
             return _mapper.Map<SessionResponseDTO>(session);
+        }
+
+        public async Task<SessionResponseDTO> UpdateSessionAbleTaken(string code)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code);
+            if (session != null && session.AbleTakenNumber > 0)
+            {
+                session.AbleTakenNumber -= 1;
+                _unitOfWork.Session.Update(session);
+                _unitOfWork.SaveAsync();
+                return _mapper.Map<SessionResponseDTO>(session);
+            }
+
+            return null;
         }
     }
 }

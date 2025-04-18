@@ -20,6 +20,8 @@ namespace BussinessObject.Models
 
         public virtual PhotoHistory PhotoHistory { get; set; }
 
+        public int AbleTakenNumber { get; set; }
+
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }
 

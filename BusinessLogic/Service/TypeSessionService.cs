@@ -152,7 +152,6 @@ namespace BusinessLogic.Service
             typeSessionCode.Description = typeSessionCodeDTO.Description ?? typeSessionCode.Description;
             typeSessionCode.Duration = typeSessionCodeDTO.Duration ?? typeSessionCode.Duration;
             typeSessionCode.Price = typeSessionCodeDTO.Price >= 0 ? typeSessionCodeDTO.Price : typeSessionCode.Price;
-            typeSessionCode.isPrinting = typeSessionCodeDTO.isPrinting;
             typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber >= 0 ? typeSessionCodeDTO.AbleTakenNumber : typeSessionCode.AbleTakenNumber;
 
             _unitOfWork.TypeSession.Update(typeSessionCode);

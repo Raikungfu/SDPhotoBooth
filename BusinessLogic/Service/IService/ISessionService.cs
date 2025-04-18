@@ -10,6 +10,7 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<SessionResponseDTO>> GetAllSessions(PaginationParams? pagination);
         Task<SessionResponseDTO> GetSessionById(int Id);
         Task<SessionResponseDTO> GetSessionByCode(string code);
+        Task<SessionResponseDTO> UpdateSessionAbleTaken(string code);
         Task<SessionResponseDTO> UseSession(string code, int? boothId);
         Task<int> GetCount();
     }
