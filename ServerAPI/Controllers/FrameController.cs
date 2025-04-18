@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.CoordinateDTO;
 using BusinessLogic.DTO.FrameDTO;
 using BusinessLogic.Service.IService;
 using DataAccess.Extensions.Pagination;
@@ -9,20 +10,22 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class FrameController : ControllerBase
     {
         private readonly IFrameService _frameService;
         private readonly IFrameStyleService _frameStyleService;
+        private readonly ICoordinateService _coordinateService;
         private readonly IMapper _mapper;
         private readonly FirebaseService _firebaseService;
 
-        public FrameController(IFrameService frameService, IMapper mapper, IFrameStyleService frameStyleService, FirebaseService firebaseService)
+        public FrameController(IFrameService frameService, IMapper mapper, IFrameStyleService frameStyleService,
+            FirebaseService firebaseService, ICoordinateService coordinateService)
         {
             _frameService = frameService;
             _mapper = mapper;
             _frameStyleService = frameStyleService;
             _firebaseService = firebaseService;
+            _coordinateService = coordinateService;
         }
 
         [HttpPost]
@@ -35,11 +38,17 @@ namespace ServerAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (form.FrameFile == null || form.FrameFile.Length == 0 ||
-             form.FrameStyleId <= 0 ||
-                form.SlotCount <= 0)
+            if (form.FrameFile == null || form.FrameFile.Length == 0)
             {
-                return BadRequest("Invalid input data");
+                return BadRequest("Invalid upload file data");
+            }
+            if (!form.SlotCount.HasValue)
+            {
+                return BadRequest("Invalid Slot Count");
+            }
+            if (!form.FrameStyleId.HasValue)
+            {
+                return BadRequest("Invalid Frame Style Id");
             }
             var frameStyle = await _frameStyleService.GetFrameStyle(form.FrameStyleId.Value);
             if (frameStyle == null)
@@ -47,6 +56,11 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid Frame Style");
             }
             if(!form.ForMobile.HasValue) form.ForMobile = false;
+
+            if (form.CoordinateDTOs == null || !form.CoordinateDTOs.Any())
+            {
+                return BadRequest("Coordinates must not be null or empty.");
+            }
 
             var uploadedUrl = await _firebaseService.UploadImageAsync(
             form.FrameFile.OpenReadStream(),
@@ -57,6 +71,18 @@ namespace ServerAPI.Controllers
             frameRequestDTO.FrameUrl = uploadedUrl;
 
             var frame = await _frameService.CreateFrame(frameRequestDTO);
+            foreach (var coordinate in form.CoordinateDTOs)
+            {
+                var coordinateRequestDTO = new CoordinateRequestDTO
+                {
+                    FrameId = frame.Id,
+                    X = coordinate.X,
+                    Y = coordinate.Y,
+                    Width = coordinate.Width,
+                    Height = coordinate.Height
+                };
+                await _coordinateService.CreateCoordinate(coordinateRequestDTO);
+            }
             return Ok(frame);
         }
 

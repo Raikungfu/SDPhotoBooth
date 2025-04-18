@@ -16,8 +16,5 @@ namespace BusinessLogic.DTO.TypeSessionProductDTO
     {
         public string? Name { get; set; }
         public string? ProductId { get; set; }
-        public int? LevelMembershipId { get; set; }
-        public int? TypeSessionId { get; set; }
-        public int? CouponId { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class DepositController : ControllerBase
     {
         private readonly IDepositService _depositService;

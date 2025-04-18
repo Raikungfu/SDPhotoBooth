@@ -129,7 +129,7 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseMiddleware<BlacklistMiddleware>();
-app.UseMiddleware<RoleValidationMiddleware>();
+app.UseMiddleware<UserValidationMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<ResponseTimeMiddleware>();
 

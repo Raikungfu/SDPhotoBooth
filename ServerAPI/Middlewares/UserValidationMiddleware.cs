@@ -1,19 +1,16 @@
 ﻿using BusinessLogic.Service.IService;
-using Microsoft.Extensions.Caching.Distributed;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace ServerAPI.Middlewares
 {
-    public class RoleValidationMiddleware
+    public class UserValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IDistributedCache _cache;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public RoleValidationMiddleware(RequestDelegate next, IDistributedCache cache, IServiceScopeFactory serviceScopeFactory)
+        public UserValidationMiddleware(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
         {
             _next = next;
-            _cache = cache;
             _serviceScopeFactory = serviceScopeFactory;
         }
 
@@ -33,17 +30,26 @@ namespace ServerAPI.Middlewares
                         var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
                         var currentUser = await userService.UserDetailById(userId);
-                        var currentRole = currentUser.Role;
 
+                        if (currentUser == null)
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            await context.Response.WriteAsync("User not found.");
+                            return;
+                        }
+
+                        if (currentUser.IsBanned)
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            await context.Response.WriteAsync("Tài khoản của bạn đã bị cấm.");
+                            return;
+                        }
+
+                        var currentRole = currentUser.Role;
                         var tokenRole = jwtToken?.Claims?.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
 
                         if (!string.Equals(currentRole, tokenRole, StringComparison.OrdinalIgnoreCase))
                         {
-                            await _cache.SetStringAsync($"blacklist:{token}", "true", new DistributedCacheEntryOptions
-                            {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) 
-                            });
-
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                             await context.Response.WriteAsync("Role của người dùng đã thay đổi, vui lòng đăng nhập lại.");
                             return;
@@ -51,6 +57,7 @@ namespace ServerAPI.Middlewares
                     }
                 }
             }
+
             await _next(context);
         }
     }

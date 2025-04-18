@@ -45,8 +45,18 @@ namespace ServerAPI.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password) && !user.IsDeleted)
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                if (user.IsDeleted)
+                {
+                    return Unauthorized(new { message = "Your account has been deleted." });
+                }
+
+                if (user.IsBanned)
+                {
+                    return Unauthorized(new { message = "Your account has been banned." });
+                }
+
                 var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 
                 if (signInResult.Succeeded)
@@ -58,19 +68,18 @@ namespace ServerAPI.Controllers
                         return Unauthorized(new { message = "User has no roles assigned" });
                     }
 
-                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff && UserType.Customer != userRole))
+                    if (!Enum.TryParse<UserType>(roles[0], out var userRole) || !Enum.IsDefined(typeof(UserType), userRole) || (userRole != UserType.Admin && userRole != UserType.Manager && userRole != UserType.Staff && userRole != UserType.Customer))
                     {
                         return Unauthorized(new { message = "You don't have permission to access!" });
                     }
-                    else
-                    {
-                        return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
-                    }
+
+                    return Ok(new { message = "Token is valid", token = JwtHelper.GenerateJwtToken(user.Id, user.UserName, userRole, _configuration["Jwt:PrivateKey"]) });
                 }
             }
 
-            return Unauthorized();
+            return Unauthorized(new { message = "Invalid credentials" });
         }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
@@ -162,7 +171,7 @@ namespace ServerAPI.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(new { message = "Profile updated successfully" });
+            return Ok(result);
         }
 
         [HttpPut("update-avatar")]
