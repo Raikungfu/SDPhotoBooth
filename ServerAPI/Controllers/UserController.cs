@@ -150,12 +150,24 @@ namespace ServerAPI.Controllers
             {
                 return NotFound();
             }
-            var result = await _userService.ChangeRole(email, role);
-            return Ok(result);
+            if (role == UserType.Customer || role == UserType.Admin)
+            {
+                return BadRequest("Role cannot be Customer");
+            }
+            var isExistRole = isExistUser.Role;
+            if (isExistRole == "Manager" || isExistRole == "Staff")
+            {
+                var result = await _userService.ChangeRole(email, role);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest("Role cannot be changed");
+            }
         }
 
         [HttpPost("staff/move-location")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> MoveLocation([FromQuery] string email, [FromQuery] int locationId)
         {
             var isExistUser = await _userService.UserDetail(email);
