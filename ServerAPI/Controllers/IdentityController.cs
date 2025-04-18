@@ -171,7 +171,7 @@ namespace ServerAPI.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(result);
+            return Ok(user);
         }
 
         [HttpPut("update-avatar")]

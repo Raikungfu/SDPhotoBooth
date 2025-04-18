@@ -928,8 +928,8 @@ public static class SeedData
             if (!context.Session.Any())
             {
                 context.Session.AddRange(
-            new Session { Id = 1, Code = "SESSION", Expired = DateTime.Now.AddDays(60), IsActive = true, OrderId = 1 },
-            new Session { Id = 2, Code = "SESSION2", IsActive = true, OrderId = 2 }
+            new Session { Id = 1, Code = "SESSION", Expired = DateTime.Now.AddDays(60), AbleTakenNumber = 100, IsActive = true, OrderId = 1 },
+            new Session { Id = 2, Code = "SESSION2", IsActive = true, AbleTakenNumber = 10, OrderId = 2 }
                 );
 
                 context.SaveChanges();
