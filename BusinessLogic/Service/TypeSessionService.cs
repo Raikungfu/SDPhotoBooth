@@ -85,9 +85,11 @@ namespace BusinessLogic.Service
                 {
                     return false;
                 }
+
                 typeSessionCode.Name = typeSessionCodeDTO.Name;
             }
-            if (typeSessionCodeDTO.ForMobile.HasValue)
+
+            if (typeSessionCodeDTO.ForMobile.HasValue && typeSessionCode.ForMobile != typeSessionCodeDTO.ForMobile)
             {
                 if (typeSessionCodeDTO.ForMobile == false)
                 {
@@ -101,62 +103,81 @@ namespace BusinessLogic.Service
                 else
                 {
                     var typeSessionProducts = await _unitOfWork.TypeSessionProduct.GetAllAsync(s => s.TypeSessionId == id);
-                    if (!typeSessionProducts.Any())
+                    if (typeSessionProducts.Any())
                     {
-                        var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync();
-                        var coupons = await _couponService.GetCoupons(new PaginationParams());
-
-                        var validCoupons = new List<CouponResponseDTO>();
-                        foreach (var c in coupons)
+                        foreach (var typeSessionProduct in typeSessionProducts)
                         {
-                            try
-                            {
-                                _couponService.ValidateCoupon(c, typeSessionCode.Price);
-                                validCoupons.Add(c);
-                            }
-                            catch { }
+                            _unitOfWork.TypeSessionProduct.Remove(id: typeSessionProduct.Id);
                         }
-
-                        foreach (var level in levelMemberships)
-                        {
-                            var typeSessionProduct = new TypeSessionProduct
-                            {
-                                Name = $"{typeSessionCode.Name}_{level.Name}", 
-                                ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(level.Name)}", 
-                                TypeSessionId = typeSessionCode.Id,
-                                LevelMembershipId = level.Id
-                            };
-                            await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
-                            await _unitOfWork.SaveAsync();
-                        }
-
-
-                        foreach (var coupon in validCoupons)
-                        {
-                            var typeSessionProduct = new TypeSessionProduct
-                            {
-                                Name = $"{typeSessionCode.Name}_{coupon.Name}",
-                                ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
-                                TypeSessionId = typeSessionCode.Id,
-                                CouponId = coupon.Id
-                            };
-                            await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
-                            await _unitOfWork.SaveAsync();
-                        }
-
-                        typeSessionCode.ForMobile = typeSessionCodeDTO.ForMobile.Value;
                     }
+                    var levelMemberships = await _unitOfWork.LevelMembership.GetAllAsync();
+                    var coupons = await _couponService.GetCoupons(new PaginationParams());
+
+                    var validCoupons = new List<CouponResponseDTO>();
+                    foreach (var c in coupons)
+                    {
+                        try
+                        {
+                            _couponService.ValidateCoupon(c, typeSessionCode.Price);
+                            validCoupons.Add(c);
+                        }
+                        catch { }
+                    }
+
+                    foreach (var level in levelMemberships)
+                    {
+                        var typeSessionProduct = new TypeSessionProduct
+                        {
+                            Name = $"{typeSessionCode.Name}_{level.Name}",
+                            ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(level.Name)}",
+                            TypeSessionId = typeSessionCode.Id,
+                            LevelMembershipId = level.Id
+                        };
+                        await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
+                        await _unitOfWork.SaveAsync();
+                    }
+
+
+                    foreach (var coupon in validCoupons)
+                    {
+                        var typeSessionProduct = new TypeSessionProduct
+                        {
+                            Name = $"{typeSessionCode.Name}_{coupon.Name}",
+                            ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
+                            TypeSessionId = typeSessionCode.Id,
+                            CouponId = coupon.Id
+                        };
+                        await _unitOfWork.TypeSessionProduct.AddAsync(typeSessionProduct);
+                        await _unitOfWork.SaveAsync();
+                    }
+                    typeSessionCode.ForMobile = typeSessionCodeDTO.ForMobile.Value;
                 }
             }
-
-            typeSessionCode.Description = typeSessionCodeDTO.Description ?? typeSessionCode.Description;
-            typeSessionCode.Duration = typeSessionCodeDTO.Duration ?? typeSessionCode.Duration;
-            typeSessionCode.Price = typeSessionCodeDTO.Price >= 0 ? typeSessionCodeDTO.Price : typeSessionCode.Price;
-            typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber >= 0 ? typeSessionCodeDTO.AbleTakenNumber : typeSessionCode.AbleTakenNumber;
+            if(!string.IsNullOrEmpty(typeSessionCodeDTO.Description))
+            {
+                typeSessionCode.Description = typeSessionCodeDTO.Description;
+            }
+            if (typeSessionCodeDTO.Duration.HasValue)
+            {
+                typeSessionCode.Duration = typeSessionCodeDTO.Duration.Value;
+            }
+            if (typeSessionCodeDTO.Duration.HasValue && typeSessionCodeDTO.Price >= 0)
+            {
+                typeSessionCode.Price = typeSessionCodeDTO.Price.Value; 
+            }
+            if (typeSessionCodeDTO.Price.HasValue && typeSessionCodeDTO.Price >= 0)
+            {
+                typeSessionCode.Price = typeSessionCodeDTO.Price.Value;
+            }
+            if (typeSessionCodeDTO.AbleTakenNumber.HasValue && typeSessionCodeDTO.AbleTakenNumber >= 0)
+            {
+                typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber.Value;
+            }
 
             _unitOfWork.TypeSession.Update(typeSessionCode);
             await _unitOfWork.SaveAsync();
             return true;
+            //eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE4ZDliNDY4LWJkYjUtNDg2ZC1hNzgwLWYxMmJmOGNhNTVmYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbjEiLCJqdGkiOiJhYTlmYTg4NC1mN2E2LTQ1ZGQtODNjNi1kYWExMGU1YjExYTkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc0NzU1ODYwMiwiaXNzIjoiUmFpWXVnaSIsImF1ZCI6IlNhaW50In0.Y3VnoZ3BM0-1be8pnCzz4EDASvyR9MJ3AjbZDTVjIH2uLV4SH_FcRiZcVFI2Qut2k_s7fbQ2fJsbEVikpeJuFpoXGWVIO2tnsYRcqYoHWGuxh7zIDfJPCuKE8WL4AQ2E0_P1ETyHyt7Df3O4xNwc-c5JBDHHHUoWGaiElp8sPiAM0_7HIYnexJ25jGkHL5FAjQHxxWJtInDsWzXwDiMegd2OXSXUZ7J0wEvQTpTsTgNuOLB7_rilz1DlLRoT336YWblqbu3DbtpTPE32vPu9ssDT-5fJFumlSd2bjHI1uFbFIsytnbXDv0rrNjn1WV5AuvGKa_0IpAwEEioB7_jDpQ
         }
     }
 }

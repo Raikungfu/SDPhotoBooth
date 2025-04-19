@@ -138,8 +138,11 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest("Invalid data provided.");
             }
-            var isExist = await _typeSessionService.GetTypeSessionCodeByIdAsync(id);
-            if (isExist == null)  return BadRequest("TypeSession name already exists.");
+            var isNameExist = await _typeSessionService.GetTypeSessionCodeByIdAsync(id);
+            if (isNameExist == null)
+            {
+                return BadRequest("TypeSession not found.");
+            }
 
             var typeSession = await _typeSessionService.UpdateTypeSessionCodeAsync(id, typeSessionRequestDTO);
             return Ok(typeSession);
