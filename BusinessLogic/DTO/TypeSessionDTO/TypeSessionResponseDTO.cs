@@ -8,7 +8,6 @@
         public int? Duration { get; set; }
         public decimal Price { get; set; }
         public bool ForMobile { get; set; } 
-        public bool isPrinting { get; set; }
         public int? AbleTakenNumber { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? LastModified { get; set; }

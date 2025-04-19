@@ -17,6 +17,8 @@ namespace DataAccess.Repository
             objFromDb.Name = typeSession.Name;
             objFromDb.Description = typeSession.Description;
             objFromDb.Duration = typeSession.Duration;
+            objFromDb.Price = typeSession.Price;
+            objFromDb.ForMobile = typeSession.ForMobile;
             objFromDb.AbleTakenNumber = typeSession.AbleTakenNumber;
         }
 
@@ -27,6 +29,8 @@ namespace DataAccess.Repository
             objFromDb.Description = typeSession.Description;
             objFromDb.Duration = typeSession.Duration;
             objFromDb.AbleTakenNumber = typeSession.AbleTakenNumber;
+            objFromDb.Price = typeSession.Price;
+            objFromDb.ForMobile = typeSession.ForMobile;
             return Task.CompletedTask;
         }
     }

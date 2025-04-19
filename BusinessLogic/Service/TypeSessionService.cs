@@ -148,15 +148,31 @@ namespace BusinessLogic.Service
                     }
                 }
             }
-
-            typeSessionCode.Description = typeSessionCodeDTO.Description ?? typeSessionCode.Description;
-            typeSessionCode.Duration = typeSessionCodeDTO.Duration ?? typeSessionCode.Duration;
-            typeSessionCode.Price = typeSessionCodeDTO.Price >= 0 ? typeSessionCodeDTO.Price : typeSessionCode.Price;
-            typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber >= 0 ? typeSessionCodeDTO.AbleTakenNumber : typeSessionCode.AbleTakenNumber;
+            if(!string.IsNullOrEmpty(typeSessionCodeDTO.Description))
+            {
+                typeSessionCode.Description = typeSessionCodeDTO.Description;
+            }
+            if (typeSessionCodeDTO.Duration.HasValue)
+            {
+                typeSessionCode.Duration = typeSessionCodeDTO.Duration.Value;
+            }
+            if (typeSessionCodeDTO.Duration.HasValue && typeSessionCodeDTO.Price >= 0)
+            {
+                typeSessionCode.Price = typeSessionCodeDTO.Price.Value; 
+            }
+            if (typeSessionCodeDTO.Price.HasValue && typeSessionCodeDTO.Price >= 0)
+            {
+                typeSessionCode.Price = typeSessionCodeDTO.Price.Value;
+            }
+            if (typeSessionCodeDTO.AbleTakenNumber.HasValue && typeSessionCodeDTO.AbleTakenNumber >= 0)
+            {
+                typeSessionCode.AbleTakenNumber = typeSessionCodeDTO.AbleTakenNumber.Value;
+            }
 
             _unitOfWork.TypeSession.Update(typeSessionCode);
             await _unitOfWork.SaveAsync();
             return true;
+            //eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE4ZDliNDY4LWJkYjUtNDg2ZC1hNzgwLWYxMmJmOGNhNTVmYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbjEiLCJqdGkiOiJhYTlmYTg4NC1mN2E2LTQ1ZGQtODNjNi1kYWExMGU1YjExYTkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc0NzU1ODYwMiwiaXNzIjoiUmFpWXVnaSIsImF1ZCI6IlNhaW50In0.Y3VnoZ3BM0-1be8pnCzz4EDASvyR9MJ3AjbZDTVjIH2uLV4SH_FcRiZcVFI2Qut2k_s7fbQ2fJsbEVikpeJuFpoXGWVIO2tnsYRcqYoHWGuxh7zIDfJPCuKE8WL4AQ2E0_P1ETyHyt7Df3O4xNwc-c5JBDHHHUoWGaiElp8sPiAM0_7HIYnexJ25jGkHL5FAjQHxxWJtInDsWzXwDiMegd2OXSXUZ7J0wEvQTpTsTgNuOLB7_rilz1DlLRoT336YWblqbu3DbtpTPE32vPu9ssDT-5fJFumlSd2bjHI1uFbFIsytnbXDv0rrNjn1WV5AuvGKa_0IpAwEEioB7_jDpQ
         }
     }
 }

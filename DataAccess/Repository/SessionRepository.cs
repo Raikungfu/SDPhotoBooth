@@ -23,6 +23,7 @@ namespace DataAccess.Repository
         {
             var objFromDb = _db.Session.FirstOrDefault(s => s.Code == session.Code);
             objFromDb.IsActive = session.IsActive;
+            objFromDb.Expired = session.Expired;
             return Task.CompletedTask;
         }
     }
