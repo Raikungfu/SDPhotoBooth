@@ -32,5 +32,6 @@ namespace BusinessLogic.DTO.MembershipCardDTO
         public int Id { get; set; }
         public string Name { get; set; }
         public int? Point { get; set; }
+        public int? NextLevelId { get; set; }
     }
 }

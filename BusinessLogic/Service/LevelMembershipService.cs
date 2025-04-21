@@ -79,6 +79,10 @@ namespace BusinessLogic.Service
             {
                 levelMembership.MinOrder = levelMembershipRequestDTO.MinOrder;
             }
+            if (levelMembershipRequestDTO.NextLevelId.HasValue)
+            {
+                levelMembership.NextLevelId = levelMembershipRequestDTO.NextLevelId;
+            }
 
             await _unitOfWork.LevelMembership.UpdateAsync(levelMembership);
             await _unitOfWork.SaveAsync();

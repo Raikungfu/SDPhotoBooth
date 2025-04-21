@@ -1,5 +1,6 @@
 ﻿using BussinessObject.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BussinessObject.Models
 {
@@ -19,7 +20,10 @@ namespace BussinessObject.Models
         public decimal? MaxDiscount { get; set; }
 
         public decimal? MinOrder { get; set; }
+        public int? NextLevelId { get; set; }
 
+        [ForeignKey("NextLevelId")]
+        public virtual LevelMembership NextLevel { get; set; }
         public virtual ICollection<MembershipCard> MembershipCards { get; set; } = new List<MembershipCard>();
 
         public virtual ICollection<TypeSessionProduct> TypeSessionProducts { get; set; } = new List<TypeSessionProduct>();

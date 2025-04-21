@@ -20,6 +20,7 @@ namespace BusinessLogic.DTO.LevelMembershipDTO
         public decimal? MaxDiscount { get; set; }
 
         public decimal? MinOrder { get; set; }
+        public int? NextLevelId { get; set; } = null;
     }
 
     public class UpdateLevelMembershipRequestDTO
@@ -38,5 +39,6 @@ namespace BusinessLogic.DTO.LevelMembershipDTO
         public decimal? MaxDiscount { get; set; }
 
         public decimal? MinOrder { get; set; }
+        public int? NextLevelId { get; set; } = null;
     }
 }

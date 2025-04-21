@@ -167,7 +167,8 @@ namespace BusinessLogic.ConfigMapper
                 {
                     Id = src.LevelMemberShip.Id,
                     Name = src.LevelMemberShip.Name,
-                    Point = src.LevelMemberShip.Point
+                    Point = src.LevelMemberShip.Point,
+                    NextLevelId = src.LevelMemberShip.NextLevelId
                 } : null));
 
             CreateMap<WalletRequestDTO, Wallet>();

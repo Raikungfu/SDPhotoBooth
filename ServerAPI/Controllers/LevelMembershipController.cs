@@ -55,8 +55,22 @@ namespace ServerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (levelMembershipRequestDTO.Point < 0)
+            {
+                return BadRequest("Point cannot be negative.");
+            }
+            bool isNextLevelAvailable = levelMembershipRequestDTO.NextLevelId.HasValue;
+            if (isNextLevelAvailable)
+            {
+                var nextLevel = await _levelMembershipService.GetLevelMembershipById(levelMembershipRequestDTO.NextLevelId.Value);
+                if (nextLevel == null)
+                {
+                    return NotFound($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} not found.");
+                }
+            }
             var createdLevelMembership = await _levelMembershipService.CreateLevelMembership(levelMembershipRequestDTO);
-            return CreatedAtAction(nameof(GetLevelMembership), new { id = createdLevelMembership.Id }, createdLevelMembership);
+
+            return Ok(createdLevelMembership);
         }
 
         [HttpPut("{id:int}")]
@@ -72,6 +86,21 @@ namespace ServerAPI.Controllers
             {
                 return NotFound();
             }
+            if (levelMembershipRequestDTO.Point < 0)
+            {
+                return BadRequest("Point cannot be negative.");
+            }
+
+            bool isNextLevelAvailable = levelMembershipRequestDTO.NextLevelId.HasValue;
+            if (isNextLevelAvailable)
+            {
+                var nextLevel = await _levelMembershipService.GetLevelMembershipById(levelMembershipRequestDTO.NextLevelId.Value);
+                if (nextLevel == null)
+                {
+                    return NotFound($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} not found.");
+                }
+            }
+
             var updatedLevelMembership = await _levelMembershipService.UpdateLevelMembership(id, levelMembershipRequestDTO);
             return Ok(updatedLevelMembership);
         }
