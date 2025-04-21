@@ -12,11 +12,15 @@ namespace ServerAPI.Controllers
     {
         private readonly IOrderService orderService;
         private readonly IUserService userService;
+        private readonly IDepositService depositService;
+        private readonly ITransactionService transactionService;
 
-        public DashboardController(IOrderService orderService, IUserService userService)
+        public DashboardController(IOrderService orderService, IUserService userService, IDepositService depositService, ITransactionService transactionService)
         {
             this.orderService = orderService;
             this.userService = userService;
+            this.depositService = depositService;
+            this.transactionService = transactionService;
         }
 
         [HttpPost("statictis-order")]
@@ -25,6 +29,14 @@ namespace ServerAPI.Controllers
             var totalOrderStatic = await orderService.StaticOrderCreated(staticType);
 
             return Ok(totalOrderStatic);
+        }
+
+        [HttpPost("statictis-deposit")]
+        public async Task<IActionResult> GetStaticDeposit([FromBody] StaticType staticType)
+        {
+            var totalDepositStatic = await depositService.StaticDepositCreated(staticType);
+
+            return Ok(totalDepositStatic);
         }
 
         [HttpPost("statictis-user")]
@@ -38,7 +50,7 @@ namespace ServerAPI.Controllers
         [HttpPost("statictis-revenue")]
         public async Task<IActionResult> GetStaticRevenue([FromBody] StaticType staticType)
         {
-            var totalRevenueStatic = await orderService.StaticRevenue(staticType);
+            var totalRevenueStatic = await transactionService.StaticRevenue(staticType);
 
             return Ok(totalRevenueStatic);
         }

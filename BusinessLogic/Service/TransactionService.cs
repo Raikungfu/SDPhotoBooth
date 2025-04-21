@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
+using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
@@ -64,6 +67,28 @@ namespace BusinessLogic.Service
                 return null;
             }
             return _mapper.Map<TransactionResponseDTO>(transaction);
+        }
+
+        public async Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType)
+        {
+            var totalRevenueStatic = new TotalRevenueStaticResponseDTO();
+            (DateTime start, DateTime startPrev) = TimeRangeHelper.GetTimeRange(staticType);
+
+            var step = TimeRangeHelper.GetStepSize(staticType);
+
+            var groupedCounts = (await _unitOfWork.Transaction
+                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step)))
+                .GroupBy(s => s.CreatedAt >= start ? "current" : "prev")
+                .Select(g => new
+                {
+                    Period = g.Key,
+                    Sum = g.Sum(s => s.Amount)
+                });
+
+            totalRevenueStatic.TotalRevenue = groupedCounts.FirstOrDefault(x => x.Period == "current")?.Sum ?? 0;
+            totalRevenueStatic.TotalRevenuePrev = groupedCounts.FirstOrDefault(x => x.Period == "prev")?.Sum ?? 0;
+
+            return totalRevenueStatic;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace BusinessLogic.DTO.OrderDTO
         public string? LocationName { get; set; }
         public string? BoothName { get; set; }
         public string? TypeSessionName { get; set; }
+        public string? CustomerId { get; set; }
         public UserResponseOnOrderDTO? User { get; set; }
     }
 

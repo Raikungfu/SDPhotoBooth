@@ -130,41 +130,26 @@ namespace BusinessLogic.Service
             return _mapper.Map<OrderResponseDTO>(order);
         }
 
-        public async Task<TotalOrderStaticResponseDTO> StaticOrderCreated()
-        {
-            var totalOrderStatic = new TotalOrderStaticResponseDTO();
-
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var startOfPrevMonth = startOfMonth.AddMonths(-1);
-            var endOfPrevMonth = startOfMonth;
-
-            totalOrderStatic.TotalOrder = await _unitOfWork.Order.CountAsync(s => s.CreatedAt >= startOfMonth && s.Status == OrderStatus.Completed);
-            totalOrderStatic.TotalOrderPrev = await _unitOfWork.Order.CountAsync(s => s.CreatedAt >= startOfPrevMonth && s.CreatedAt < endOfPrevMonth && s.Status == OrderStatus.Completed);
-
-            return totalOrderStatic;
-        }
-
         public async Task<TotalOrderStaticResponseDTO> StaticOrderCreated(StaticType staticType)
         {
             var totalOrderStatic = new TotalOrderStaticResponseDTO();
             (DateTime start, DateTime startPrev) = TimeRangeHelper.GetTimeRange(staticType);
 
-            totalOrderStatic.TotalOrder = await _unitOfWork.Order.CountAsync(s => s.CreatedAt >= start && s.CreatedAt < start.Add(TimeRangeHelper.GetStepSize(staticType)) && s.Status == OrderStatus.Completed);
-            totalOrderStatic.TotalOrderPrev = await _unitOfWork.Order.CountAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start && s.Status == OrderStatus.Completed);
+            var step = TimeRangeHelper.GetStepSize(staticType);
+
+            var groupedCounts = (await _unitOfWork.Order
+                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step) && s.Status == OrderStatus.Completed))
+                .GroupBy(s => s.CreatedAt >= start ? "current" : "prev")
+                .Select(g => new
+                {
+                    Period = g.Key,
+                    Count = g.Count()
+                });
+
+            totalOrderStatic.TotalOrder = groupedCounts.FirstOrDefault(x => x.Period == "current")?.Count ?? 0;
+            totalOrderStatic.TotalOrderPrev = groupedCounts.FirstOrDefault(x => x.Period == "prev")?.Count ?? 0;
 
             return totalOrderStatic;
-        }
-
-        public async Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType)
-        {
-            var totalRevenueStatic = new TotalRevenueStaticResponseDTO();
-            (DateTime start, DateTime startPrev) = TimeRangeHelper.GetTimeRange(staticType);
-
-            totalRevenueStatic.TotalRevenue = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= start && s.CreatedAt < start.Add(TimeRangeHelper.GetStepSize(staticType)) && s.Status == OrderStatus.Completed)).Sum(o => o.Amount);
-            totalRevenueStatic.TotalRevenuePrev = (await _unitOfWork.Order.GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start && s.Status == OrderStatus.Completed)).Sum(o => o.Amount);
-
-            return totalRevenueStatic;
         }
 
         public async Task<OrderResponseDTO> GetOrderBySessionCode(string sessionCode)

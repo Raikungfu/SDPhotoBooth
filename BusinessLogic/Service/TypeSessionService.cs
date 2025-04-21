@@ -128,8 +128,8 @@ namespace BusinessLogic.Service
                     {
                         var typeSessionProduct = new TypeSessionProduct
                         {
-                            Name = $"{typeSessionCode.Name}_{level.Name}",
-                            ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(level.Name)}",
+                            Name = $"{typeSessionCode.Name}({level.Name})",
+                            ProductId = $"product_{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(level.Name)}",
                             TypeSessionId = typeSessionCode.Id,
                             LevelMembershipId = level.Id
                         };
@@ -142,8 +142,8 @@ namespace BusinessLogic.Service
                     {
                         var typeSessionProduct = new TypeSessionProduct
                         {
-                            Name = $"{typeSessionCode.Name}_{coupon.Name}",
-                            ProductId = $"{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
+                            Name = $"{typeSessionCode.Name}({coupon.Name})",
+                            ProductId = $"product_{ProductIdHelper.Normalize(typeSessionCode.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
                             TypeSessionId = typeSessionCode.Id,
                             CouponId = coupon.Id
                         };

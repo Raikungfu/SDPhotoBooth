@@ -5,6 +5,7 @@ using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.Service;
 using BusinessLogic.Service.IService;
 using BussinessObject.Enums;
+using BussinessObject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +30,9 @@ namespace ServerAPI.Controllers
         private readonly IPaymentService paymentService;
         private readonly ITransactionService transactionService;
         private readonly IDepositService depositService;
+        private readonly IMembershipCardService membershipCardService;
 
-        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper, IPaymentService paymentService, ITransactionService transactionService, IDepositService depositService)
+        public PaymentGateWebhookController(IOrderService orderService, IPayOSService payOSService, IMapper mapper, IPaymentService paymentService, ITransactionService transactionService, IDepositService depositService, IMembershipCardService membershipCardService)
         {
             this.orderService = orderService;
             this.payOSService = payOSService;
@@ -38,6 +40,7 @@ namespace ServerAPI.Controllers
             this.paymentService = paymentService;
             this.transactionService = transactionService;
             this.depositService = depositService;
+            this.membershipCardService = membershipCardService;
         }
 
 
@@ -86,6 +89,11 @@ namespace ServerAPI.Controllers
                     VirtualAccountNumber = request.data.virtualAccountNumber
                 });
 
+                if (request.success && order.CustomerId != null)
+                {
+                    var updatePointTask = membershipCardService.UpdatePoint(order.CustomerId, (int)Math.Round(order.Amount / 10), true);
+                }
+
                 return Ok(new
                 {
                     code = "00",
@@ -132,6 +140,13 @@ namespace ServerAPI.Controllers
                         Type = TransactionType.Purchase,
                         Description = $"Order {order.Code} via Google Billing",
                     });
+
+                    var updatePointTask = membershipCardService.UpdatePoint(
+                        order.CustomerId,
+                        (int)Math.Round(order.Amount / 10),
+                        true
+                    );
+
                 }
                 else if(depositId.HasValue)
                 {

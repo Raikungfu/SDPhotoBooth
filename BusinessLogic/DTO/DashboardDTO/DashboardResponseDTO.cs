@@ -20,6 +20,12 @@ namespace BusinessLogic.DTO.DashboardDTO
         public int TotalOrderPrev { get; set; }
     }
 
+    public class TotalDepositStaticResponseDTO
+    {
+        public int TotalDeposit { get; set; }
+        public int TotalDepositPrev { get; set; }
+    }
+
     public class TotalProfitStaticResponseDTO
     {
         public decimal TotalProfit { get; set; }

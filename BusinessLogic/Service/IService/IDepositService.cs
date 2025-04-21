@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTO.DepositDTO;
+﻿using BusinessLogic.DTO.DashboardDTO;
+using BusinessLogic.DTO.DepositDTO;
 using BussinessObject.Enums;
 using DataAccess.Extensions.Pagination;
 
@@ -11,6 +12,6 @@ namespace BusinessLogic.Service.IService
         Task<DepositResponseDTO> CreateDeposit(DepositRequestDTO depositRequestDTO, string userId);
         Task<DepositResponseDTO> UpdateDepositStatusById(int id, DepositStatus depositStatus);
         Task<DepositResponseDTO> DeleteDeposit(int id);
-        Task<int> GetCount();
+        Task<int> GetCount(); Task<TotalDepositStaticResponseDTO> StaticDepositCreated(StaticType staticType);
     }
 }

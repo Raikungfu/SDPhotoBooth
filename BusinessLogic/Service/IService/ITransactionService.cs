@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTO.TransactionDTO;
+﻿using BusinessLogic.DTO.DashboardDTO;
+using BusinessLogic.DTO.TransactionDTO;
 using DataAccess.Extensions.Pagination;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace BusinessLogic.Service.IService
         Task<TransactionResponseDTO> GetTransactionById(int Id);
         Task<IEnumerable<TransactionResponseDTO>> GetTransactionByCusId(string cusId);
         Task<TransactionResponseDTO> CreateTransaction(TransactionRequestDTO transactionRequestDTO);
+        Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType);
         Task<int> GetCount();
     }
 }

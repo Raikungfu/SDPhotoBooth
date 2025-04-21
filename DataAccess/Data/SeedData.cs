@@ -5,9 +5,42 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
+using static Azure.Core.HttpHeader;
 
 public static class SeedData
 {
+    public static class ProductIdHelper
+    {
+        public static string Normalize(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            string noDiacritics = RemoveDiacritics(input);
+
+            return noDiacritics
+                .Trim()
+                .ToLower()
+                .Replace(" ", "_")
+                .Replace("__", "_");
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                    stringBuilder.Append(c);
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+    }
+
     public static async Task Seed(AIPhotoboothDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
         using var transaction = await context.Database.BeginTransactionAsync();
@@ -789,10 +822,10 @@ public static class SeedData
                         typeSessionProducts.Add(new TypeSessionProduct
                         {
                             Id = idCounter++,
-                            Name = $"{typeSession.Name}_{levelMembership.Name}",
+                            Name = $"{typeSession.Name}({levelMembership.Name})",
                             TypeSessionId = typeSessionId,
                             LevelMembershipId = levelMembershipId,
-                            ProductId = Normalize($"{typeSession.Name}_{levelMembership.Name}"),
+                            ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(levelMembership.Name)}",
                             CreatedById = admin.Id,
                             LastModifiedById = admin.Id
                         });
@@ -804,10 +837,10 @@ public static class SeedData
                         typeSessionProducts.Add(new TypeSessionProduct
                         {
                             Id = idCounter++,
-                            Name = $"{typeSession.Name}_{coupon.Name}",
+                            Name = $"{typeSession.Name}({coupon.Name})",
                             TypeSessionId = typeSessionId,
                             CouponId = couponId,
-                            ProductId = Normalize($"{typeSession.Name}_{coupon.Name}"),
+                            ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
                             CreatedById = admin.Id,
                             LastModifiedById = admin.Id
                         });
@@ -842,11 +875,11 @@ public static class SeedData
             if (!context.DepositProduct.Any())
             {
                 context.DepositProduct.AddRange(
-                new DepositProduct { Id = 1, Name = "Nạp 20 nghìn", Description = "Giá 20 nghìn kèm khuyến mãi 10%", AmountAdd = 2000, ProductId = "product_deposit_1", Price = 20000 },
-                new DepositProduct { Id = 2, Name = "Nạp 15 nghìn", Description = "Giá 15 nghìn kèm khuyến mãi 10%", AmountAdd = 1500, ProductId = "product_deposit_2", Price = 15000 },
-                new DepositProduct { Id = 3, Name = "Nạp 12 nghìn", Description = "Giá 12 nghìn kèm khuyến mãi 10%", AmountAdd = 1200, ProductId = "product_deposit_3", Price = 12000 },
-                new DepositProduct { Id = 4, Name = "Nạp 10 nghìn", Description = "Giá 10 nghìn", AmountAdd = 0, ProductId = "product_deposit_4", Price = 10000 },
-                new DepositProduct { Id = 5, Name = "Nạp 17 nghìn", Description = "Giá 17 nghìn kèm khuyến mãi 10%", AmountAdd = 1700, ProductId = "product_deposit_5", Price = 17000 }
+                new DepositProduct { Id = 1, Name = "Nạp 20 nghìn", Description = "Giá 20 nghìn kèm khuyến mãi 10%", AmountAdd = 2000, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 20 nghìn")}", Price = 20000 },
+                new DepositProduct { Id = 2, Name = "Nạp 15 nghìn", Description = "Giá 15 nghìn kèm khuyến mãi 10%", AmountAdd = 1500, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 15 nghìn")}", Price = 15000 },
+                new DepositProduct { Id = 3, Name = "Nạp 12 nghìn", Description = "Giá 12 nghìn kèm khuyến mãi 10%", AmountAdd = 1200, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 12 nghìn")}", Price = 12000 },
+                new DepositProduct { Id = 4, Name = "Nạp 10 nghìn", Description = "Giá 10 nghìn", AmountAdd = 0, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 10 nghìn")}", Price = 10000 },
+                new DepositProduct { Id = 5, Name = "Nạp 17 nghìn", Description = "Giá 17 nghìn kèm khuyến mãi 10%", AmountAdd = 1700, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 17 nghìn")}", Price = 17000 }
             );
                 context.SaveChanges();
             }

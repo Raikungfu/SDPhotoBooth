@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTO.DepositProductDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
@@ -27,7 +28,7 @@ namespace BusinessLogic.Service
             await _unitOfWork.DepositProduct.AddAsync(depositProductEntity);
             await _unitOfWork.SaveAsync();
 
-            depositProductEntity.ProductId = $"product_deposit_{depositProductEntity.Id}";
+            depositProductEntity.ProductId = $"product_{ProductIdHelper.Normalize(depositProductEntity.Name)}";
             await _unitOfWork.DepositProduct.UpdateAsync(depositProductEntity);
             await _unitOfWork.SaveAsync();
 

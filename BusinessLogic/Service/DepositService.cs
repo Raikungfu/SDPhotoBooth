@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTO.DashboardDTO;
 using BusinessLogic.DTO.DepositDTO;
 using BusinessLogic.Service.IService;
+using BusinessLogic.Utils;
 using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
@@ -104,6 +101,28 @@ namespace BusinessLogic.Service
                 return null;
             }
             return _mapper.Map<IEnumerable<DepositResponseDTO>>(wallet.Deposits);
+        }
+
+
+        public async Task<TotalDepositStaticResponseDTO> StaticDepositCreated(StaticType staticType)
+        {
+            var totalDepositStatic = new TotalDepositStaticResponseDTO();
+            (DateTime start, DateTime startPrev) = TimeRangeHelper.GetTimeRange(staticType);
+
+            var step = TimeRangeHelper.GetStepSize(staticType);
+
+            var groupedCounts = (await _unitOfWork.Deposit
+                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step) && s.Status == DepositStatus.Success))
+                .GroupBy(s => s.CreatedAt >= start ? "current" : "prev")
+                .Select(g => new
+                {
+                    Period = g.Key,
+                    Count = g.Count()
+                });
+
+            totalDepositStatic.TotalDeposit = groupedCounts.FirstOrDefault(x => x.Period == "current")?.Count ?? 0;
+            totalDepositStatic.TotalDepositPrev = groupedCounts.FirstOrDefault(x => x.Period == "prev")?.Count ?? 0;
+            return totalDepositStatic;
         }
     }
 }

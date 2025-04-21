@@ -17,7 +17,6 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<OrderResponseDTO>> GetOrdersForCurrentUser(string userId);
         Task<IEnumerable<OrderResponseDTO>> GetOrdersByCusId(string userId);
         Task<TotalOrderStaticResponseDTO> StaticOrderCreated(StaticType staticType);
-        Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType);
         Task<OrderResponseDTO> GetOrderBySessionCode(string sessionCode);
         Task<int> GetCount();
 

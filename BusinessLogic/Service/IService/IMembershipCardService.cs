@@ -11,6 +11,7 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<MembershipCardResponseDTO>> GetByLevelMembershipId(int levelMembershipId);
         Task<MembershipCardResponseDTO> Create(CreateMembershipCardRequestDTO membershipCardRequestDTO);
         Task<MembershipCardResponseDTO> Update(int id, UpdateMembershipCardRequestDTO membershipCardRequestDTO);
+        Task<MembershipCardResponseDTO> UpdatePoint(string cusId, int amount, bool isPlus);
         Task<int> GetCount();
     }
 }

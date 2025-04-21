@@ -15,7 +15,8 @@ namespace BusinessLogic.Utils
             return noDiacritics
                 .Trim()
                 .ToLower()
-                .Replace(" ", "_");
+                .Replace(" ", "_")
+                .Replace("__", "_");
         }
 
         private static string RemoveDiacritics(string text)

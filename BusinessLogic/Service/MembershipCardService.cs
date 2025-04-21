@@ -23,7 +23,7 @@ namespace BusinessLogic.Service
         public async Task<MembershipCardResponseDTO> Create(CreateMembershipCardRequestDTO membershipCardRequestDTO)
         {
             var membershipCard = _mapper.Map<MembershipCard>(membershipCardRequestDTO);
-             await _unitOfWork.MembershipCard.AddAsync(membershipCard);
+            await _unitOfWork.MembershipCard.AddAsync(membershipCard);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<MembershipCardResponseDTO>(membershipCard);
         }
@@ -72,7 +72,7 @@ namespace BusinessLogic.Service
         public async Task<MembershipCardResponseDTO> Update(int id, UpdateMembershipCardRequestDTO membershipCardRequestDTO)
         {
             var membershipCard = await _unitOfWork.MembershipCard.GetFirstOrDefaultAsync(s => s.Id == id);
-            
+
             if (membershipCardRequestDTO.LevelMemberShipId != null)
             {
                 membershipCard.LevelMemberShipId = membershipCardRequestDTO.LevelMemberShipId.Value;
@@ -94,5 +94,30 @@ namespace BusinessLogic.Service
             await _unitOfWork.SaveAsync();
             return _mapper.Map<MembershipCardResponseDTO>(membershipCard);
         }
+
+        public async Task<MembershipCardResponseDTO> UpdatePoint(string cusId, int point, bool isPlus)
+        {
+            var membershipCard = await _unitOfWork.MembershipCard.GetFirstOrDefaultAsync(s => s.CustomerId == cusId);
+            if (membershipCard == null)
+            {
+                return null;
+            }
+            if (isPlus)
+            {
+                membershipCard.Points += point;
+            }
+            else
+            {
+                if (membershipCard.Points < point)
+                {
+                    return null;
+                }
+                membershipCard.Points -= point;
+            }
+            _unitOfWork.MembershipCard.Update(membershipCard);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<MembershipCardResponseDTO>(membershipCard);
+        }
     }
+
 }
