@@ -257,12 +257,12 @@ public static class SeedData
             if (!context.LevelMembership.Any())
             {
                 context.LevelMembership.AddRange(
-                new LevelMembership { Id = 1, Name = "Basic", Description = "Basic membership level", Point = 0, DiscountPercent = 0.02m, MaxDiscount = 1000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                new LevelMembership { Id = 2, Name = "Bronze", Description = "Bronze membership level", Point = 100000, DiscountPercent = 0.05m, MaxDiscount = 2500, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                new LevelMembership { Id = 3, Name = "Silver", Description = "Silver membership level", Point = 300000, DiscountPercent = 0.10m, MaxDiscount = 5000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                new LevelMembership { Id = 4, Name = "Gold", Description = "Gold membership level", Point = 600000, DiscountPercent = 0.15m, MaxDiscount = 7500, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                new LevelMembership { Id = 5, Name = "Platinum", Description = "Platinum membership level", Point = 1000000, DiscountPercent = 0.20m, MaxDiscount = 10000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
-                    );
+                new LevelMembership { Id = 5, Name = "Platinum", Description = "Platinum membership level", Point = 1000000, DiscountPercent = 0.20m, MaxDiscount = 10000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                new LevelMembership { Id = 4, NextLevelId = 5, Name = "Gold", Description = "Gold membership level", Point = 600000, DiscountPercent = 0.15m, MaxDiscount = 7500, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                new LevelMembership { Id = 3, NextLevelId = 4, Name = "Silver", Description = "Silver membership level", Point = 300000, DiscountPercent = 0.10m, MaxDiscount = 5000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                new LevelMembership { Id = 2, NextLevelId = 3, Name = "Bronze", Description = "Bronze membership level", Point = 100000, DiscountPercent = 0.05m, MaxDiscount = 2500, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                new LevelMembership { Id = 1, NextLevelId = 2, Name = "Basic", Description = "Basic membership level", Point = 0, DiscountPercent = 0.02m, MaxDiscount = 1000, MinOrder = 10000, IsActive = true, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                );
 
                 context.SaveChanges();
             }
@@ -779,7 +779,7 @@ public static class SeedData
                 var typeSessionProducts = new List<TypeSessionProduct>();
                 int idCounter = 1;
 
-                for (int typeSessionId = 1; typeSessionId <= 10; typeSessionId++)
+                for (int typeSessionId = 1; typeSessionId <= 3; typeSessionId++)
                 {
                     var typeSession = context.TypeSession.Find(typeSessionId);
 
@@ -811,6 +811,7 @@ public static class SeedData
                             CreatedById = admin.Id,
                             LastModifiedById = admin.Id
                         });
+
                     }
                 }
 

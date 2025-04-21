@@ -24,6 +24,7 @@ namespace DataAccess.Repository
                 levelMembership.DiscountPercent = obj.DiscountPercent;
                 levelMembership.MaxDiscount = obj.MaxDiscount;
                 levelMembership.MinOrder = obj.MinOrder;
+                levelMembership.NextLevelId = obj.NextLevelId;
             }
         }
         public async Task UpdateAsync(LevelMembership obj)
@@ -38,6 +39,7 @@ namespace DataAccess.Repository
                 levelMembership.DiscountPercent = obj.DiscountPercent;
                 levelMembership.MaxDiscount = obj.MaxDiscount;
                 levelMembership.MinOrder = obj.MinOrder;
+                levelMembership.NextLevelId = obj.NextLevelId;
             }
         }
     }

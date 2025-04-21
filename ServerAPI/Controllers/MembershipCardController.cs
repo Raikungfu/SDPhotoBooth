@@ -116,34 +116,49 @@ namespace ServerAPI.Controllers
             return Ok(updatedCard);
         }
 
-        [HttpPut("upgrade-level/{id}")]
+        [HttpPut("upgrade-level")]
         [Authorize(Roles ="Staff, Customer")]
-        public async Task<IActionResult> UpgradeLevel(int id, int levelId)
+        public async Task<IActionResult> UpgradeLevel(int? id)
         {
-            var existingCard = await _membershipCardService.GetById(id);
-            if (existingCard == null)
-                return NotFound();
+            MembershipCardResponseDTO existingCard = null;
+            var Role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (Role == "Staff")
+            {
+                var membershipCard = await _membershipCardService.GetById(id.Value);
+                if (membershipCard == null)
+                    return NotFound();
+                existingCard = membershipCard;
+            }
+            else
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var membershipCard = await _membershipCardService.GetByCustomerId(userId);
+                if (membershipCard == null)
+                    return NotFound("Membership card not found.");
+                existingCard = membershipCard;
+            }
+
 
             if (!existingCard.IsActive)
                 return BadRequest("Cannot upgrade. Membership card is not active.");
 
-            var level = await _levelMembershipService.GetLevelMembershipById(levelId);
-            if (level == null)
-                return NotFound($"Level Membership with ID {levelId} not found.");
+            bool isNextLevelAvailable = existingCard.LevelMemberShip.NextLevelId.HasValue;
+            if (!isNextLevelAvailable)
+            {
+                return BadRequest("Cannot upgrade. No next level available.");
+            }
+            var nextLevel = await _levelMembershipService.GetLevelMembershipById(existingCard.LevelMemberShip.NextLevelId.Value);
 
-            if (existingCard.LevelMemberShip.Id >= levelId)
-                return BadRequest($"Cannot upgrade. Target level {levelId} is not higher than current level {existingCard.LevelMemberShip.Id}.");
-
-            if (existingCard.Points < level.Point)
-                return BadRequest($"Insufficient points ({existingCard.Points}) to upgrade to level {levelId} (requires {level.Point}).");
+            if (existingCard.Points < nextLevel.Point)
+                return BadRequest($"Insufficient points ({existingCard.Points}) to upgrade to level {nextLevel.Name} (requires {existingCard.LevelMemberShip.Name}).");
 
             var dto = new UpdateMembershipCardRequestDTO
             {
-                LevelMemberShipId = levelId,
-                Points = existingCard.Points - level.Point
+                LevelMemberShipId = nextLevel.Id,
+                Points = existingCard.Points - nextLevel.Point
             };
 
-            var updatedCard = await _membershipCardService.Update(id, dto);
+            var updatedCard = await _membershipCardService.Update(existingCard.Id, dto);
             return Ok(updatedCard);
         }
 

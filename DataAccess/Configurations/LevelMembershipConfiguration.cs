@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection.Emit;
 
 namespace DataAccess.Configurations
 {
@@ -32,6 +33,11 @@ namespace DataAccess.Configurations
             builder.HasMany(b => b.TypeSessionProducts)
                 .WithOne(l => l.LevelMembership)
                 .HasForeignKey(b => b.LevelMembershipId);
+
+            builder.HasOne(lm => lm.NextLevel)
+                    .WithOne() 
+                    .HasForeignKey<LevelMembership>(lm => lm.NextLevelId)
+                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

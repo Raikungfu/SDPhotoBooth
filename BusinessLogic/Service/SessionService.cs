@@ -6,6 +6,7 @@ using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Service
 {
@@ -80,7 +81,10 @@ namespace BusinessLogic.Service
 
         public async Task<SessionResponseDTO> GetSessionByCode(string code)
         {
-            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(s => s.Code == code);
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(
+                s => EF.Functions.Collate(s.Code, "Latin1_General_CS_AS") == code
+            );
+
             return _mapper.Map<SessionResponseDTO>(session);
         }
 
@@ -102,7 +106,6 @@ namespace BusinessLogic.Service
 
                 await _unitOfWork.PhotoHistory.AddAsync(photoHistory);
                 await _unitOfWork.SaveAsync();
-                return _mapper.Map<SessionResponseDTO>(session);
             }
             else
             {
