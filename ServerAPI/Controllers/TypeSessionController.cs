@@ -107,7 +107,7 @@ namespace ServerAPI.Controllers
                     var typeSessionProduct = new TypeSessionProductCreateRequestDTO
                     {
                         Name = $"{typeSession.Name}({level.Name})", 
-                        ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(level.Name)}", 
+                        ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(level.Name)}", 
                         TypeSessionId = typeSession.Id,
                         LevelMembershipId = level.Id
                     };
@@ -120,7 +120,7 @@ namespace ServerAPI.Controllers
                     var typeSessionProduct = new TypeSessionProductCreateRequestDTO
                     {
                         Name = $"{typeSession.Name}({coupon.Name})", 
-                        ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
+                        ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
                         TypeSessionId = typeSession.Id,
                         CouponId = coupon.Id
                     };

@@ -91,7 +91,7 @@ namespace ServerAPI.Controllers
 
                 if (request.success && order.CustomerId != null)
                 {
-                    var updatePointTask = membershipCardService.UpdatePoint(order.CustomerId, (int)Math.Round(order.Amount / 10), true);
+                    await membershipCardService.UpdatePoint(order.CustomerId, (int)Math.Round(order.Amount / 10), true);
                 }
 
                 return Ok(new
@@ -141,7 +141,7 @@ namespace ServerAPI.Controllers
                         Description = $"Order {order.Code} via Google Billing",
                     });
 
-                    var updatePointTask = membershipCardService.UpdatePoint(
+                    await membershipCardService.UpdatePoint(
                         order.CustomerId,
                         (int)Math.Round(order.Amount / 10),
                         true

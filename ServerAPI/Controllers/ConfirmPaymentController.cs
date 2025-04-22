@@ -8,7 +8,6 @@ namespace ServerAPI.Controllers
     [ApiController]
     public class ConfirmPaymentController : ControllerBase
     {
-
         private readonly IHubContext<TranferPhotoHub> _hubContext;
 
         public ConfirmPaymentController(IHubContext<TranferPhotoHub> hubContext)

@@ -160,19 +160,12 @@ namespace ServerAPI.Controllers
 
                 order.CustomerId = userId;
 
-                var typeSessionTask = typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
-                var paymentMethodTask = paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+                var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+                if (typeSession == null) return BadRequest("Invalid type session.");
 
                 var newOrder = await orderService.CreateOrder(order);
 
-                await Task.WhenAll(typeSessionTask, paymentMethodTask);
-
-                var typeSession = typeSessionTask.Result;
-                var paymentMethod = paymentMethodTask.Result;
-
-                if (typeSession == null)
-                    return BadRequest("Invalid type session.");
-
+                var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
                 if (paymentMethod == null || !paymentMethod.IsOnline || !paymentMethod.ForMobile)
                     return BadRequest("Invalid payment.");
 
@@ -182,32 +175,26 @@ namespace ServerAPI.Controllers
 
                     var walletUpdate = await walletService.UpdateBalanceWallet(userId, order.Amount.Value, false);
 
-                    if (walletUpdate == null)
-                        return BadRequest("Wallet update failed.");
-
-                    var createPaymentTask = paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                    if (walletUpdate != null)
                     {
-                        OrderId = newOrder.Id,
-                        Amount = newOrder.Amount,
-                        PaymentMethodId = order.PaymentMethodId,
-                        Status = PaymentStatus.Success
-                    });
+                        await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
+                        {
+                            OrderId = newOrder.Id,
+                            Amount = newOrder.Amount,
+                            PaymentMethodId = order.PaymentMethodId,
+                            Status = PaymentStatus.Success
+                        });
 
-                    var updateOrderStatusTask = orderService.UpdateOrderStatus(new OrderStatusRequestDTO
-                    {
-                        OrderId = newOrder.Id,
-                        Status = OrderStatus.Completed
-                    });
+                        var orderUpdate = await orderService.UpdateOrderStatus(new OrderStatusRequestDTO
+                        {
+                            OrderId = newOrder.Id,
+                            Status = OrderStatus.Completed
+                        });
 
-                    var updatePointTask = membershipCardService.UpdatePoint(
-                        userId,
-                        (int)Math.Round(order.Amount.Value / 10),
-                        true
-                    );
+                        await membershipCardService.UpdatePoint(userId, (int)Math.Round(order.Amount.Value / 10), true);
 
-                    await Task.WhenAll(createPaymentTask, updateOrderStatusTask, updatePointTask);
-
-                    return Ok(updateOrderStatusTask.Result);
+                        return Ok(orderUpdate);
+                    }
                 }
                 else
                 {
@@ -217,15 +204,16 @@ namespace ServerAPI.Controllers
                         Amount = newOrder.Amount,
                         PaymentMethodId = order.PaymentMethodId
                     });
-
-                    return Ok(newOrder);
                 }
+
+                return Ok(newOrder);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
 
         private async Task<IActionResult> ProcessOrder(OrderRequestDTO order, bool isMobile, bool isDashboard)
         {
@@ -235,23 +223,16 @@ namespace ServerAPI.Controllers
             if (order.TypeSessionId <= 0 || order.PaymentMethodId <= 0)
                 return BadRequest("Type session or payment method is invalid.");
 
-            var typeSessionTask = typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
-            var paymentMethodTask = paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-            await Task.WhenAll(typeSessionTask, paymentMethodTask);
+            var typeSession = await typeSessionService.GetTypeSessionCodeByIdAsync(order.TypeSessionId);
+            if (typeSession == null) return BadRequest("Invalid type session.");
 
-            var typeSession = typeSessionTask.Result;
-            var paymentMethod = paymentMethodTask.Result;
-
-            if (typeSession == null)
-                return BadRequest("Invalid type session.");
-            if (paymentMethod == null)
-                return BadRequest("Invalid payment.");
+            var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
+            if (paymentMethod == null) return BadRequest("Invalid payment.");
 
             if (!isMobile)
             {
-                bool isInvalid = (isDashboard && !paymentMethod.IsOnline)
-                              || (!isDashboard && (!paymentMethod.IsOnline || paymentMethod.ForMobile));
-                if (isInvalid) return BadRequest("Invalid payment.");
+                if ((isDashboard && paymentMethod.IsOnline == false) || (!isDashboard && (!paymentMethod.IsOnline || paymentMethod.ForMobile)))
+                    return BadRequest("Invalid payment.");
             }
 
             var customer = await userService.UserDetail(order.Email);
@@ -259,14 +240,13 @@ namespace ServerAPI.Controllers
                 order.CustomerId = customer.Id;
 
             var (error, _, _) = await couponService.ApplyCouponIfAny(order, typeSession);
-            if (error != null) return BadRequest(error);
+            if (error != null) throw new Exception(error);
 
             if (!paymentMethod.IsOnline)
                 order.Status = OrderStatus.Completed;
 
             var newOrder = await orderService.CreateOrder(order);
-            if (newOrder == null)
-                return BadRequest("Failed to create order.");
+            if (newOrder == null) return BadRequest("Failed to create order.");
 
             if (!paymentMethod.IsOnline)
             {
@@ -293,18 +273,7 @@ namespace ServerAPI.Controllers
 
             string clientUrl = GetClientUrl();
 
-            var paymentLink = await payOSService.CreatePaymentLink(
-                order.Amount.Value,
-                paymentMethod.MethodName,
-                newOrder,
-                typeSession,
-                customer,
-                clientUrl,
-                order.ConnectionId
-            );
-
-            if (string.IsNullOrEmpty(paymentLink))
-                return BadRequest("Failed to create payment link.");
+            var paymentLink = await payOSService.CreatePaymentLink(order.Amount.Value, paymentMethod.MethodName, newOrder, typeSession, customer, clientUrl, order.ConnectionId);
 
             await paymentService.CreatePaymentForOrder(new PaymentRequestDTO
             {
@@ -316,6 +285,7 @@ namespace ServerAPI.Controllers
 
             return Ok(new { newOrder, paymentLink });
         }
+
 
         private string GetClientUrl()
         {

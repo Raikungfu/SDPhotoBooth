@@ -131,7 +131,7 @@ namespace ServerAPI.Controllers
                 var typeSessionProduct = new TypeSessionProductCreateRequestDTO
                 {
                     Name = $"{ts.Name}({coupon.Name})", 
-                    ProductId = $"product_{ProductIdHelper.Normalize(ts.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
+                    ProductId = $"product_session_{ProductIdHelper.Normalize(ts.Name)}_{ProductIdHelper.Normalize(coupon.Name)}", 
                     TypeSessionId = ts.Id,
                     CouponId = coupon.Id
                 };

@@ -825,7 +825,7 @@ public static class SeedData
                             Name = $"{typeSession.Name}({levelMembership.Name})",
                             TypeSessionId = typeSessionId,
                             LevelMembershipId = levelMembershipId,
-                            ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(levelMembership.Name)}",
+                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(levelMembership.Name)}",
                             CreatedById = admin.Id,
                             LastModifiedById = admin.Id
                         });
@@ -840,7 +840,7 @@ public static class SeedData
                             Name = $"{typeSession.Name}({coupon.Name})",
                             TypeSessionId = typeSessionId,
                             CouponId = couponId,
-                            ProductId = $"product_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
+                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
                             CreatedById = admin.Id,
                             LastModifiedById = admin.Id
                         });
