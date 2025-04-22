@@ -13,7 +13,6 @@ namespace BusinessLogic.DTO.PaymentDTO
     public class PaymentResponseDTO
     {
         public int Id { get; set; }
-        public long Code { get; set; }
         public int? OrderId { get; set; }
         public int? DepositId { get; set; }
         public int PaymentMethodId { get; set; }

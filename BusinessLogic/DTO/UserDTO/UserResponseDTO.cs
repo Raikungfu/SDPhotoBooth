@@ -24,6 +24,7 @@ namespace BusinessLogic.DTO.UserDTO
 
     public class MemberShipCardOnUserResponseDTO
     {
+        public int Id { get; set; }
         public string CurrentLevel { get; set; }
         public int CurrentPoint { get; set; }
         public string? Description { get; set; }

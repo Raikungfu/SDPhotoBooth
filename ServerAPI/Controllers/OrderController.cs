@@ -124,7 +124,7 @@ namespace ServerAPI.Controllers
         {
             try
             {
-                return await ProcessOrder(order, isMobile: false, isDashboard: true);
+                return await ProcessOrder(order, isDashboard: true);
             }
             catch (Exception ex)
             {
@@ -138,7 +138,7 @@ namespace ServerAPI.Controllers
         {
             try
             {
-                return await ProcessOrder(order, isMobile: false, isDashboard: false);
+                return await ProcessOrder(order, isDashboard: false);
             }
             catch (Exception ex)
             {
@@ -166,7 +166,7 @@ namespace ServerAPI.Controllers
                 var newOrder = await orderService.CreateOrder(order);
 
                 var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-                if (paymentMethod == null || !paymentMethod.IsOnline || !paymentMethod.ForMobile)
+                if (paymentMethod == null || !paymentMethod.IsOnline || !paymentMethod.ForMobile || !paymentMethod.IsActive)
                     return BadRequest("Invalid payment.");
 
                 if (paymentMethod.MethodName == "Wallet")
@@ -215,7 +215,7 @@ namespace ServerAPI.Controllers
         }
 
 
-        private async Task<IActionResult> ProcessOrder(OrderRequestDTO order, bool isMobile, bool isDashboard)
+        private async Task<IActionResult> ProcessOrder(OrderRequestDTO order, bool isDashboard)
         {
             ModelState.Remove("ConnectionId");
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -227,13 +227,9 @@ namespace ServerAPI.Controllers
             if (typeSession == null) return BadRequest("Invalid type session.");
 
             var paymentMethod = await paymentMethodService.GetPaymentMethod(order.PaymentMethodId);
-            if (paymentMethod == null) return BadRequest("Invalid payment.");
 
-            if (!isMobile)
-            {
-                if ((isDashboard && paymentMethod.IsOnline == false) || (!isDashboard && (!paymentMethod.IsOnline || paymentMethod.ForMobile)))
-                    return BadRequest("Invalid payment.");
-            }
+            if (paymentMethod == null || !paymentMethod.IsActive || (isDashboard && paymentMethod.ForMobile) || (!isDashboard && (!paymentMethod.IsOnline || paymentMethod.ForMobile)))
+                return BadRequest("Invalid payment.");
 
             var customer = await userService.UserDetail(order.Email);
             if (customer != null)

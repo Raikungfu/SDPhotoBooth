@@ -30,10 +30,10 @@ namespace BusinessLogic.Service
         public async Task<TransactionResponseDTO> CreateTransaction(TransactionRequestDTO transactionRequestDTO)
         {
             var transaction = _mapper.Map<Transaction>(transactionRequestDTO);
-            var newTransaction = _unitOfWork.Transaction.AddAsync(transaction);
+            await _unitOfWork.Transaction.AddAsync(transaction);
             await _unitOfWork.SaveAsync();
 
-            return _mapper.Map<TransactionResponseDTO>(newTransaction);
+            return _mapper.Map<TransactionResponseDTO>(transaction);
         }
 
         public async Task<IEnumerable<TransactionResponseDTO>> GetAllTransactions(PaginationParams? pagination)

@@ -13,11 +13,13 @@ namespace ServerAPI.Controllers
     public class MembershipCardController : ControllerBase
     {
         private readonly IMembershipCardService _membershipCardService;
+        private readonly IUserService _userService;
         private readonly ILevelMembershipService _levelMembershipService;
-        public MembershipCardController(IMembershipCardService membershipCardService, IMapper mapper, IUserService userService, ILevelMembershipService levelMembershipService)
+        public MembershipCardController(IMembershipCardService membershipCardService,IUserService userService, ILevelMembershipService levelMembershipService)
         {
             _membershipCardService = membershipCardService;
             _levelMembershipService = levelMembershipService;
+            _userService = userService;
         }
 
 
@@ -117,27 +119,49 @@ namespace ServerAPI.Controllers
         }
 
         [HttpPut("upgrade-level")]
-        [Authorize(Roles ="Staff, Customer")]
-        public async Task<IActionResult> UpgradeLevel(int? id)
+        [Authorize(Roles ="Staff")]
+        public async Task<IActionResult> UpgradeLevel([FromBody] string email)
         {
-            MembershipCardResponseDTO existingCard = null;
-            var Role = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (Role == "Staff")
-            {
-                var membershipCard = await _membershipCardService.GetById(id.Value);
-                if (membershipCard == null)
-                    return NotFound();
-                existingCard = membershipCard;
-            }
-            else
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var membershipCard = await _membershipCardService.GetByCustomerId(userId);
-                if (membershipCard == null)
-                    return NotFound("Membership card not found.");
-                existingCard = membershipCard;
-            }
+            var user = await _userService.UserDetail(email);
+            if (user == null)
+                return NotFound("User not found.");
 
+            var existingCard = await _membershipCardService.GetById(user.MembershipCard.Id);
+            if (existingCard == null)
+                return NotFound();
+
+            if (!existingCard.IsActive)
+                return BadRequest("Cannot upgrade. Membership card is not active.");
+
+            bool isNextLevelAvailable = existingCard.LevelMemberShip.NextLevelId.HasValue;
+            if (!isNextLevelAvailable)
+            {
+                return BadRequest("Cannot upgrade. No next level available.");
+            }
+            var nextLevel = await _levelMembershipService.GetLevelMembershipById(existingCard.LevelMemberShip.NextLevelId.Value);
+
+            if (existingCard.Points < nextLevel.Point)
+                return BadRequest($"Insufficient points ({existingCard.Points}) to upgrade to level {nextLevel.Name} (requires {existingCard.LevelMemberShip.Name}).");
+
+            var dto = new UpdateMembershipCardRequestDTO
+            {
+                LevelMemberShipId = nextLevel.Id,
+                Points = existingCard.Points - nextLevel.Point
+            };
+
+            var updatedCard = await _membershipCardService.Update(existingCard.Id, dto);
+            return Ok(updatedCard);
+        }
+
+        [HttpPut("mobile/upgrade-level")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> UpgradeLevel()
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var existingCard = await _membershipCardService.GetByCustomerId(userId);
+            if (existingCard == null)
+                return NotFound("Membership card not found.");
 
             if (!existingCard.IsActive)
                 return BadRequest("Cannot upgrade. Membership card is not active.");

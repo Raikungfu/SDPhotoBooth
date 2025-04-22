@@ -161,17 +161,16 @@ namespace ServerAPI.Controllers
                     return BadRequest("Only one of 'Discount' or 'DiscountPercent' can be provided.");
                 if (couponRequestDTO.Discount.Value == 0 && couponRequestDTO.DiscountPercent.Value == 0)
                     return BadRequest("Either 'Discount' or 'DiscountPercent' must be greater than 0.");
+
             }
-
-            if (hasDiscountDTO && couponRequestDTO.Discount.Value <= 0)
-                return BadRequest("'Discount' must be greater than 0.");
-
-            if (hasDiscountPercentDTO && couponRequestDTO.DiscountPercent.Value <= 0)
-                return BadRequest("'DiscountPercent' must be greater than 0.");
-
-            couponRequestDTO.DiscountPercent = hasDiscountDTO ? 0 : couponRequestDTO.DiscountPercent;
-            couponRequestDTO.Discount = hasDiscountPercentDTO ? 0 : couponRequestDTO.Discount;
-
+            else if(hasDiscountDTO && !hasDiscountPercentDTO)
+            {
+                couponRequestDTO.DiscountPercent = 0;
+            }
+            else if (!hasDiscountDTO && hasDiscountPercentDTO)
+            {
+                couponRequestDTO.Discount = 0;
+            }
 
             var isExist = await _couponService.GetCouponById(id);
             if (isExist == null)

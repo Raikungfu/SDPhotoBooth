@@ -42,7 +42,6 @@ namespace ServerAPI.Controllers
 
 
         [HttpGet("all/destop")]
-        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllForDestop()
         {
             var paymentMethods = await _paymentMethodService.GetAllFor(false, true);

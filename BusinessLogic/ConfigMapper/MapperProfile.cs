@@ -54,7 +54,8 @@ namespace BusinessLogic.ConfigMapper
                 .ForMember(dest => dest.CurrentLevel, opt => opt.MapFrom(src => src.LevelMemberShip != null ? src.LevelMemberShip.Name : null))
                 .ForMember(dest => dest.CurrentPoint, opt => opt.MapFrom(src => src.Points))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<TypeSessionRequestDTO, TypeSession>();
             CreateMap<TypeSession, TypeSessionResponseDTO>();
