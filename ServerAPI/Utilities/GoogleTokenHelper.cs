@@ -4,6 +4,7 @@ using BusinessLogic.Service;
 using BussinessObject.Enums;
 using BussinessObject.Models;
 using BussinessObject.ViewModels;
+using Google.Apis.AndroidPublisher.v3;
 using Google.Apis.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,6 @@ namespace ServerAPI.Helpers
 {
     public class GoogleTokenHelper
     {
-        private static string GoogleScope = "https://www.googleapis.com/auth/androidpublisher";
         private static string CredentialPath = "Key/sd-photobooth-452212-20ba22c87361.json";
 
         public static async Task<GoogleJsonWebSignature.Payload?> VerifyAccessTokenAsync(string idToken, string googleWebClientId, string googleMobileClientId)
@@ -62,11 +62,13 @@ namespace ServerAPI.Helpers
 
             using (var stream = new FileStream(CredentialPath, FileMode.Open, FileAccess.Read))
             {
-                credential = GoogleCredential.FromStream(stream).CreateScoped(GoogleScope);
+                credential = GoogleCredential.FromStream(stream)
+                    .CreateScoped(AndroidPublisherService.Scope.Androidpublisher);
             }
 
             var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
             return token;
         }
+
     }
 }

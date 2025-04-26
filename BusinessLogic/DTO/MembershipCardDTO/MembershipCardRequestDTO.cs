@@ -18,6 +18,10 @@ namespace BusinessLogic.DTO.MembershipCardDTO
         public int? LevelMemberShipId { get; set; }
         public string? Description { get; set; }
         public int? Points { get; set; }
-        public bool? IsActive { get; set; } 
+        public bool? IsActive { get; set; }
+    }
+    public class UpgradeMembershipCardRequestDTO
+    {
+        public string email { get; set; }
     }
 }

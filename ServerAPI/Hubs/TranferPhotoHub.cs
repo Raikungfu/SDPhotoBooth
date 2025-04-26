@@ -18,18 +18,45 @@ namespace ServerAPI.Hubs
 
         public async Task<object> GetConnectionId(string sessionCode)
         {
-            var added = _sessionConnections.TryAdd(sessionCode, Context.ConnectionId);
-            if (!added)
+            if(string.IsNullOrEmpty(sessionCode))
             {
                 return new
                 {
+                    connectionId = Context.ConnectionId,
                     success = false,
-                    message = $"Session code {sessionCode} is already in use by another device.",
-                    currentConnectionId = _sessionConnections[sessionCode]
+                    message = "Session code cannot be null or empty.",
                 };
             }
 
-            return new { success = true, connectionId = Context.ConnectionId, _sessionConnections };
+            if (_sessionConnections.TryGetValue(sessionCode, out var existingConnectionId))
+            {
+                if (existingConnectionId == Context.ConnectionId)
+                {
+                    return new
+                    {
+                        success = true,
+                        connectionId = Context.ConnectionId,
+                        message = "Connection already registered for this session.",
+                        _sessionConnections
+                    };
+                }
+                else
+                {
+                    return new
+                    {
+                        success = false,
+                        message = $"Session code {sessionCode} is already in use by another device.",
+                    };
+                }
+            }
+
+            _sessionConnections.TryAdd(sessionCode, Context.ConnectionId);
+            return new
+            {
+                success = true,
+                connectionId = Context.ConnectionId,
+                _sessionConnections
+            };
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

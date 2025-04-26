@@ -122,6 +122,42 @@ namespace ServerAPI.Controllers
                 var depositId = request.DepositId;
                 var purchaseToken = request.PurchaseToken;
                 var typeSessionId = request.TypeSessionName;
+                if (orderCode.HasValue)
+                {
+                    var order = await orderService.UpdateOrderStatusByCode(new OrderStatusCodeRequestDTO { OrderCode = orderCode.Value, Status = OrderStatus.Completed });
+
+                    var payment = await paymentService.UpdatePaymentStatusByOrderId(order.Id, PaymentStatus.Success);
+                    await transactionService.CreateTransaction(new TransactionRequestDTO
+                    {
+                        PaymentId = payment.Id,
+                        Amount = payment.Amount,
+                        Type = TransactionType.Purchase,
+                        Reference = purchaseToken,
+                        Description = $"Order {order.Code} via Google Billing",
+                    });
+
+                    await membershipCardService.UpdatePoint(
+                        order.CustomerId,
+                        (int)Math.Round(order.Amount / 10),
+                        true
+                    );
+
+                }
+                else if (depositId.HasValue)
+                {
+                    var deposit = await depositService.UpdateDepositStatusById(depositId.Value, DepositStatus.Success);
+
+                    var payment = await paymentService.UpdatePaymentStatusByDepositId(deposit.Id, PaymentStatus.Success);
+
+                    await transactionService.CreateTransaction(new TransactionRequestDTO
+                    {
+                        PaymentId = payment.Id,
+                        Amount = payment.Amount,
+                        Type = TransactionType.Purchase,
+                        Description = $"Deposit {deposit.Id} via Google Billing",
+                    });
+                }
+
                 var purchaseResponse = await GoogleTokenHelper.VerifyPurchaseAsync(typeSessionId, purchaseToken);
                 if (purchaseResponse == null || purchaseResponse.PurchaseState != 0)
                 {
@@ -138,6 +174,7 @@ namespace ServerAPI.Controllers
                         PaymentId = payment.Id,
                         Amount = payment.Amount,
                         Type = TransactionType.Purchase,
+                        Reference = purchaseToken,
                         Description = $"Order {order.Code} via Google Billing",
                     });
 

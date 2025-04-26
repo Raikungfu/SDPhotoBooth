@@ -36,6 +36,13 @@ namespace ServerAPI.Controllers
                 return BadRequest("Connection ID and session code are required.");
             }
 
+            var photoStyle = await _photoStyleService.GetPhotoStyleById(request.photoStyleId);
+
+            if (photoStyle == null)
+            {
+                return BadRequest("Photo style not found.");
+            }
+
             var session = await _sessionService.UpdateSessionAbleTaken(request.sessionCode);
 
             if (session == null)
@@ -48,8 +55,6 @@ namespace ServerAPI.Controllers
             {
                 firebaseUrl = await _firebaseService.UploadImageAsync(stream, request.image.FileName, request.image.ContentType);
             }
-
-            var photoStyle = await _photoStyleService.GetPhotoStyleById(request.photoStyleId);
 
             await _rabbitService.SendMessageAsync(firebaseUrl, request.connectionId, photoStyle, request.sessionCode);
 

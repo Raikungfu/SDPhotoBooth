@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTO.OrderDTO;
+﻿using Azure.Core;
+using BusinessLogic.DTO.OrderDTO;
 using BusinessLogic.DTO.PaymentDTO;
 using BusinessLogic.DTO.TransactionDTO;
 using BusinessLogic.Service.IService;
@@ -214,7 +215,6 @@ namespace ServerAPI.Controllers
             }
         }
 
-
         private async Task<IActionResult> ProcessOrder(OrderRequestDTO order, bool isDashboard)
         {
             ModelState.Remove("ConnectionId");
@@ -261,6 +261,11 @@ namespace ServerAPI.Controllers
                     Type = TransactionType.Purchase,
                     Description = $"Order {newOrder.Code} via Cash"
                 });
+
+                if (order.CustomerId != null)
+                {
+                    await membershipCardService.UpdatePoint(order.CustomerId, (int)Math.Round(newOrder.Amount / 10), true);
+                }
 
                 return Ok(newOrder);
             }

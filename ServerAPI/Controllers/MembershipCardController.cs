@@ -120,9 +120,9 @@ namespace ServerAPI.Controllers
 
         [HttpPut("upgrade-level")]
         [Authorize(Roles ="Staff")]
-        public async Task<IActionResult> UpgradeLevel([FromBody] string email)
+        public async Task<IActionResult> UpgradeLevel([FromBody] UpgradeMembershipCardRequestDTO upgradeMembershipCard)
         {
-            var user = await _userService.UserDetail(email);
+            var user = await _userService.UserDetail(upgradeMembershipCard.email);
             if (user == null)
                 return NotFound("User not found.");
 
