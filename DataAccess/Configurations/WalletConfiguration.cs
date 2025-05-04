@@ -20,6 +20,8 @@ namespace DataAccess.Configurations
             builder.HasMany(b => b.Deposits)
                 .WithOne(l => l.Wallet)
                 .HasForeignKey(b => b.WalletId);
+
+            builder.Property(lm => lm.Balance).HasPrecision(18, 2);
         }
     }
 }

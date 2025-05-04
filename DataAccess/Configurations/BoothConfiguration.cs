@@ -12,6 +12,7 @@ namespace DataAccess.Configurations
             builder.Property(b => b.BoothName)
                 .IsRequired()
                 .HasMaxLength(100);
+
             builder.Property(b => b.Description).HasMaxLength(500);
             builder.Property(b => b.Status).HasDefaultValue(true);
 

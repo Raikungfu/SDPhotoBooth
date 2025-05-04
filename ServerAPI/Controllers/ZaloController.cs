@@ -27,7 +27,7 @@ namespace ServerAPI.Controllers
                     return BadRequest("Phone and sessionCode are required.");
                 }
 
-                var photoUrls = await photoHistoryService.GetListPhotosFromSessionCode(sessionCode);
+                var photoUrls = (await photoHistoryService.GetListPhotosFromSessionCode(sessionCode)).TakeLast(48).ToArray();
 
                 string photoUrlsString = string.Join("\n", await UrlShortenerHelper.ShortenUrlsParallel(photoUrls));
 

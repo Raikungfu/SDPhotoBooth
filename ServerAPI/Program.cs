@@ -61,7 +61,13 @@ builder.Services.AddSessionConfiguration();
 
 
 builder.Services.AddHttpClient();
-builder.Services.AddControllers();
+builder.Services.AddScoped<TransactionFilter>();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<TransactionFilter>();
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
