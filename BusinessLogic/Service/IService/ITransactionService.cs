@@ -16,6 +16,7 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<TransactionResponseDTO>> GetTransactionByCusId(string cusId);
         Task<TransactionResponseDTO> CreateTransaction(TransactionRequestDTO transactionRequestDTO);
         Task<TotalRevenueStaticResponseDTO> StaticRevenue(StaticType staticType);
+        Task<RevenueByPlatformStatisticsResponseDTO> StaticRevenueByPlatformType(GroupingType staticType);
         Task<int> GetCount();
     }
 }

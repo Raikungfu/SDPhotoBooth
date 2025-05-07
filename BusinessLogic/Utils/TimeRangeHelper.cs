@@ -34,5 +34,18 @@ namespace BusinessLogic.Utils
                 _ => TimeSpan.Zero
             };
         }
+
+        public static TimeSpan GetStepSize(GroupingType staticType)
+        {
+            DateTime today = DateTime.Today;
+            return staticType switch
+            {
+                GroupingType.Day => TimeSpan.FromDays(1),
+                GroupingType.Month => TimeSpan.FromDays(DateTime.DaysInMonth(today.Year, today.Month)),
+                GroupingType.Quarter => TimeSpan.FromDays(90),
+                GroupingType.Year => TimeSpan.FromDays(365),
+                _ => TimeSpan.Zero
+            };
+        }
     }
 }

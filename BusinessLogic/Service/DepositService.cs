@@ -112,7 +112,7 @@ namespace BusinessLogic.Service
             var step = TimeRangeHelper.GetStepSize(staticType);
 
             var groupedCounts = (await _unitOfWork.Deposit
-                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step) && s.Status == DepositStatus.Success))
+                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step) && s.Status == DepositStatus.Success, asNoTracking: true))
                 .GroupBy(s => s.CreatedAt >= start ? "current" : "prev")
                 .Select(g => new
                 {

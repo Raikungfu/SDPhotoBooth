@@ -7,6 +7,8 @@ using BussinessObject.Enums;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace BusinessLogic.Service
 {
@@ -40,6 +42,8 @@ namespace BusinessLogic.Service
         {
             var transactions = await _unitOfWork.Transaction.GetAllAsync(
                 includeProperties: "Payment,Payment.PaymentMethod",
+                orderBy: t => t.OrderByDescending(t => t.CreatedAt),
+                asNoTracking: true,
                 pagination: pagination
             );
 
@@ -52,7 +56,9 @@ namespace BusinessLogic.Service
                 t =>
                     (t.Payment.Order != null && t.Payment.Order.CustomerId == cusId) ||
                     (t.Payment.Deposit != null && t.Payment.Deposit.Wallet.CustomerId == cusId),
-                includeProperties: "Payment.PaymentMethod,Payment.Order,Payment.Deposit.Wallet"
+                includeProperties: "Payment.PaymentMethod,Payment.Order,Payment.Deposit.Wallet",
+                orderBy: t => t.OrderByDescending(t => t.CreatedAt),
+                asNoTracking: true
             );
 
             return _mapper.Map<IEnumerable<TransactionResponseDTO>>(transactions);
@@ -77,7 +83,7 @@ namespace BusinessLogic.Service
             var step = TimeRangeHelper.GetStepSize(staticType);
 
             var groupedCounts = (await _unitOfWork.Transaction
-                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step)))
+                .GetAllAsync(s => s.CreatedAt >= startPrev && s.CreatedAt < start.Add(step), asNoTracking: true))
                 .GroupBy(s => s.CreatedAt >= start ? "current" : "prev")
                 .Select(g => new
                 {
@@ -90,5 +96,80 @@ namespace BusinessLogic.Service
 
             return totalRevenueStatic;
         }
+
+        public async Task<RevenueByPlatformStatisticsResponseDTO> StaticRevenueByPlatformType(GroupingType groupingType)
+        {
+            var today = DateTime.UtcNow.Date;
+            IEnumerable<Transaction> transactions = groupingType switch
+            {
+                GroupingType.Day => await _unitOfWork.Transaction
+                    .GetAllAsync(t => t.CreatedAt.Date >= today.AddDays(-29), includeProperties: "Payment.PaymentMethod", asNoTracking: true),
+
+                GroupingType.Month or GroupingType.Quarter => await _unitOfWork.Transaction
+                    .GetAllAsync(t => t.CreatedAt.Year == today.Year, includeProperties: "Payment.PaymentMethod", asNoTracking: true),
+
+                GroupingType.Year => await _unitOfWork.Transaction
+                    .GetAllAsync(includeProperties: "Payment.PaymentMethod", asNoTracking: true),
+
+                _ => new List<Transaction>()
+            };
+
+            var result = new RevenueByPlatformStatisticsResponseDTO
+            {
+                GroupingType = groupingType,
+                Data = GroupRevenueByPlatform(transactions.ToList(), groupingType, today.Year)
+            };
+
+            return result;
+        }
+
+        private List<TotalRevenueByPlatformTypeDTO> GroupRevenueByPlatform(List<Transaction> transactions, GroupingType groupingType, int currentYear)
+        {
+            return groupingType switch
+            {
+                GroupingType.Day => transactions
+                    .GroupBy(t => t.CreatedAt.Date)
+                    .Select(g => new TotalRevenueByPlatformTypeDTO
+                    {
+                        Day = g.Key,
+                        TotalRevenueMobile = g.Where(IsMobile).Sum(t => t.Amount),
+                        TotalRevenueStore = g.Where(IsStore).Sum(t => t.Amount)
+                    }).ToList(),
+
+                GroupingType.Month => transactions
+                    .GroupBy(t => t.CreatedAt.Month)
+                    .Select(g => new TotalRevenueByPlatformTypeDTO
+                    {
+                        Year = currentYear,
+                        Month = g.Key,
+                        TotalRevenueMobile = g.Where(IsMobile).Sum(t => t.Amount),
+                        TotalRevenueStore = g.Where(IsStore).Sum(t => t.Amount)
+                    }).ToList(),
+
+                GroupingType.Quarter => transactions
+                    .GroupBy(t => (t.CreatedAt.Month - 1) / 3 + 1)
+                    .Select(g => new TotalRevenueByPlatformTypeDTO
+                    {
+                        Year = currentYear,
+                        Quarter = g.Key,
+                        TotalRevenueMobile = g.Where(IsMobile).Sum(t => t.Amount),
+                        TotalRevenueStore = g.Where(IsStore).Sum(t => t.Amount)
+                    }).ToList(),
+
+                GroupingType.Year => transactions
+                    .GroupBy(t => t.CreatedAt.Year)
+                    .Select(g => new TotalRevenueByPlatformTypeDTO
+                    {
+                        Year = g.Key,
+                        TotalRevenueMobile = g.Where(IsMobile).Sum(t => t.Amount),
+                        TotalRevenueStore = g.Where(IsStore).Sum(t => t.Amount)
+                    }).ToList(),
+
+                _ => new List<TotalRevenueByPlatformTypeDTO>()
+            };
+        }
+
+        private static bool IsMobile(Transaction t) => t.Payment?.PaymentMethod?.ForMobile == true;
+        private static bool IsStore(Transaction t) => t.Payment?.PaymentMethod?.ForMobile == false;
     }
 }

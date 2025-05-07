@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.DTO.DashboardDTO
 {
-    public class DashboardResponseDTO
-    {
-        public TotalOrderStaticResponseDTO TotalOrderStatic { get; set; }
-        public TotalUserStaticResponseDTO TotalUserStatic { get; set; }
-        public TotalRevenueStaticResponseDTO TotalRevenueStatic { get; set; }
-        public TotalProfitStaticResponseDTO TotalProfitStatic { get; set; }
-    }
-
     public class TotalOrderStaticResponseDTO
     {
         public int TotalOrder { get; set; }
@@ -42,5 +34,38 @@ namespace BusinessLogic.DTO.DashboardDTO
     {
         public decimal TotalRevenue { get; set; }
         public decimal TotalRevenuePrev { get; set; }
+    }
+
+    public class TotalRevenueByPlatformTypeDTO
+    {
+        public int? Year { get; set; }
+        public int? Month { get; set; }
+        public int? Quarter { get; set; }
+        public DateTime? Day { get; set; }
+
+        public decimal TotalRevenueMobile { get; set; }
+        public decimal TotalRevenueStore { get; set; }
+    }
+
+    public class RevenueByPlatformStatisticsResponseDTO
+    {
+        public GroupingType GroupingType { get; set; }
+        public List<TotalRevenueByPlatformTypeDTO> Data { get; set; }
+    }
+
+    public class UsageChannelDTO
+    {
+        public int? Year { get; set; }
+        public int? Month { get; set; }
+        public int? Quarter { get; set; }
+        public DateTime? Day { get; set; }
+        public string Name { get; set; }
+        public int TotalUsage { get; set; }
+    }
+
+    public class UsageChannelStatisticsResponseDTO
+    {
+        public GroupingType GroupingType { get; set; }
+        public List<UsageChannelDTO> Data { get; set; }
     }
 }
