@@ -67,6 +67,13 @@ namespace ServerAPI.Controllers
                 {
                     return NotFound($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} not found.");
                 }
+                // Check if the next level membership already exists
+                var allLevelMemberships = await _levelMembershipService.GetAllLevelMemberships(null);
+                var nextLevelMembership = allLevelMemberships.FirstOrDefault(l => l.NextLevelId == levelMembershipRequestDTO.NextLevelId);
+                if (nextLevelMembership != null)
+                {
+                    return BadRequest($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} already exists.");
+                }
             }
             var createdLevelMembership = await _levelMembershipService.CreateLevelMembership(levelMembershipRequestDTO);
 
@@ -98,6 +105,13 @@ namespace ServerAPI.Controllers
                 if (nextLevel == null)
                 {
                     return NotFound($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} not found.");
+                }
+                // Check if the next level membership already exists
+                var allLevelMemberships = await _levelMembershipService.GetAllLevelMemberships(null);
+                var nextLevelMembership = allLevelMemberships.FirstOrDefault(l => l.NextLevelId == levelMembershipRequestDTO.NextLevelId);
+                if (nextLevelMembership != null && nextLevelMembership.Id != id)
+                {
+                    return BadRequest($"Next Level Membership with ID {levelMembershipRequestDTO.NextLevelId} already exists.");
                 }
             }
 

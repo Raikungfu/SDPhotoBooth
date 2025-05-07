@@ -9,8 +9,10 @@ using BussinessObject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Distributed;
 using ServerAPI.Helpers;
+using System.Text;
 
 namespace ServerAPI.Controllers
 {
@@ -213,7 +215,8 @@ namespace ServerAPI.Controllers
             }
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var feDomain = _configuration["ClientUrl:Production"];
-            var resetLink = $"{feDomain}/reset-password?email={request.Email}&token={token}";
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var resetLink = $"{feDomain}/reset-password?email={request.Email}&token={encodedToken}";
             await _emailService.SendResetPasswordEmail(user.Email, resetLink);
             return Ok(new { message = "Reset password link has been sent to your email" });
         }
@@ -233,17 +236,30 @@ namespace ServerAPI.Controllers
                 return BadRequest("Invalid email.");
             }
 
-            var isValidToken = await _userManager.VerifyUserTokenAsync(user,
-                _userManager.Options.Tokens.PasswordResetTokenProvider,
-                "ResetPassword",
-                request.Token);
+            byte[] tokenBytes;
+            try
+            {
+                tokenBytes = WebEncoders.Base64UrlDecode(request.Token);
+            }
+            catch
+            {
+                return BadRequest("Invalid token format.");
+            }
+
+            var origToken = Encoding.UTF8.GetString(tokenBytes);
+
+            var isValidToken = await _userManager.VerifyUserTokenAsync(
+               user,
+               _userManager.Options.Tokens.PasswordResetTokenProvider,
+               "ResetPassword",
+               origToken);
 
             if (!isValidToken)
             {
                 return BadRequest("Invalid or expired token.");
             }
 
-            var resetPassResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, origToken, request.NewPassword);
             if (!resetPassResult.Succeeded)
             {
                 return BadRequest(resetPassResult.Errors.Select(e => e.Description));
