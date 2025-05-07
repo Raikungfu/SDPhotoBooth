@@ -3,11 +3,11 @@ using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Manager")]
     [ApiController]
     public class DashboardController : ControllerBase
     {
@@ -27,6 +27,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-order")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticOrder([FromQuery] StaticType staticType = StaticType.Day)
         {
             var totalOrderStatic = await orderService.StaticOrderCreated(staticType);
@@ -35,6 +36,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-deposit")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticDeposit([FromQuery] StaticType staticType = StaticType.Day)
         {
             var totalDepositStatic = await depositService.StaticDepositCreated(staticType);
@@ -43,6 +45,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-user")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticUser([FromQuery] StaticType staticType = StaticType.Day)
         {
             var totalUserStatic = await userService.StaticUserCreated(staticType);
@@ -51,6 +54,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-revenue")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticRevenue([FromQuery] StaticType staticType = StaticType.Day)
         {
             var totalRevenueStatic = await transactionService.StaticRevenue(staticType);
@@ -59,6 +63,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-revenue-by-platform-type")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticRevenueByPlatformType([FromQuery] GroupingType staticType = GroupingType.Day)
         {
             var totalTransactionStatic = await transactionService.StaticRevenueByPlatformType(staticType);
@@ -66,6 +71,7 @@ namespace ServerAPI.Controllers
         }
 
         [HttpGet("statictis-usage-channel")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetStaticUsageChannel([FromQuery] UsageChannelFilterDTO filter)
         {
             if (filter.ChannelGroupingType == ChannelGroupingType.Booth && filter.LocationId == null)
@@ -75,6 +81,32 @@ namespace ServerAPI.Controllers
 
             var totalUsageChannelStatic = await sessionService.StaticUsageChannel(filter);
             return Ok(totalUsageChannelStatic);
+        }
+
+        [HttpGet("statictis-revenue-staffs")]
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> GetStaticRevenueStaffs([FromQuery] GroupingType staticType = GroupingType.Day)
+        {
+            var totalRevenueStaffsStatic = await userService.StaticRevenueStaffs(staticType);
+            return Ok(totalRevenueStaffsStatic);
+        }
+
+        [HttpGet("statictis-revenue-own")]
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<IActionResult> GetStaticRevenue([FromQuery] RevenueFilterDTO revenueFilterDTO)
+        {
+            if(revenueFilterDTO.StaffId != null)
+            {
+                var role = User.FindFirstValue(ClaimTypes.Role);
+                if (role != "Manager")
+                {
+                    return BadRequest("You are not allowed to get revenue of other staff");
+                }
+            }
+            else revenueFilterDTO.StaffId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var totalRevenueStaffStatic = await userService.StaticRevenue(revenueFilterDTO);
+            return Ok(totalRevenueStaffStatic);
         }
     }
 }

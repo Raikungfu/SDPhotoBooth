@@ -53,4 +53,9 @@ namespace BusinessLogic.DTO.DashboardDTO
         public int? LocationId { get; set; }
     }
 
+    public class RevenueFilterDTO
+    {
+        public GroupingType StaticType { get; set; } = GroupingType.Day;
+        public string? StaffId { get; set; }
+    }
 }

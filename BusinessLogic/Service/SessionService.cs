@@ -201,7 +201,7 @@ namespace BusinessLogic.Service
             }).ToList();
         }
 
-        private static string GetGroupName(Session s, ChannelGroupingType type)
+        private string GetGroupName(Session s, ChannelGroupingType type)
         {
             return type switch
             {
@@ -210,6 +210,5 @@ namespace BusinessLogic.Service
                 _ => "Unknown"
             };
         }
-
     }
 }

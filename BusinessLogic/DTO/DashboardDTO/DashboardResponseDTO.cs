@@ -59,6 +59,7 @@ namespace BusinessLogic.DTO.DashboardDTO
         public int? Month { get; set; }
         public int? Quarter { get; set; }
         public DateTime? Day { get; set; }
+
         public string Name { get; set; }
         public int TotalUsage { get; set; }
     }
@@ -67,5 +68,24 @@ namespace BusinessLogic.DTO.DashboardDTO
     {
         public GroupingType GroupingType { get; set; }
         public List<UsageChannelDTO> Data { get; set; }
+    }
+
+    public class RevenueStaffDTO
+    {
+        public int? Year { get; set; }
+        public int? Month { get; set; }
+        public int? Quarter { get; set; }
+        public DateTime? Day { get; set; }
+
+        public string? Name { get; set; }
+        public string? Id { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class RevenueStaffStatisticsResponseDTO
+    {
+        public GroupingType GroupingType { get; set; }
+        public List<RevenueStaffDTO> Data { get; set; }
     }
 }

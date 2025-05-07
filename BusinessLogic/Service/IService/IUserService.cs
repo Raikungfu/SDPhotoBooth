@@ -18,6 +18,8 @@ namespace BusinessLogic.Service.IService
         Task<bool> ChangeRole(string email, UserType role);
         Task<bool> MoveLocation(string email, int locationId);
         Task<TotalUserStaticResponseDTO> StaticUserCreated(StaticType staticType);
+        Task<RevenueStaffStatisticsResponseDTO> StaticRevenue(RevenueFilterDTO revenueFilterDTO);
+        Task<RevenueStaffStatisticsResponseDTO> StaticRevenueStaffs(GroupingType staticType);
         Task<int> GetCount();
     }
 }
