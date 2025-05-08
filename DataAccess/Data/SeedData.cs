@@ -3,6 +3,7 @@ using BussinessObject.Models;
 using DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
@@ -44,9 +45,38 @@ public static class SeedData
 
     public static async Task Seed(AIPhotoboothDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
+        var random = new Random();
+
+        Random rand = new Random();
+        var now = DateTime.UtcNow;
+
         using var transaction = await context.Database.BeginTransactionAsync();
         try
         {
+            #region Seed data for Location
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] ON");
+
+            if (!context.Location.Any())
+            {
+                context.Location.AddRange(
+                     new Location { Id = 1, LocationName = "Ho Chi Minh City", Address = "123 Central Avenue, District 1, Ho Chi Minh City", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 2, LocationName = "Hanoi", Address = "456 East Street, Hoan Kiem District, Hanoi", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 3, LocationName = "Da Nang", Address = "789 West Avenue, Hai Chau District, Da Nang", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 4, LocationName = "Quy Nhon", Address = "12 Mountain Road, Quy Hoa, Quy Nhon", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 5, LocationName = "Da Lat", Address = "34 Lake View, Xuan An Ward, Da Lat", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 6, LocationName = "Can Tho", Address = "56 Le Loi, Ninh Kieu District, Can Tho", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 7, LocationName = "Hai Phong", Address = "78 Tran Phu, Ngo Quyen District, Hai Phong", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 8, LocationName = "Vung Tau", Address = "22 Nguyen An Ninh, Ward 1, Vung Tau", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 9, LocationName = "Nha Trang", Address = "15 Tran Phu, Vinh Hai, Nha Trang", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
+                     new Location {Id = 10, LocationName = "Hue", Address = "89 Phan Dinh Phung, Phu Hoa Ward, Hue", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
+                 );
+
+
+                context.SaveChanges();
+            }
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] OFF");
+            #endregion
+
             #region Seed data for Role
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
@@ -74,32 +104,182 @@ public static class SeedData
 
                 var users = new List<User>
                 {
-                    new User { UserName = "admin1", Email = "hienphannguyenxuan@gmail.com", PhoneNumber = "07774567890", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "raikungfu", Email = "raikungfu@gmail.com", PhoneNumber = "07774567891", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "doannguyenhuyentrang", Email = "doannguyenhuyentrang9303@gmail.com", PhoneNumber = "07774567892", Gender = BussinessObject.Enums.UserGender.Female, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "raikungfu98", Email = "raikungfu98@gmail.com", PhoneNumber = "07774567891", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "sinhhoctebao0903", Email = "sinhhoctebao0903@gmail.com", PhoneNumber = "07774567892", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "vovannam641", Email = "vovannam641@gmail.com", PhoneNumber = "07774567893", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "phuongtbde160476", Email = "phuongtbde160476@fpt.edu.vn", PhoneNumber = "07774567894", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "trangdnhqe170154", Email = "trangdnhqe170154@fpt.edu.vn", PhoneNumber = "07774567895", Gender = BussinessObject.Enums.UserGender.Female, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "hienpnxqe170189", Email = "hienpnxqe170189@fpt.edu.vn", PhoneNumber = "07774567896", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "staff", Email = "staff@example.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-                    new User { UserName = "trang.doan.2003", Email = "trang.doan.2003@gmail.com", PhoneNumber = "07774567897", Gender = BussinessObject.Enums.UserGender.Male, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
+                    new User {
+                        UserName     = "phannguyenxuanhien",
+                        Email        = "hienphannguyenxuan@gmail.com",
+                        FullName     = "phannguyenxuanhien",
+                        BirthDate    = new DateTime(2003, 1, 1),
+                        PhoneNumber  = "07774567890",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "raikungfu",
+                        Email        = "raikungfu@gmail.com",
+                        FullName     = "raikungfu",
+                        BirthDate    = new DateTime(2003, 12, 1),
+                        PhoneNumber  = "07774567891",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = DateTime.UtcNow,
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "doannguyenhuyentrang",
+                        Email        = "doannguyenhuyentrang9303@gmail.com",
+                        FullName     = "doannguyenhuyentrang",
+                        BirthDate    = new DateTime(2003, 12, 12),
+                        PhoneNumber  = "07774567892",
+                        Gender       = BussinessObject.Enums.UserGender.Female,
+                        CreatedAt    = now.AddDays(-1),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "raikungfu98",
+                        Email        = "raikungfu98@gmail.com",
+                        FullName     = "raikungfu98",
+                        BirthDate    = new DateTime(2003, 11, 12),
+                        PhoneNumber  = "07774567891",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-2),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "sinhhoctebao0903",
+                        Email        = "sinhhoctebao0903@gmail.com",
+                        FullName     = "sinhhoctebao0903",
+                        BirthDate    = new DateTime(2003, 8, 12),
+                        PhoneNumber  = "07774567892",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-3),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false,
+                        LocationId = 3
+                    },
+                    new User {
+                        UserName     = "vovannam641",
+                        Email        = "vovannam641@gmail.com",
+                        FullName     = "vovannam641",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567893",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-4),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "phuongtbde160476",
+                        Email        = "phuongtbde160476@fpt.edu.vn",
+                        FullName     = "phuongtbde160476",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567894",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-5),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "trangdnhqe170154",
+                        Email        = "trangdnhqe170154@fpt.edu.vn",
+                        FullName     = "trangdnhqe170154",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567895",
+                        Gender       = BussinessObject.Enums.UserGender.Female,
+                        CreatedAt    = now.AddDays(-6),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false,
+                        LocationId = 2
+                    },
+                    new User {
+                        UserName     = "hienpnxqe170189",
+                        Email        = "hienpnxqe170189@fpt.edu.vn",
+                        FullName     = "hienpnxqe170189",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567896",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-7),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "staff.sd.photobooth",
+                        Email        = "staff@sdphotobooth.com",
+                        FullName     = "Staff SD Photobooth",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567897",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-8),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false,
+                        LocationId = 1
+                    },
+                    new User {
+                        UserName     = "trang.doan.2003",
+                        Email        = "trang.doan.2003@gmail.com",
+                        FullName     = "trang.doan.2003",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567897",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-9),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "admin.sd.photobooth",
+                        Email        = "sdphotobooth.ai@gmail.com",
+                        FullName     = "Admin SD Photobooth",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567897",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-9),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
+                    new User {
+                        UserName     = "manager.sd.photobooth",
+                        Email        = "manager@sdphotobooth.com",
+                        FullName     = "Manager SD Photobooth",
+                        BirthDate    = new DateTime(2003, 6, 12),
+                        PhoneNumber  = "07774567897",
+                        Gender       = BussinessObject.Enums.UserGender.Male,
+                        CreatedAt    = now.AddDays(-9),
+                        LastModified = DateTime.UtcNow,
+                        IsDeleted    = false,
+                        IsBanned     = false
+                    },
                 };
 
                 var roles = new Dictionary<string, string>
                 {
-                    { "admin1", "Admin" },
+                    { "phannguyenxuanhien", "Admin" },
                     { "raikungfu", "Admin" },
                     { "doannguyenhuyentrang", "Admin" },
+                    { "admin.sd.photobooth", "Admin" },
                     { "raikungfu98", "Manager" },
-                    { "sinhhoctebao0903", "Staff" },
                     { "vovannam641", "Manager" },
-                    { "phuongtbde160476", "Customer" },
+                    { "trang.doan.2003", "Manager" },
+                    { "manager.sd.photobooth", "Manager" },
+                    { "sinhhoctebao0903", "Staff" },
                     { "trangdnhqe170154", "Staff" },
+                    { "staff.sd.photobooth", "Staff" },
                     { "hienpnxqe170189", "Customer" },
-                    { "staff", "Staff" },
-                    { "trang.doan.2003", "Manager" }
+                    { "phuongtbde160476", "Customer" }
                 };
 
                 foreach (var user in users)
@@ -118,7 +298,7 @@ public static class SeedData
                 //Dummy Data
                 int counter = 100;
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -126,7 +306,9 @@ public static class SeedData
                         Email = $"admin_gen_{i}@example.com",
                         PhoneNumber = $"090000{counter++:D3}",
                         Gender = BussinessObject.Enums.UserGender.Male,
-                        CreatedAt = DateTime.UtcNow,
+                        FullName = $"admin_gen_{i}",
+                        BirthDate = new DateTime(2003, 8, 8),
+                        CreatedAt = now.AddDays(rand.Next(-720,-10)),
                         LastModified = DateTime.UtcNow,
                         IsDeleted = false
                     };
@@ -136,7 +318,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Admin");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -144,7 +326,9 @@ public static class SeedData
                         Email = $"manager_gen_{i}@example.com",
                         PhoneNumber = $"090000{counter++:D3}",
                         Gender = BussinessObject.Enums.UserGender.Male,
-                        CreatedAt = DateTime.UtcNow,
+                        FullName = $"manager_gen_{i}",
+                        BirthDate = new DateTime(2003, 7, 7),
+                        CreatedAt = now.AddDays(rand.Next(-720, -10)),
                         LastModified = DateTime.UtcNow,
                         IsDeleted = false
                     };
@@ -154,7 +338,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Manager");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -162,9 +346,12 @@ public static class SeedData
                         Email = $"staff_gen_{i}@example.com",
                         PhoneNumber = $"090000{counter++:D3}",
                         Gender = BussinessObject.Enums.UserGender.Female,
-                        CreatedAt = DateTime.UtcNow,
+                        FullName = $"staff_gen_{i}",
+                        BirthDate = new DateTime(2003, 6, 6),
+                        CreatedAt = now.AddDays(rand.Next(-720, -10)),
                         LastModified = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        LocationId = random.Next(1, 11),
                     };
 
                     var result = await userManager.CreateAsync(user, password);
@@ -172,7 +359,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Staff");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -180,7 +367,9 @@ public static class SeedData
                         Email = $"customer_gen_{i}@example.com",
                         PhoneNumber = $"090000{counter++:D3}",
                         Gender = BussinessObject.Enums.UserGender.Male,
-                        CreatedAt = DateTime.UtcNow,
+                        FullName = $"customer_gen_{i}",
+                        BirthDate = new DateTime(2003, 6, 6),
+                        CreatedAt = now.AddDays(rand.Next(-720, -10)),
                         LastModified = DateTime.UtcNow,
                         IsDeleted = false
                     };
@@ -190,118 +379,46 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Customer");
                 }
 
+                
             }
 
-            var admin = await userManager.FindByNameAsync("admin1");
+            var admin = await userManager.FindByNameAsync("phannguyenxuanhien");
             var admin2 = await userManager.FindByNameAsync("raikungfu");
-            var admin3 = await userManager.FindByNameAsync("doannguyenhuyentrang");
-            var manager = await userManager.FindByNameAsync("trang.doan.2003");
+            var admin3 = await userManager.FindByNameAsync("admin.sd.photobooth");
+            var manager = await userManager.FindByNameAsync("manager.sd.photobooth");
             var manager2 = await userManager.FindByNameAsync("raikungfu98");
             var manager3 = await userManager.FindByNameAsync("vovannam641");
             var staff = await userManager.FindByNameAsync("trangdnhqe170154");
-            var staff2 = await userManager.FindByNameAsync("staff");
+            var staff2 = await userManager.FindByNameAsync("staff.sd.photobooth");
             var staff3 = await userManager.FindByNameAsync("sinhhoctebao0903");
             var customer = await userManager.FindByNameAsync("phuongtbde160476");
             var customer2 = await userManager.FindByNameAsync("hienpnxqe170189");
 
             #endregion
 
-            #region Seed data for Location
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] ON");
-
-            if (!context.Location.Any())
+            #region Seed data for Wallet
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Wallet] ON");
+            if (!context.Wallet.Any())
             {
-                context.Location.AddRange(
-                     new Location { Id = 1, LocationName = "Ho Chi Minh City", Address = "123 Central Avenue, District 1, Ho Chi Minh City", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 2, LocationName = "Hanoi", Address = "456 East Street, Hoan Kiem District, Hanoi", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 3, LocationName = "Da Nang", Address = "789 West Avenue, Hai Chau District, Da Nang", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 4, LocationName = "Quy Nhon", Address = "12 Mountain Road, Quy Hoa, Quy Nhon", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 5, LocationName = "Da Lat", Address = "34 Lake View, Xuan An Ward, Da Lat", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 6, LocationName = "Can Tho", Address = "56 Le Loi, Ninh Kieu District, Can Tho", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 7, LocationName = "Hai Phong", Address = "78 Tran Phu, Ngo Quyen District, Hai Phong", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 8, LocationName = "Vung Tau", Address = "22 Nguyen An Ninh, Ward 1, Vung Tau", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 9, LocationName = "Nha Trang", Address = "15 Tran Phu, Vinh Hai, Nha Trang", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                     new Location { Id = 10, LocationName = "Hue", Address = "89 Phan Dinh Phung, Phu Hoa Ward, Hue", CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id }
-                 );
-
-
-                context.SaveChanges();
-            }
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Location] OFF");
-            #endregion
-
-            #region Seed data for Booth
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Booth] ON");
-
-            if (!context.Booth.Any())
-            {
-                context.Booth.AddRange(
-                    new Booth { Id = 1, LocationId = 1, BoothName = "Booth A1", Description = "Booth 1 at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 2, LocationId = 1, BoothName = "Booth A2", Description = "Booth 2 at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 3, LocationId = 1, BoothName = "Booth A3", Description = "Booth 3 at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 4, LocationId = 1, BoothName = "Booth A4", Description = "Booth 4 at Main Office", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-
-                    new Booth { Id = 5, LocationId = 2, BoothName = "Booth B1", Description = "Booth 1 at Branch Office 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 6, LocationId = 2, BoothName = "Booth B2", Description = "Booth 2 at Branch Office 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 7, LocationId = 2, BoothName = "Booth B3", Description = "Booth 3 at Branch Office 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 8, LocationId = 2, BoothName = "Booth B4", Description = "Booth 4 at Branch Office 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-
-                    new Booth { Id = 9, LocationId = 3, BoothName = "Booth C1", Description = "Booth 1 at Branch Office 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 10, LocationId = 3, BoothName = "Booth C2", Description = "Booth 2 at Branch Office 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 11, LocationId = 3, BoothName = "Booth C3", Description = "Booth 3 at Branch Office 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 12, LocationId = 3, BoothName = "Booth C4", Description = "Booth 4 at Branch Office 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-
-                    new Booth { Id = 13, LocationId = 4, BoothName = "Booth D1", Description = "Booth 1 at Remote Site 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 14, LocationId = 4, BoothName = "Booth D2", Description = "Booth 2 at Remote Site 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 15, LocationId = 4, BoothName = "Booth D3", Description = "Booth 3 at Remote Site 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 16, LocationId = 4, BoothName = "Booth D4", Description = "Booth 4 at Remote Site 1", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-
-                    new Booth { Id = 17, LocationId = 5, BoothName = "Booth E1", Description = "Booth 1 at Remote Site 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 18, LocationId = 5, BoothName = "Booth E2", Description = "Booth 2 at Remote Site 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 19, LocationId = 5, BoothName = "Booth E3", Description = "Booth 3 at Remote Site 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id },
-                    new Booth { Id = 20, LocationId = 5, BoothName = "Booth E4", Description = "Booth 4 at Remote Site 2", Status = true, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false, CreatedById = manager.Id, LastModifiedById = manager.Id }
-                );
-
+                //Create wallet for customer
+                var customers = await userManager.GetUsersInRoleAsync("Customer");
+                var wallets = new List<Wallet>();
+                int nextId = 1;
+                foreach (var customerUser in customers)
+                {
+                    wallets.Add(new Wallet
+                    {
+                        Id = nextId++,
+                        CustomerId = customerUser.Id,
+                        Balance = random.Next(100_000, 1_000_000),
+                        IsLocked = false
+                    });
+                }
+                context.Wallet.AddRange(wallets);
                 context.SaveChanges();
             }
 
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Booth] OFF");
-
-            #endregion
-
-            #region Seed data for Coupon
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] ON");
-
-            if (!context.Coupon.Any())
-            {
-                context.Coupon.AddRange(
-                    new Coupon { Id = 1, Name = "New Year Deal", Code = "NY2025", Description = "New Year 2025 promotion", Discount = 5000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 2, Name = "Spring Sale", Code = "SPRING25", Description = "Spring discount", Discount = 3000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 15000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 3, Name = "Summer Heat", Code = "SUMMERHEAT", Description = "Hot summer deal", Discount = 4000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 4, Name = "Back to School", Code = "SCHOOL25", Description = "School season sale", Discount = 2500, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 12000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 5, Name = "Autumn Bonus", Code = "AUTUMN22", Description = "Fall special offer", Discount = 2200, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 13000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Black Friday 50% OFF", DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday sale", DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 20000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 8, Name = "Xmas Cheer", Code = "XMAS2025", Description = "Christmas discount", StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 9, Name = "Birthday Gift", Code = "BIRTHDAY", Description = "Special birthday offer", DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 5000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new Coupon { Id = 10, Name = "Flash Sale", Code = "FLASH2025", Description = "Limited time discount", DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 4000, CreatedById = admin.Id, LastModifiedById = admin.Id }
-
-                    //new Coupon { Id = 1, Name = "Khuyến Mãi Tết Nguyên Đán", Code = "NY2025", Description = "Chào đón năm mới 2025, chúng tôi mang đến cho bạn một chương trình khuyến mãi đặc biệt để cùng bạn đón Tết Nguyên Đán. Giảm giá ngay 5000 đồng cho mỗi đơn hàng và cơ hội nhận các ưu đãi tuyệt vời khác. Hãy tận dụng ngay!", Discount = 5000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 2, Name = "Giảm Giá Mùa Xuân", Code = "SPRING25", Description = "Chào mừng mùa xuân đến với những ưu đãi hấp dẫn! Giảm giá 3000 đồng cho các đơn hàng mùa xuân. Khám phá các sản phẩm mới và tận hưởng không khí tươi mới của mùa xuân với mức giá cực kỳ ưu đãi.", Discount = 3000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 15000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 3, Name = "Giảm Giá Mùa Hè", Code = "SUMMERHEAT", Description = "Cùng làm dịu cơn nóng mùa hè với chương trình khuyến mãi 'Giảm Giá Mùa Hè'. Nhận ngay ưu đãi giảm giá 4000 đồng cho các đơn hàng mùa hè. Chương trình kéo dài trong 2 tháng, đừng bỏ lỡ!", Discount = 4000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 4, Name = "Khuyến Mãi Trở Lại Trường", Code = "SCHOOL25", Description = "Mùa tựu trường đã đến và chúng tôi có một chương trình ưu đãi đặc biệt dành cho các bạn học sinh và sinh viên. Giảm giá 2500 đồng cho mỗi đơn hàng, cùng những món quà thú vị chuẩn bị cho năm học mới.", Discount = 2500, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 12000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 5, Name = "Thưởng Mùa Thu", Code = "AUTUMN22", Description = "Mùa thu mang đến không khí tươi mới và những chương trình khuyến mãi hấp dẫn. Với 'Thưởng Mùa Thu', bạn sẽ nhận được giảm giá 2200 đồng cho mỗi đơn hàng. Đặc biệt, chương trình này chỉ kéo dài trong 1 tháng, đừng bỏ qua!", Discount = 2200, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 13000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Ngày hội mua sắm lớn nhất trong năm - Black Friday đã đến! Giảm giá lên đến 50% cho các sản phẩm hot nhất. Đừng bỏ lỡ cơ hội mua sắm tiết kiệm vào dịp cuối năm. Chương trình áp dụng đến hết 10 ngày từ khi khởi động.", DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday cũng đến với những ưu đãi hấp dẫn. Giảm giá 35% cho tất cả các sản phẩm trong chương trình này. Chương trình áp dụng đến hết 7 ngày từ khi bắt đầu. Hãy nhanh tay kẻo lỡ!", DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 20000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 8, Name = "Giảm Giá Giáng Sinh", Code = "XMAS2025", Description = "Mừng Giáng Sinh với chương trình khuyến mãi hấp dẫn. Giảm giá lớn cho các đơn hàng dịp lễ Giáng Sinh. Chỉ áp dụng trong vòng 1 tháng và có giới hạn số lượng sử dụng. Đừng bỏ lỡ cơ hội này để có những món quà tuyệt vời!", StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 9, Name = "Quà Sinh Nhật", Code = "BIRTHDAY", Description = "Chúc mừng sinh nhật với một món quà đặc biệt từ chúng tôi! Giảm giá 20% cho các đơn hàng sinh nhật. Chương trình này áp dụng trong 5 ngày và chỉ có số lượng hạn chế, nên hãy nhanh tay tận dụng!", DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 5000, CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    //new Coupon { Id = 10, Name = "Giảm Giá Flash Sale", Code = "FLASH2025", Description = "Flash Sale siêu khuyến mãi trong thời gian ngắn! Giảm giá ngay 15% cho các sản phẩm nổi bật. Chương trình chỉ kéo dài 2 ngày và số lượng có hạn, hãy nhanh tay mua sắm.", DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 4000, CreatedById = admin.Id, LastModifiedById = admin.Id }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] OFF");
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Wallet] OFF");
 
             #endregion
 
@@ -322,6 +439,72 @@ public static class SeedData
             }
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [LevelMembership] OFF");
+
+            #endregion
+
+            #region Seed data for MembershipCard
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] ON");
+            if (!context.MembershipCard.Any())
+            {
+                var customers = await userManager.GetUsersInRoleAsync("Customer");
+                var membershipCards = new List<MembershipCard>();
+                int nextId = 1;
+
+                foreach (var customerUser in customers)
+                {
+                    int levelId = random.Next(1, 6);
+                    membershipCards.Add(new MembershipCard
+                    {
+                        Id = nextId++,
+                        CustomerId = customerUser.Id,
+                        LevelMemberShipId = levelId,
+                        Points = random.Next(100_000, 500_000),
+                        Description = $"Membership card cấp {levelId} cho {customerUser.UserName}",
+                        IsActive = true,
+                        CreatedById = admin.Id,
+                        LastModifiedById = admin.Id
+                    });
+                }
+                context.MembershipCard.AddRange(membershipCards);
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] OFF");
+
+            #endregion
+
+            #region Seed data for Booth
+
+            if (!context.Booth.Any())
+            {
+                var locations = context.Location
+                .Select(l => new { l.Id, l.LocationName })
+                .ToList();
+
+                var booths = new List<Booth>();
+
+                foreach (var loc in locations)
+                {
+                    for (int i = 1; i <= 5; i++)
+                    {
+                        booths.Add(new Booth
+                        {
+                            Id = rand.Next(100000000, 999999999),
+                            LocationId = loc.Id,
+                            BoothName = $"Booth {loc.LocationName}-{i}",
+                            Description = $"Booth {i} tại {loc.LocationName}",
+                            Status = true,
+                            CreatedAt = DateTime.UtcNow,
+                            LastModified = DateTime.UtcNow,
+                            IsDeleted = false,
+                            CreatedById = manager.Id,
+                            LastModifiedById = manager.Id
+                        });
+                    }
+                }
+                context.Booth.AddRange(booths);
+                context.SaveChanges();
+            }
 
             #endregion
 
@@ -355,7 +538,7 @@ public static class SeedData
                         Id = 1,
                         Name = "ID Photo",
                         Description = "Professional ID photo with studio lighting and sharp focus.",
-                        ImageUrl = "https://cdn.tgdd.vn/Files/2023/07/10/1537629/cachkhacphucloitaianh4x6lenhochieuonline-130723-145414-800-resize.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/idphoto.jpg?alt=media",
                         Prompt = "a person wearing a formal suit, white shirt, professional portrait, studio lighting, upper body, front view, neutral expression, clean background, high quality, photorealistic",
                         NegativePrompt = "blurry, low quality, cartoon, 3d, deformed, extra arms, bad hands, exaggerated makeup, jewelry, messy hair, hat.",
                         //Prompt = "Super Portrait, professional ID photo, studio lighting, sharp focus, neutral background, straight-on angle, natural skin texture, neutral expression, straight posture, ultra-high resolution.",
@@ -368,7 +551,6 @@ public static class SeedData
                         NumInferenceSteps = 20,
                         GuidanceScale = 4.0,
                         Strength = 0.3,
-                        FaceImage = true,
                         BackgroundRemover = true,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:04:20.5382419"),
@@ -403,7 +585,7 @@ public static class SeedData
                         Id = 2,
                         Name = "Anime",
                         Description = "Anime-style portrait with refined details, vibrant colors, and balanced composition.",
-                        ImageUrl = "https://i.pinimg.com/564x/01/2d/cd/012dcd62de1e3ba6b356940ac83b0898.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/anime.jpg?alt=media",
                         Prompt = "Create a high-quality anime image featuring a youthful character with bright eyes and soft gradients. Use vibrant colors and perfect symmetry to enhance the character's appeal. The background should be detailed and colorful, complementing the character's design while maintaining a cohesive anime aesthetic.",
                         NegativePrompt = "ugly, extra fingers, mutated hands, extra limbs, long neck, watermark, text, logo, Rough lines, muted colors, photorealistic details, missing parts, extra limbs, or blurry outlines.",
                         //Prompt = "High-quality anime illustration, smooth shading, expressive eyes, perfect symmetry, vibrant color palette. The background is detailed yet balanced, complementing the character's design.",
@@ -416,7 +598,6 @@ public static class SeedData
                         NumInferenceSteps = 26, 
                         GuidanceScale = 12.0,
                         Strength = 0.9,
-                        FaceImage = true,
                         BackgroundRemover = true,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:06:00.0000000"),
@@ -428,7 +609,7 @@ public static class SeedData
                         Id = 3,
                         Name = "Fashion Style",
                         Description = "Editorial fashion portrait with high-definition details and elegant outfit.",
-                        ImageUrl = "https://www.pixelstalk.net/wp-content/uploads/2016/06/Nature-girl-winter-fashion-wallpaper-1920x1080.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/nature.jpg?alt=media",
                         //Prompt = "Editorial fashion portrait, striking pose, high-definition details, elegant outfit, perfect fit, confident expression, soft studio lighting. The background is clean and minimalistic, enhancing the subject.",
                         //NegativePrompt = "bad lighting, ill-fitting clothes, low-quality textures, unnatural expression, distorted proportions, cluttered background.",
                         Prompt = "Generate a high-fashion editorial image showcasing a model with radiant skin and a trendy outfit. The outfit should be perfectly fitted and elegant, with a striking pose that conveys confidence. Use soft studio lighting to enhance the model's features, and ensure the background is minimalistic to keep the focus on the fashion.",
@@ -438,10 +619,10 @@ public static class SeedData
                         NumImagesPerGen = 6,
                         Height = null,
                         Width = null,
+                        IP_Adapter_Scale = 0.5,
                         NumInferenceSteps = 26,
                         GuidanceScale = 9.0,
                         Strength = 0.8,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:16:22.4802536"),
@@ -453,7 +634,7 @@ public static class SeedData
                         Id = 4,
                         Name = "Cartoon",
                         Description = "Vibrant cartoon character with smooth shading and bold outlines.",
-                        ImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/046/238/401/small/a-3d-character-illustration-for-a-childrens-book-photo.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/cartoon.jpg?alt=media",
                         //Prompt = "Vibrant cartoon character, smooth shading, expressive eyes, bold outlines, dynamic pose. The background is colorful and playful, enhancing the lively personality.",
                         //NegativePrompt = "blurred lines, dull colors, photorealistic details, excessive shading, missing body parts, distorted proportions.",
                         Prompt = "Create a cartoon character with smooth features, big eyes, sharp outlines, and bright colors. The background should be playful and colorful. The character should have a lively expression and dynamic pose, capturing the essence of a classic cartoon style.",
@@ -466,7 +647,6 @@ public static class SeedData
                         NumInferenceSteps = 32,
                         GuidanceScale = 12,
                         Strength = 0.9,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:10:24.5847326"),
@@ -478,7 +658,7 @@ public static class SeedData
                         Id = 5,
                         Name = "Artistic",
                         Description = "Fine art portrait with soft lighting and warm color harmony.",
-                        ImageUrl = "https://images5.alphacoders.com/135/thumb-1920-1352020.png",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/ar.png?alt=media",
                         //Prompt = "Fine art portrait, soft and balanced lighting, rich textures, warm color harmony. The subject exudes elegance and emotion, resembling classical masterpieces.",
                         //NegativePrompt = "oversaturated, artificial blur, harsh contrast, distorted proportions, lifeless expression, missing elements.",
                         Prompt = "Design a masterpiece portrait with elegant features and soft lighting. The colors should be balanced and glowing, creating a dreamy aesthetic. The subject should be posed gracefully, and the overall composition should evoke a sense of tranquility and beauty, reminiscent of classical art.",
@@ -489,9 +669,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 28,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.0,
                         Strength = 0.5,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:06:34.262168"),
@@ -503,7 +683,7 @@ public static class SeedData
                         Id = 6,
                         Name = "Vintage",
                         Description = "Classic vintage portrait with warm sepia tones and subtle grain texture.",
-                        ImageUrl = "https://images7.alphacoders.com/573/573462.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/vintage.jpg?alt=media",
                         //Prompt = "Classic vintage portrait, warm sepia tones, soft film-like contrast, subtle grain texture. The subject appears timeless with natural lighting and elegant styling.",
                         //NegativePrompt = "modern sharpness, digital artifacts, unnatural lighting, reflections, artificial blur, excessive grain.",
                         Prompt = "Create a classic vintage photo with a sepia tone and soft contrast. The image should evoke a nostalgic feel, featuring smooth skin and a natural expression. Use high-quality textures to enhance the vintage look, and ensure the background complements the overall aesthetic without being distracting.",
@@ -514,9 +694,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5,
                         Strength = 0.6,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:34:08.9543789"),
@@ -528,7 +708,7 @@ public static class SeedData
                         Id = 7,
                         Name = "Fantasy",
                         Description = "Ethereal fantasy portrait with glowing atmosphere and magical details.",
-                        ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSynwqUs6fsgDDN5tl8UG5NhyLK9nQcC7WCYg&s",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/fantasy.jpg?alt=media",
                         //Prompt = "Ethereal fantasy portrait, glowing atmosphere, intricate costume details, vibrant magical background. The subject radiates an enchanting aura with a dreamlike aesthetic.",
                         //NegativePrompt = "lifeless expression, dull tones, distorted anatomy, harsh shadows, CGI artifacts, unnatural blur.",
                         Prompt = "Generate an enchanting fantasy scene featuring a radiant character with an ethereal glow. Use soft lighting to create a magical aura, and focus on delicate and elegant details in the character's attire. The background should be a whimsical landscape, filled with vibrant colors and fantastical elements.",
@@ -539,9 +719,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 35,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,
                         Strength = 0.6,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-14T05:45:36.871683"),
@@ -553,7 +733,7 @@ public static class SeedData
                         Id = 8,
                         Name = "Modern",
                         Description = "Sleek modern portrait with high-definition textures and stylish composition.",
-                        ImageUrl = "https://img.freepik.com/premium-photo/modern-woman-portrait-hd-8k-wallpaper-stock-photographic-image_890746-53098.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/modern.jpg?alt=media",
                         Prompt = "Create a futuristic style image featuring a sleek model in a stylish outfit. Use sharp lighting to highlight the model's features and ensure perfect symmetry in the composition. The background should be modern and minimalistic, with vibrant colors that enhance the overall editorial feel of the shot.",
                         NegativePrompt = "ugly, extra fingers, mutated hands, extra limbs, long neck, watermark, text, logo, old-fashioned elements, dull colors, messy hair, asymmetry, wrinkles, or noisy backgrounds.",
                         //Prompt = "Sleek modern portrait, sharp lighting, high-definition textures, dynamic composition, stylish outfit. The background is minimalistic with a futuristic touch.",
@@ -564,9 +744,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5,
                         Strength = 0.5,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:27:24.4834447"),
@@ -578,7 +758,7 @@ public static class SeedData
                         Id = 9,
                         Name = "Nature",
                         Description = "Natural outdoor portrait with warm sunlight and scenic backgrounds.",
-                        ImageUrl = "https://wallpapercave.com/wp/wp7118266.jpg",
+                        ImageUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/wp.jpg?alt=media",
                         Prompt = "Design an outdoor photography scene with a model showcasing glowing skin and wind-blown hair. Use soft sunlight to create a fresh atmosphere, and incorporate vibrant colors in the natural surroundings. The setting should be peaceful and serene, capturing the beauty of nature.",
                         NegativePrompt = "ugly, extra fingers, mutated hands, extra limbs, long neck, watermark, text, logo, dry skin, dull tones, harsh shadows, distortions, cluttered backgrounds, or artificial lighting.",
                         //Prompt = "Natural outdoor portrait, warm sunlight, soft breeze, fresh atmosphere, glowing skin. The background features lush greenery or scenic landscapes, complementing the subject.",
@@ -589,9 +769,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 30,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,
                         Strength = 0.6,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:29:05.8312544"),
@@ -614,7 +794,6 @@ public static class SeedData
                         NumInferenceSteps = 30,
                         GuidanceScale = 7.5,
                         Strength = 0.5,   // 0.78 -> 0.5
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:38:00.0000000"),
@@ -635,9 +814,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,  //6.8 -> 8.0
                         Strength = 0.6,     //0.72 -> 0.6
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:39:00.0000000"),
@@ -658,9 +837,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 22,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5, //6.2 -> 7.5
                         Strength = 0.6, //0.65 -> 0.6
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:40:00.0000000"),
@@ -681,9 +860,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 27,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 12.0, //7.3 -> 12
                         Strength = 0.9, //0.76 -> 0.9
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:41:00.0000000"),
@@ -698,7 +877,7 @@ public static class SeedData
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoStyle] OFF");
 
             #endregion
-
+            
             #region Seed data for StickerStyle
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [StickerStyle] ON");
 
@@ -722,292 +901,6 @@ public static class SeedData
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [StickerStyle] OFF");
 
-            #endregion
-
-            #region Seed data for TypeSession
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] ON");
-
-            if (!context.TypeSession.Any())
-            {
-                context.TypeSession.AddRange(
-                    new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, Price = 10000, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 20000, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 3, Name = "Basic Package", Description = "Basic printing service package", Duration = 30, Price = 50000, AbleTakenNumber = 10, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:24:45.6577221"), LastModified = DateTime.Parse("2025-03-28T04:24:45.6577221"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 4, Name = "Printing Consultation", Description = "Consultation for suitable printing type", Duration = 20, Price = 10000, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:00:00"), LastModified = DateTime.Parse("2025-03-30T08:00:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 5, Name = "File Editing", Description = "Edit files before printing", Duration = 30, Price = 20000, AbleTakenNumber = 4, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:01:00"), LastModified = DateTime.Parse("2025-03-30T08:01:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 6, Name = "Poster Design", Description = "Design posters on demand", Duration = 45, Price = 40000, AbleTakenNumber = 3, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:02:00"), LastModified = DateTime.Parse("2025-03-30T08:02:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 7, Name = "Namecard Design", Description = "Create namecard designs", Duration = 25, Price = 15000, AbleTakenNumber = 6, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:03:00"), LastModified = DateTime.Parse("2025-03-30T08:03:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 8, Name = "Flyer Design", Description = "Design brochures and promotional flyers", Duration = 35, Price = 35000, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:04:00"), LastModified = DateTime.Parse("2025-03-30T08:04:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 9, Name = "Layout Consultation", Description = "Consult on content layout for print", Duration = 20, Price = 10000, AbleTakenNumber = 7, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:05:00"), LastModified = DateTime.Parse("2025-03-30T08:05:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
-                    new TypeSession { Id = 10, Name = "Product Photography", Description = "Professional product photography", Duration = 60, Price = 25000, AbleTakenNumber = 2, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:06:00"), LastModified = DateTime.Parse("2025-03-30T08:06:00"), CreatedById = admin.Id, LastModifiedById = admin.Id }
-                    );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] OFF");
-
-            #endregion
-
-            #region Seed data for Wallet
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Wallet] ON");
-            if (!context.Wallet.Any())
-            {
-                context.Wallet.AddRange(
-                    new Wallet { Id = 1, CustomerId = customer.Id, Balance = 500000, IsLocked = false },
-                    new Wallet { Id = 2, CustomerId = customer2.Id, Balance = 350000, IsLocked = false }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Wallet] OFF");
-
-            #endregion
-
-            #region Seed data for MembershipCard
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] ON");
-            if (!context.MembershipCard.Any())
-            {
-                context.MembershipCard.AddRange(
-                    new MembershipCard
-                    {
-                        Id = 1,
-                        CustomerId = customer2.Id,
-                        LevelMemberShipId = 5, // Platinum
-                        Points = 1000,
-                        Description = "User's Platinum membership",
-                        IsActive = true,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    },
-                    
-                    new MembershipCard
-                    {
-                        Id = 4,
-                        CustomerId = customer.Id,
-                        LevelMemberShipId = 2, // Bronze
-                        Points = 100,
-                        Description = "User's Bronze membership",
-                        IsActive = true,
-                        CreatedById = admin.Id,
-                        LastModifiedById = admin.Id
-                    }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [MembershipCard] OFF");
-
-            #endregion
-
-            #region Seed data for TypeSessionProduct
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] ON");
-
-            if (!context.TypeSessionProduct.Any())
-            {
-                var typeSessionProducts = new List<TypeSessionProduct>();
-                int idCounter = 1;
-
-                for (int typeSessionId = 1; typeSessionId <= 3; typeSessionId++)
-                {
-                    var typeSession = context.TypeSession.Find(typeSessionId);
-
-                    for (int levelMembershipId = 1; levelMembershipId <= 5; levelMembershipId++)
-                    {
-                        var levelMembership = context.LevelMembership.Find(levelMembershipId);
-                        typeSessionProducts.Add(new TypeSessionProduct
-                        {
-                            Id = idCounter++,
-                            Name = $"{typeSession.Name}({levelMembership.Name})",
-                            TypeSessionId = typeSessionId,
-                            LevelMembershipId = levelMembershipId,
-                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(levelMembership.Name)}",
-                            CreatedById = admin.Id,
-                            LastModifiedById = admin.Id
-                        });
-                    }
-
-                    for (int couponId = 1; couponId <= 10; couponId++)
-                    {
-                        var coupon = context.Coupon.Find(couponId);
-                        typeSessionProducts.Add(new TypeSessionProduct
-                        {
-                            Id = idCounter++,
-                            Name = $"{typeSession.Name}({coupon.Name})",
-                            TypeSessionId = typeSessionId,
-                            CouponId = couponId,
-                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
-                            CreatedById = admin.Id,
-                            LastModifiedById = admin.Id
-                        });
-
-                    }
-                }
-
-                context.TypeSessionProduct.AddRange(typeSessionProducts);
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] OFF");
-            #endregion
-
-            #region Seed data for Order
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
-
-            if (!context.Order.Any())
-            {
-                context.Order.AddRange(
-                    new Order { Id = 1, Code = new Random().NextInt64(1000000000, 9999999999), CustomerId = customer2.Id, Status = OrderStatus.Completed, Amount = 300000, Email = customer2.Email, Phone = "123456789", CouponId = 9, TypeSessionId = 9, CreatedById = customer2.Id, LastModifiedById = customer2.Id },
-                    new Order { Id = 2, Code = new Random().NextInt64(1000000000, 9999999999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 500000, Email = customer.Email, Phone = "123456789", CouponId = 10, TypeSessionId = 8, CreatedById = customer.Id, LastModifiedById = customer.Id }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] OFF");
-            #endregion
-
-            #region Seed data for DepositProduct
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] ON");
-            if (!context.DepositProduct.Any())
-            {
-                context.DepositProduct.AddRange(
-                new DepositProduct { Id = 1, Name = "Nạp 20 nghìn", Description = "Giá 20 nghìn kèm khuyến mãi 10%", AmountAdd = 2000, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 20 nghìn")}", Price = 20000 },
-                new DepositProduct { Id = 2, Name = "Nạp 15 nghìn", Description = "Giá 15 nghìn kèm khuyến mãi 10%", AmountAdd = 1500, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 15 nghìn")}", Price = 15000 },
-                new DepositProduct { Id = 3, Name = "Nạp 12 nghìn", Description = "Giá 12 nghìn kèm khuyến mãi 10%", AmountAdd = 1200, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 12 nghìn")}", Price = 12000 },
-                new DepositProduct { Id = 4, Name = "Nạp 10 nghìn", Description = "Giá 10 nghìn", AmountAdd = 0, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 10 nghìn")}", Price = 10000 },
-                new DepositProduct { Id = 5, Name = "Nạp 17 nghìn", Description = "Giá 17 nghìn kèm khuyến mãi 10%", AmountAdd = 1700, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 17 nghìn")}", Price = 17000 }
-            );
-                context.SaveChanges();
-            }
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] OFF");
-            #endregion
-
-            #region Seed data for Deposit
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
-
-            if (!context.Deposit.Any())
-            {
-                context.Deposit.AddRange(
-                    new Deposit
-                    {
-                        Id = 1,
-                        WalletId = 1,
-                        Amount = 20000,
-                        Status = DepositStatus.Success,
-                        DepositProductId = 1,
-                    },
-                    new Deposit
-                    {
-                        Id = 2,
-                        WalletId = 1,
-                        Amount = 10000,
-                        Status = DepositStatus.Success,
-                        DepositProductId = 2,
-                    }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
-
-            #endregion
-
-            #region Seed data for Payment
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
-
-            if (!context.Payment.Any())
-            {
-                context.Payment.AddRange(
-                    new Payment { Id = 1, OrderId = 1, PaymentMethodId = 1, Status = PaymentStatus.Success, Amount = 150000 },
-                    new Payment { Id = 2, OrderId = 2, PaymentMethodId = 2, Status = PaymentStatus.Failed, Amount = 200000 },
-                    new Payment { Id = 3, DepositId = 1, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 100000 },
-                    new Payment { Id = 4, DepositId = 2, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 250000 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
-
-            #endregion
-
-            #region Seed data for Transaction
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
-
-            if (!context.Transaction.Any())
-            {
-                context.Transaction.AddRange(
-                    new Transaction { Id = 1, Type = TransactionType.Purchase, Amount = 50000, PaymentId = 1 },
-                    new Transaction { Id = 2, Type = TransactionType.Refund, Amount = 100000, PaymentId = 2 },
-                    new Transaction { Id = 3, Type = TransactionType.Deposit, Amount = 200000, PaymentId = 3 },
-                    new Transaction { Id = 4, Type = TransactionType.Withdraw, Amount = 150000, PaymentId = 4 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
-
-            #endregion
-
-            #region Seed data for Session
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] ON");
-
-            if (!context.Session.Any())
-            {
-                context.Session.AddRange(
-            new Session { Id = 1, Code = "SESSION", Expired = DateTime.Now.AddDays(60), AbleTakenNumber = 100, IsActive = true, OrderId = 1 },
-            new Session { Id = 2, Code = "SESSION2", IsActive = true, AbleTakenNumber = 10, OrderId = 2 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] OFF");
-            #endregion
-
-            #region Seed data for PhotoHistory
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] ON");
-
-            if (!context.PhotoHistory.Any())
-            {
-                context.PhotoHistory.AddRange(
-            new PhotoHistory { Id = 1, CustomerId = customer.Id, BoothId = 1, SessionId = 1 },
-            new PhotoHistory { Id = 2, CustomerId = customer2.Id, BoothId = 2, SessionId = 2 }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
-            #endregion
-
-            #region Seed data for Photo
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
-
-            if (!context.Photo.Any())
-            {
-                context.Photo.AddRange(
-            new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlmtEDH8kbb.png?alt=media", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 2, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F3EQLsfozA8.png?alt=media", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 3, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRF583N9tuh.png?alt=media", PhotoStyleId = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 4, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fj5gbl9Iq2l.png?alt=media", PhotoStyleId = 4, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 5, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F9hcRtilHjX.png?alt=media", PhotoStyleId = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 6, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fra2403PcfG.png?alt=media", PhotoStyleId = 6, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 7, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F75suz3e6eU.png?alt=media", PhotoStyleId = 7, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 8, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FOl6sWrWzVi.png?alt=media", PhotoStyleId = 8, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 9, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FKvtV11AeCU.png?alt=media", PhotoStyleId = 9, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 10, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FXVQ7YgFsi9.png?alt=media", PhotoStyleId = 10, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
-                );
-
-                context.SaveChanges();
-            }
-
-            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
             #endregion
 
             #region Seed data for Sticker
@@ -1117,21 +1010,21 @@ public static class SeedData
                 context.Frame.AddRange(
                     new Frame { Id = 1, Name = "HappyBirthday", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Frame1_Happy%20Birthday.png?alt=media", FrameStyleId = 2, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 2, Name = "Instagram", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Frame1_Instagram.png?alt=media", FrameStyleId = 5, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 3, Name = "Japan", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Japan.png?alt=media", FrameStyleId = 7, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 3, Name = "Japan", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Japan.png?alt=media", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 4, Name = "Happy Wedding", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Wedding.png?alt=media", FrameStyleId = 1, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 5, Name = "Graduation", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Graduation.png?alt=media", FrameStyleId = 6, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 6, Name = "90's Style", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Retro.png?alt=media", FrameStyleId = 3, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 7, Name = "Zoo", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Zoo.png?alt=media", FrameStyleId = 7, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 8, Name = "Merry Christmas", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Merry%20Christmas.png?alt=media", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 9, Name = "Halloween", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Halloween.png?alt=media", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 10, Name = "Summer Sea", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Summer.png?alt=media", FrameStyleId = 7, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 11, Name = "Night Party", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Night%20Party.png?alt=media", FrameStyleId = 2, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 6, Name = "90's Style", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Retro.png?alt=media", FrameStyleId = 3, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 7, Name = "Zoo", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Zoo.png?alt=media", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 8, Name = "Merry Christmas", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Merry%20Christmas.png?alt=media", FrameStyleId = 4, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 9, Name = "Halloween", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Halloween.png?alt=media", FrameStyleId = 4, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 10, Name = "Summer Sea", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Summer.png?alt=media", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 11, Name = "Night Party", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Night%20Party.png?alt=media", FrameStyleId = 2, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 12, Name = "Vintage Camera", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Vintage%20Camera.png?alt=media", FrameStyleId = 3, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 13, Name = "Happy New Year", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/New%20Year.png?alt=media", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
                     new Frame { Id = 14, Name = "Happy Mid-Autumn", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Mid%20Autumn%20Festival.png?alt=media", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 15, Name = "VietNam Travel", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Vietnam%20Travel.png?alt=media", FrameStyleId = 7, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 16, Name = "Grunge Retro", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Grunge%20Retro.png?alt=media", FrameStyleId = 3, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
-                    new Frame { Id = 17, Name = "Happy 30/4", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/304%20%282%29.png?alt=media", FrameStyleId = 4, SlotCount = 1, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null }
+                    new Frame { Id = 15, Name = "VietNam Travel", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Vietnam%20Travel.png?alt=media", FrameStyleId = 7, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 16, Name = "Grunge Retro", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/Grunge%20Retro.png?alt=media", FrameStyleId = 3, SlotCount = 4, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null },
+                    new Frame { Id = 17, Name = "Happy 30/4", FrameUrl = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/304%20%282%29.png?alt=media", FrameStyleId = 4, SlotCount = 1, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28 13:15:24"), LastModified = DateTime.Parse("2025-03-28 13:15:24"), IsDeleted = false, CreatedById = null, LastModifiedById = null }
                 );
 
                 context.SaveChanges();
@@ -1199,6 +1092,403 @@ public static class SeedData
 
             #endregion
 
+            #region Seed data for TypeSession
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] ON");
+
+            if (!context.TypeSession.Any())
+            {
+                context.TypeSession.AddRange(
+                    new TypeSession { Id = 1, Name = "Photography", Description = "Photo session", Duration = 60, Price = 10000, AbleTakenNumber = 5, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 2, Name = "Videography", Description = "Video session", Duration = 120, Price = 20000, AbleTakenNumber = 3, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-14T05:45:36.4862448"), LastModified = DateTime.Parse("2025-03-14T05:45:36.4862448"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 3, Name = "Basic Package", Description = "Basic printing service package", Duration = 30, Price = 50000, AbleTakenNumber = 10, ForMobile = true, CreatedAt = DateTime.Parse("2025-03-28T04:24:45.6577221"), LastModified = DateTime.Parse("2025-03-28T04:24:45.6577221"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 4, Name = "Printing Consultation", Description = "Consultation for suitable printing type", Duration = 20, Price = 10000, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:00:00"), LastModified = DateTime.Parse("2025-03-30T08:00:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 5, Name = "File Editing", Description = "Edit files before printing", Duration = 30, Price = 20000, AbleTakenNumber = 4, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:01:00"), LastModified = DateTime.Parse("2025-03-30T08:01:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 6, Name = "Poster Design", Description = "Design posters on demand", Duration = 45, Price = 40000, AbleTakenNumber = 3, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:02:00"), LastModified = DateTime.Parse("2025-03-30T08:02:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 7, Name = "Namecard Design", Description = "Create namecard designs", Duration = 25, Price = 15000, AbleTakenNumber = 6, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:03:00"), LastModified = DateTime.Parse("2025-03-30T08:03:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 8, Name = "Flyer Design", Description = "Design brochures and promotional flyers", Duration = 35, Price = 35000, AbleTakenNumber = 5, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:04:00"), LastModified = DateTime.Parse("2025-03-30T08:04:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 9, Name = "Layout Consultation", Description = "Consult on content layout for print", Duration = 20, Price = 10000, AbleTakenNumber = 7, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:05:00"), LastModified = DateTime.Parse("2025-03-30T08:05:00"), CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new TypeSession { Id = 10, Name = "Product Photography", Description = "Professional product photography", Duration = 60, Price = 25000, AbleTakenNumber = 2, ForMobile = false, CreatedAt = DateTime.Parse("2025-03-30T08:06:00"), LastModified = DateTime.Parse("2025-03-30T08:06:00"), CreatedById = admin.Id, LastModifiedById = admin.Id }
+                    );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSession] OFF");
+
+            #endregion
+
+            #region Seed data for Coupon
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] ON");
+
+            if (!context.Coupon.Any())
+            {
+                context.Coupon.AddRange(
+                    new Coupon { Id = 1, Name = "New Year Deal", Code = "NY2025", Description = "Chào đón năm mới 2025, chúng tôi mang đến cho bạn một chương trình khuyến mãi đặc biệt để cùng bạn đón Tết Nguyên Đán. Giảm giá ngay 5000 đồng cho mỗi đơn hàng và cơ hội nhận các ưu đãi tuyệt vời khác. Hãy tận dụng ngay!", Discount = 5000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 2, Name = "Spring Sale", Code = "SPRING25", Description = "Chào mừng mùa xuân đến với những ưu đãi hấp dẫn! Giảm giá 3000 đồng cho các đơn hàng mùa xuân. Khám phá các sản phẩm mới và tận hưởng không khí tươi mới của mùa xuân với mức giá cực kỳ ưu đãi.", Discount = 3000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 15000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 3, Name = "Summer Heat", Code = "SUMMERHEAT", Description = "Cùng làm dịu cơn nóng mùa hè với chương trình khuyến mãi 'Giảm Giá Mùa Hè'. Nhận ngay ưu đãi giảm giá 4000 đồng cho các đơn hàng mùa hè. Chương trình kéo dài trong 2 tháng, đừng bỏ lỡ!", Discount = 4000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 4, Name = "Back to School", Code = "SCHOOL25", Description = "Mùa tựu trường đã đến và chúng tôi có một chương trình ưu đãi đặc biệt dành cho các bạn học sinh và sinh viên. Giảm giá 2500 đồng cho mỗi đơn hàng, cùng những món quà thú vị chuẩn bị cho năm học mới.", Discount = 2500, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 12000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 5, Name = "Autumn Bonus", Code = "AUTUMN22", Description = "Mùa thu mang đến không khí tươi mới và những chương trình khuyến mãi hấp dẫn. Với 'Thưởng Mùa Thu', bạn sẽ nhận được giảm giá 2200 đồng cho mỗi đơn hàng. Đặc biệt, chương trình này chỉ kéo dài trong 1 tháng, đừng bỏ qua!", Discount = 2200, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 13000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Ngày hội mua sắm lớn nhất trong năm - Black Friday đã đến! Giảm giá lên đến 50% cho các sản phẩm hot nhất. Đừng bỏ lỡ cơ hội mua sắm tiết kiệm vào dịp cuối năm. Chương trình áp dụng đến hết 10 ngày từ khi khởi động.", DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday cũng đến với những ưu đãi hấp dẫn. Giảm giá 35% cho tất cả các sản phẩm trong chương trình này. Chương trình áp dụng đến hết 7 ngày từ khi bắt đầu. Hãy nhanh tay kẻo lỡ!", DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 20000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 8, Name = "Xmas Cheer", Code = "XMAS2025", Description = "Mừng Giáng Sinh với chương trình khuyến mãi hấp dẫn. Giảm giá lớn cho các đơn hàng dịp lễ Giáng Sinh. Chỉ áp dụng trong vòng 1 tháng và có giới hạn số lượng sử dụng. Đừng bỏ lỡ cơ hội này để có những món quà tuyệt vời!", StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 9, Name = "Birthday Gift", Code = "BIRTHDAY", Description = "Chúc mừng sinh nhật với một món quà đặc biệt từ chúng tôi! Giảm giá 20% cho các đơn hàng sinh nhật. Chương trình này áp dụng trong 5 ngày và chỉ có số lượng hạn chế, nên hãy nhanh tay tận dụng!", DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 5000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    new Coupon { Id = 10, Name = "Flash Sale", Code = "FLASH2025", Description = "Flash Sale siêu khuyến mãi trong thời gian ngắn! Giảm giá ngay 15% cho các sản phẩm nổi bật. Chương trình chỉ kéo dài 2 ngày và số lượng có hạn, hãy nhanh tay mua sắm.", DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 4000, CreatedById = admin.Id, LastModifiedById = admin.Id }
+
+                    //new Coupon { Id = 1, Name = "Khuyến Mãi Tết Nguyên Đán", Code = "NY2025", Description = "Chào đón năm mới 2025, chúng tôi mang đến cho bạn một chương trình khuyến mãi đặc biệt để cùng bạn đón Tết Nguyên Đán. Giảm giá ngay 5000 đồng cho mỗi đơn hàng và cơ hội nhận các ưu đãi tuyệt vời khác. Hãy tận dụng ngay!", Discount = 5000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 100, MaxDiscount = 100000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 2, Name = "Giảm Giá Mùa Xuân", Code = "SPRING25", Description = "Chào mừng mùa xuân đến với những ưu đãi hấp dẫn! Giảm giá 3000 đồng cho các đơn hàng mùa xuân. Khám phá các sản phẩm mới và tận hưởng không khí tươi mới của mùa xuân với mức giá cực kỳ ưu đãi.", Discount = 3000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 50, MaxDiscount = 50000, MinOrder = 15000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 3, Name = "Giảm Giá Mùa Hè", Code = "SUMMERHEAT", Description = "Cùng làm dịu cơn nóng mùa hè với chương trình khuyến mãi 'Giảm Giá Mùa Hè'. Nhận ngay ưu đãi giảm giá 4000 đồng cho các đơn hàng mùa hè. Chương trình kéo dài trong 2 tháng, đừng bỏ lỡ!", Discount = 4000, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(2), MaxUse = 70, MaxDiscount = 60000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 4, Name = "Khuyến Mãi Trở Lại Trường", Code = "SCHOOL25", Description = "Mùa tựu trường đã đến và chúng tôi có một chương trình ưu đãi đặc biệt dành cho các bạn học sinh và sinh viên. Giảm giá 2500 đồng cho mỗi đơn hàng, cùng những món quà thú vị chuẩn bị cho năm học mới.", Discount = 2500, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 30, MaxDiscount = 40000, MinOrder = 12000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 5, Name = "Thưởng Mùa Thu", Code = "AUTUMN22", Description = "Mùa thu mang đến không khí tươi mới và những chương trình khuyến mãi hấp dẫn. Với 'Thưởng Mùa Thu', bạn sẽ nhận được giảm giá 2200 đồng cho mỗi đơn hàng. Đặc biệt, chương trình này chỉ kéo dài trong 1 tháng, đừng bỏ qua!", Discount = 2200, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 60, MaxDiscount = 45000, MinOrder = 13000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 6, Name = "Black Friday", Code = "BLKFRI50", Description = "Ngày hội mua sắm lớn nhất trong năm - Black Friday đã đến! Giảm giá lên đến 50% cho các sản phẩm hot nhất. Đừng bỏ lỡ cơ hội mua sắm tiết kiệm vào dịp cuối năm. Chương trình áp dụng đến hết 10 ngày từ khi khởi động.", DiscountPercent = 0.50m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(10), MaxUse = 500, MaxDiscount = 200000, MinOrder = 10000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 7, Name = "Cyber Monday", Code = "CYBER2025", Description = "Cyber Monday cũng đến với những ưu đãi hấp dẫn. Giảm giá 35% cho tất cả các sản phẩm trong chương trình này. Chương trình áp dụng đến hết 7 ngày từ khi bắt đầu. Hãy nhanh tay kẻo lỡ!", DiscountPercent = 0.35m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7), MaxUse = 300, MaxDiscount = 150000, MinOrder = 20000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 8, Name = "Giảm Giá Giáng Sinh", Code = "XMAS2025", Description = "Mừng Giáng Sinh với chương trình khuyến mãi hấp dẫn. Giảm giá lớn cho các đơn hàng dịp lễ Giáng Sinh. Chỉ áp dụng trong vòng 1 tháng và có giới hạn số lượng sử dụng. Đừng bỏ lỡ cơ hội này để có những món quà tuyệt vời!", StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddMonths(1), MaxUse = 250, MaxDiscount = 180000, MinOrder = 200000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 9, Name = "Quà Sinh Nhật", Code = "BIRTHDAY", Description = "Chúc mừng sinh nhật với một món quà đặc biệt từ chúng tôi! Giảm giá 20% cho các đơn hàng sinh nhật. Chương trình này áp dụng trong 5 ngày và chỉ có số lượng hạn chế, nên hãy nhanh tay tận dụng!", DiscountPercent = 0.20m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(5), MaxUse = 100, MaxDiscount = 80000, MinOrder = 5000, CreatedById = admin.Id, LastModifiedById = admin.Id },
+                    //new Coupon { Id = 10, Name = "Giảm Giá Flash Sale", Code = "FLASH2025", Description = "Flash Sale siêu khuyến mãi trong thời gian ngắn! Giảm giá ngay 15% cho các sản phẩm nổi bật. Chương trình chỉ kéo dài 2 ngày và số lượng có hạn, hãy nhanh tay mua sắm.", DiscountPercent = 0.15m, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), MaxUse = 80, MaxDiscount = 60000, MinOrder = 4000, CreatedById = admin.Id, LastModifiedById = admin.Id }
+                );
+
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Coupon] OFF");
+
+            #endregion
+
+            #region Seed data for TypeSessionProduct
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] ON");
+
+            if (!context.TypeSessionProduct.Any())
+            {
+                var typeSessionProducts = new List<TypeSessionProduct>();
+                int idCounter = 1;
+
+                for (int typeSessionId = 1; typeSessionId <= 3; typeSessionId++)
+                {
+                    var typeSession = context.TypeSession.Find(typeSessionId);
+
+                    for (int levelMembershipId = 1; levelMembershipId <= 5; levelMembershipId++)
+                    {
+                        var levelMembership = context.LevelMembership.Find(levelMembershipId);
+                        typeSessionProducts.Add(new TypeSessionProduct
+                        {
+                            Id = idCounter++,
+                            Name = $"{typeSession.Name}({levelMembership.Name})",
+                            TypeSessionId = typeSessionId,
+                            LevelMembershipId = levelMembershipId,
+                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(levelMembership.Name)}",
+                            CreatedById = admin.Id,
+                            LastModifiedById = admin.Id
+                        });
+                    }
+
+                    for (int couponId = 1; couponId <= 10; couponId++)
+                    {
+                        var coupon = context.Coupon.Find(couponId);
+                        typeSessionProducts.Add(new TypeSessionProduct
+                        {
+                            Id = idCounter++,
+                            Name = $"{typeSession.Name}({coupon.Name})",
+                            TypeSessionId = typeSessionId,
+                            CouponId = couponId,
+                            ProductId = $"product_session_{ProductIdHelper.Normalize(typeSession.Name)}_{ProductIdHelper.Normalize(coupon.Name)}",
+                            CreatedById = admin.Id,
+                            LastModifiedById = admin.Id
+                        });
+
+                    }
+                }
+
+                context.TypeSessionProduct.AddRange(typeSessionProducts);
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [TypeSessionProduct] OFF");
+            #endregion
+
+            #region Seed data for DepositProduct
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] ON");
+            if (!context.DepositProduct.Any())
+            {
+                context.DepositProduct.AddRange(
+                new DepositProduct { Id = 1, Name = "Nạp 20 nghìn", Description = "Giá 20 nghìn kèm khuyến mãi 10%", AmountAdd = 2000, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 20 nghìn")}", Price = 20000 },
+                new DepositProduct { Id = 2, Name = "Nạp 15 nghìn", Description = "Giá 15 nghìn kèm khuyến mãi 10%", AmountAdd = 1500, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 15 nghìn")}", Price = 15000 },
+                new DepositProduct { Id = 3, Name = "Nạp 12 nghìn", Description = "Giá 12 nghìn kèm khuyến mãi 10%", AmountAdd = 1200, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 12 nghìn")}", Price = 12000 },
+                new DepositProduct { Id = 4, Name = "Nạp 10 nghìn", Description = "Giá 10 nghìn", AmountAdd = 0, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 10 nghìn")}", Price = 10000 },
+                new DepositProduct { Id = 5, Name = "Nạp 17 nghìn", Description = "Giá 17 nghìn kèm khuyến mãi 10%", AmountAdd = 1700, ProductId = $"product_{ProductIdHelper.Normalize("Nạp 17 nghìn")}", Price = 17000 }
+            );
+                context.SaveChanges();
+            }
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [DepositProduct] OFF");
+            #endregion
+
+            #region Seed data for Order
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
+
+            var createdByOptions = new[] { staff.Id, staff2.Id, staff3.Id, manager.Id, manager2.Id, manager3.Id };
+            var orders = new List<Order>();
+
+            for (int i = 1; i <= 200; i++)
+            {
+                var createdById = createdByOptions[random.Next(createdByOptions.Length)];
+                var daysBack = (int)(Math.Pow(random.NextDouble(), 2) * 720);
+                var createdAt = now.AddDays(-daysBack); 
+
+                orders.Add(new Order
+                {
+                    Id = i,
+                    Code = random.NextInt64(1_000_000_000, 9_999_999_999),
+                    CustomerId = (i % 2 == 0) ? customer.Id : customer2.Id,  
+                    Status = random.Next(10) < 7 ? OrderStatus.Completed : OrderStatus.Failed,
+                    Amount = random.Next(10_000, 100_001),
+                    Email = (i % 2 == 0) ? customer.Email : customer2.Email,
+                    Phone = "0" + random.Next(100_000_000, 1_000_000_000).ToString(),
+                    CouponId = random.Next(1, 11), 
+                    TypeSessionId = random.Next(1, 11), 
+                    CreatedById = createdById,
+                    LastModifiedById = (i % 2 == 0) ? customer.Id : customer2.Id,
+                    CreatedAt = createdAt
+                });
+            }
+            context.Order.AddRange(orders);
+            context.SaveChanges();
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] OFF");
+            #endregion
+
+            #region Seed data for Session
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] ON");
+
+            var ordersCompleteId = context.Order
+                .Where(o => o.Status == OrderStatus.Completed)
+                 .Select(o => new { o.Id, o.CreatedAt })
+                .ToList();
+
+            if (!context.Session.Any())
+            {
+                var sessions = new List<Session>();
+
+                for (int i = 0; i < ordersCompleteId.Count; i++)
+                {
+                    var orderId = ordersCompleteId[i];
+
+                    if (i == 0)
+                    {
+                        // Giữ nguyên session đầu tiên
+                        sessions.Add(new Session
+                        {
+                            Id = 1,
+                            Code = "SESSION",
+                            Expired = DateTime.Now.AddDays(60),
+                            AbleTakenNumber = 100,
+                            IsActive = false,
+                            OrderId = orderId.Id
+                        });
+                    }
+                    else
+                    {
+                        sessions.Add(new Session
+                        {
+                            Id = i + 1, // Id bắt đầu từ 1
+                            //Code = $"SESSION{i + 1}",
+                            Expired = orderId.CreatedAt.Value.AddDays(random.Next(1, 6)),
+                            AbleTakenNumber = random.Next(1, 11), // random 1..10
+                            IsActive = random.Next(2) == 0, // random true/false
+                            OrderId = orderId.Id
+                        });
+                    }
+                }
+
+                context.Session.AddRange(sessions);
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] OFF");
+            #endregion
+
+            #region Seed data for PhotoHistory
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] ON");
+
+            var boothIds = context.Booth
+                       .Select(b => b.Id)
+                       .ToList();
+            var sessionIds = context.Session
+                       .Select(s => s.Id)
+                       .ToList();
+
+            if (!context.PhotoHistory.Any())
+            {
+                var histories = Enumerable.Range(1, sessionIds.Count / 2)
+                    .Select(i => new PhotoHistory
+                    {
+                        Id = i,
+                        CustomerId = (i % 2 == 1) ? customer.Id : customer2.Id,
+                        BoothId = boothIds[(i - 1) % boothIds.Count],
+                        SessionId = sessionIds[(i - 1) % sessionIds.Count]
+                    })
+                    .ToList();
+
+                context.PhotoHistory.AddRange(histories);
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [PhotoHistory] OFF");
+            #endregion
+
+            #region Seed data for Photo
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
+
+            var photoHistoryIds = context.PhotoHistory
+                .Select(ph => ph.Id)
+                .ToList();
+
+            var photoUrls = new List<string>
+                {
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlmtEDH8kbb.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F3EQLsfozA8.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRF583N9tuh.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fj5gbl9Iq2l.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F9hcRtilHjX.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fra2403PcfG.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F75suz3e6eU.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FOl6sWrWzVi.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FKvtV11AeCU.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FXVQ7YgFsi9.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRFqyNFBk8D.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlRJjkNJynq.png?alt=media"
+                };
+
+
+            if (!context.Photo.Any())
+            {
+                int id = 1;
+                var photos = new List<Photo>();
+
+                foreach (var photoHistoryId in photoHistoryIds)
+                {
+                    for (int i = 0; i < photoUrls.Count; i++)
+                    {
+                        photos.Add(new Photo
+                        {
+                            Id = id++,
+                            PhotoHistoryId = photoHistoryId,
+                            Url = photoUrls[i],
+                            PhotoStyleId = (i % photoUrls.Count) + 1,
+                            CreatedAt = DateTime.UtcNow,
+                            LastModified = DateTime.UtcNow
+                        });
+                    }
+                }
+
+                context.Photo.AddRange(photos);
+                context.SaveChanges();
+            }
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] OFF");
+            #endregion
+
+            #region Seed data for Deposit
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
+
+            var customerWalletIds = context.Wallet
+            .Select(w => w.Id)
+            .ToList();
+
+            var deposits = new List<Deposit>();
+
+            for (int i = 1; i <= 100; i++)
+            {
+                var walletId = customerWalletIds[random.Next(customerWalletIds.Count)];
+                var status = random.Next(10) < 7 ? DepositStatus.Success : DepositStatus.Failed; // 70% success
+                var amount = random.Next(10_000, 100_001);
+                var createdAt = now.AddDays(-random.Next(0, 720));
+                var depositProductId = random.Next(1, 5);
+
+                deposits.Add(new Deposit
+                {
+                    Id = i,
+                    WalletId = walletId,
+                    Amount = amount,
+                    Status = status,
+                    DepositProductId = depositProductId,
+                    CreatedAt = createdAt
+                });
+            }
+
+            context.Deposit.AddRange(deposits);
+            context.SaveChanges();
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
+
+            #endregion
+
+            #region Seed data for Payment
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
+
+            var payments = new List<Payment>();
+            int paymentId = 1;
+
+            var ordersForDeposit = context.Order.ToList();
+            foreach (var order in ordersForDeposit)
+            {
+                payments.Add(new Payment
+                {
+                    Id = paymentId++,
+                    OrderId = order.Id,
+                    DepositId = null,
+                    PaymentMethodId = random.Next(1, 5), 
+                    Status = order.Status == OrderStatus.Completed ? PaymentStatus.Success : PaymentStatus.Failed,
+                    Amount = order.Amount,
+                    CreatedAt = order.CreatedAt ?? DateTime.UtcNow
+                });
+            }
+            // Tạo payment từ Deposit
+            var depositsForPayment = context.Deposit.ToList();
+            foreach (var deposit in depositsForPayment)
+            {
+                payments.Add(new Payment
+                {
+                    Id = paymentId++,
+                    OrderId = null,
+                    DepositId = deposit.Id,
+                    PaymentMethodId = 4,
+                    Status = deposit.Status == DepositStatus.Success ? PaymentStatus.Success : PaymentStatus.Failed,
+                    Amount = deposit.Amount,
+                    CreatedAt = deposit.CreatedAt
+                });
+            }
+
+            context.Payment.AddRange(payments);
+            context.SaveChanges();
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
+
+            #endregion
+
+            #region Seed data for Transaction
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
+
+            int transactionId = 1;
+            var transactions = new List<Transaction>();
+            var validPayments = context.Payment
+            .Where(p => p.PaymentMethodId != 1 && p.Status == PaymentStatus.Success)
+            .ToList();
+
+            foreach (var payment in validPayments)
+            {
+                transactions.Add(new Transaction
+                {
+                    Id = transactionId++,
+                    Type = payment.OrderId.HasValue ? TransactionType.Purchase : TransactionType.Deposit,
+                    Amount = payment.Amount,
+                    PaymentId = payment.Id,
+                    CreatedAt = payment.CreatedAt
+                });
+            }
+            context.Transaction.AddRange(transactions);
+            context.SaveChanges();
+
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
+
+            #endregion
 
             await transaction.CommitAsync();
             

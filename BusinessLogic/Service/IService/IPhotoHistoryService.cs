@@ -16,7 +16,7 @@ namespace BusinessLogic.Service.IService
         Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByCustomerIdAsync(string customerId);
         Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByBoothIdAsync(int boothId);
         Task<IEnumerable<PhotoHistoryResponseDTO>> GetPhotoHistoryByLocationIdAsync(int locationId);
-        Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode);
+        Task<IEnumerable<PhotoResponseDTO>> GetPhotoHistoryBySessionCodeAsync(string sessionCode);
         Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls, int PhotoStyleId = 1);
         Task<int> GetCount();
         Task<IEnumerable<PhotoResponseDTO>> GetPhotoHistoryByIdAsync(int photoHistoryId);

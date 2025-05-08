@@ -5,6 +5,7 @@ using BusinessLogic.Service.IService;
 using BussinessObject.Models;
 using DataAccess.Extensions.Pagination;
 using DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Service
 {
@@ -97,16 +98,7 @@ namespace BusinessLogic.Service
             return photoHistoriesResponseDTO;
         }
 
-        public async Task<PhotoHistoryResponseDTO> GetPhotoHistoryBySessionCodeAsync(string sessionCode)
-        {
-            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(includeProperties: "Session", filter: o => o.Session.Code == sessionCode);
-            if (photoHistory == null)
-            {
-                return null;
-            }
-            var photoHistoryResponseDTO = _mapper.Map<PhotoHistoryResponseDTO>(photoHistory);
-            return photoHistoryResponseDTO;
-        }
+        
 
         public async Task<bool> SaveUploadedPhotos(string sessionCode, List<string> photoUrls, int PhotoStyleId)
         {
@@ -156,6 +148,37 @@ namespace BusinessLogic.Service
             {
                 return null;
             }
+            var photoResponseDTOs = new List<PhotoResponseDTO>();
+            foreach (var photo in photoHistory.Photos)
+            {
+                photoResponseDTOs.Add(new PhotoResponseDTO
+                {
+                    Url = photo.Url,
+                    PhotoStyleName = photo.PhotoStyle.Name
+                });
+            }
+            return photoResponseDTOs;
+        }
+
+        public async Task<IEnumerable<PhotoResponseDTO>> GetPhotoHistoryBySessionCodeAsync(string sessionCode)
+        {
+            var session = await _unitOfWork.Session.GetFirstOrDefaultAsync(
+                s => EF.Functions.Collate(s.Code, "Latin1_General_CS_AS") == sessionCode
+            );
+            if (session == null)
+            {
+                return null;
+            }
+
+            var photoHistory = await _unitOfWork.PhotoHistory.GetFirstOrDefaultAsync(
+                includeProperties: "Session,Photos,Photos.PhotoStyle", filter: o => o.Session.Code == sessionCode);
+
+            if (photoHistory == null)
+            {
+                return null;
+            }
+            var photoHistoryResponseDTO = _mapper.Map<PhotoHistoryResponseDTO>(photoHistory);
+
             var photoResponseDTOs = new List<PhotoResponseDTO>();
             foreach (var photo in photoHistory.Photos)
             {

@@ -1,11 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 
 namespace BussinessObject.Models
 {
     public class Booth : BaseEntity
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public new int Id { get; set; } = new Random().Next(100000000, 999999999);
+
         [Required]
         public int LocationId { get; set; }
 

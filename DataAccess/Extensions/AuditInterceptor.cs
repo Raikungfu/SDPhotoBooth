@@ -41,16 +41,22 @@ namespace DataAccess.Extensions
 
             foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
             {
+                
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedAt = now;
-                    entry.Entity.LastModified = now;
-                    //Handle CreatedById and LastModifiedById
-                    entry.Entity.CreatedById = userId;
-                    entry.Entity.LastModifiedById = userId;
+                    if (_httpContextAccessor.HttpContext != null) // chỉ khi chạy trong web request
+                    {
+                        if (entry.Entity.CreatedAt == default)
+                            entry.Entity.CreatedAt = now;
 
+                        if (entry.Entity.LastModified == default)
+                            entry.Entity.LastModified = now;
 
+                        entry.Entity.CreatedById = userId;
+                        entry.Entity.LastModifiedById = userId;
+                    }
                 }
+
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModified = now;
@@ -71,8 +77,14 @@ namespace DataAccess.Extensions
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedAt = now;
-                    entry.Entity.LastModified = now;
+                    if (_httpContextAccessor.HttpContext != null) // chỉ khi chạy trong web request
+                    {
+                        if (entry.Entity.CreatedAt == default)
+                            entry.Entity.CreatedAt = now;
+
+                        if (entry.Entity.LastModified == default)
+                            entry.Entity.LastModified = now;
+                    }
                 }
                 if (entry.State == EntityState.Modified)
                 {

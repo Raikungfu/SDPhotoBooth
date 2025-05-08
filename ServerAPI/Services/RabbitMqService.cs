@@ -66,7 +66,7 @@ namespace ServerAPI.Services
                 numInferenceSteps = photoStyle.NumInferenceSteps,
                 guidanceScale = photoStyle.GuidanceScale,
                 strength = photoStyle.Strength,
-                faceImage = photoStyle.FaceImage,
+                ip_adapter_scale = photoStyle.IP_Adapter_Scale,
                 backgroundRemover = photoStyle.BackgroundRemover,
                 height = photoStyle.Height,
                 width = photoStyle.Width,
