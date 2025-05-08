@@ -39,7 +39,7 @@ namespace ServerAPI.Services
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle, string sessionCode)
+        public async Task SendMessageAsync(string imageUrl, string correlationId, PhotoStyleResponseDTO photoStyle, string sessionCode, string queueName)
         {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
@@ -49,7 +49,7 @@ namespace ServerAPI.Services
                         { "x-message-ttl", 300000 }
                     };
 
-            await channel.QueueDeclareAsync(queue: SendQueue, durable: false, exclusive: false, autoDelete: false, arguments: arguments);
+            await channel.QueueDeclareAsync(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: arguments);
 
 
             var message = new
