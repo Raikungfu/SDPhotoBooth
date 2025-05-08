@@ -13,19 +13,21 @@ using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace BusinessLogic.Service
 {
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILocationService _locationService;
         private readonly IWalletService _walletService;
         private readonly IMembershipCardService _membershipCardService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public UserService(IMapper mapper, UserManager<User> userManager, ILocationService locationService,
-            IUnitOfWork unitOfWork, IWalletService walletService, IMembershipCardService membershipCardService)
+            IUnitOfWork unitOfWork, IWalletService walletService, IMembershipCardService membershipCardService, RoleManager<IdentityRole> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -33,6 +35,7 @@ namespace BusinessLogic.Service
             _unitOfWork = unitOfWork;
             _walletService = walletService;
             _membershipCardService = membershipCardService;
+            _roleManager = roleManager;
         }
 
         public async Task<int> GetCount()
@@ -289,6 +292,137 @@ namespace BusinessLogic.Service
             userDTO.Wallet = _mapper.Map<WalletResponseDTO>(user.Wallet);
             userDTO.MembershipCard = _mapper.Map<MemberShipCardOnUserResponseDTO>(user.MembershipCard);
             return userDTO;
+        }
+
+        public async Task<RevenueStaffStatisticsResponseDTO> StaticRevenueStaffs(GroupingType staticType)
+        {
+            var today = DateTime.Today;
+
+            var staffUsers = await _userManager.GetUsersInRoleAsync("Staff");
+            var managerUsers = await _userManager.GetUsersInRoleAsync("Manager");
+            var staffs = staffUsers.Concat(managerUsers).DistinctBy(s => s.Id).ToList();
+            var staffIds = staffs.Select(s => s.Id).ToList();
+            var staffIdSet = staffIds.ToHashSet();
+
+            var orders = staticType switch
+            {
+                GroupingType.Day => await _unitOfWork.Order.GetAllAsync(
+                    o => o.CreatedAt.HasValue && o.CreatedAt.Value.Date >= today.AddDays(-29) && staffIdSet.Contains(o.CreatedById), asNoTracking: true),
+                GroupingType.Month or GroupingType.Quarter => await _unitOfWork.Order.GetAllAsync(
+                    o => o.CreatedAt.HasValue && o.CreatedAt.Value.Year == today.Year && staffIdSet.Contains(o.CreatedById), asNoTracking: true),
+                GroupingType.Year => await _unitOfWork.Order.GetAllAsync(
+                    o => o.CreatedAt.HasValue && staffIdSet.Contains(o.CreatedById), asNoTracking: true),
+                _ => Enumerable.Empty<Order>()
+            };
+
+            return new RevenueStaffStatisticsResponseDTO
+            {
+                GroupingType = staticType,
+                Data = GroupRevenueStaffs(staffs, orders, staticType)
+            };
+        }
+
+        private List<RevenueStaffDTO> GroupRevenueStaffs(List<User> staffs, IEnumerable<Order> orders, GroupingType grouping)
+        {
+            var staffDict = staffs.ToDictionary(s => s.Id, s => s.Email);
+
+            var validOrders = orders
+                .Where(s => s.CreatedAt.HasValue)
+                .Select(s => new
+                {
+                    Id = s.CreatedById,
+                    Name = staffDict[s.CreatedById],
+                    Amount = s.Amount,
+                    CreatedAt = s.CreatedAt!.Value
+                });
+
+            var grouped = validOrders.GroupBy(s => new
+            {
+                s.Id,
+                Day = s.CreatedAt.Date,
+                Month = s.CreatedAt.Month,
+                Quarter = (s.CreatedAt.Month - 1) / 3 + 1,
+                Year = s.CreatedAt.Year
+            });
+
+            return grouped.Select(g =>
+            {
+                var key = g.Key;
+                return new RevenueStaffDTO
+                {
+                    Id = key.Id,
+                    Day = grouping == GroupingType.Day ? key.Day : null,
+                    Month = grouping == GroupingType.Month ? key.Month : null,
+                    Quarter = grouping == GroupingType.Quarter ? key.Quarter : null,
+                    Year = grouping is GroupingType.Year or GroupingType.Quarter or GroupingType.Month ? key.Year : null,
+                    Name = g.First().Name,
+                    TotalRevenue = g.Sum(o => o.Amount),
+                    Count = g.Count()
+                };
+            }).ToList();
+        }
+
+        public async Task<RevenueStaffStatisticsResponseDTO> StaticRevenue(RevenueFilterDTO revenueFilterDTO)
+        {
+            var today = DateTime.Today;
+
+            var staff = await _userManager.Users
+                .Where(u => !u.IsDeleted && !u.IsBanned && u.Id == revenueFilterDTO.StaffId)
+                .FirstOrDefaultAsync();
+
+            Expression<Func<Order, bool>> filter = revenueFilterDTO.StaticType switch
+            {
+                GroupingType.Day => o => o.CreatedAt != null && o.CreatedAt.Value.Date >= today.AddDays(-29) && o.CreatedById == staff.Id,
+                GroupingType.Month or GroupingType.Quarter => o => o.CreatedAt != null && o.CreatedAt.Value.Year == today.Year && o.CreatedById == staff.Id,
+                GroupingType.Year => o => o.CreatedAt != null && o.CreatedById == staff.Id,
+                _ => o => false
+            };
+
+            var orders = await _unitOfWork.Order.GetAllAsync(filter, asNoTracking: true);
+
+            return new RevenueStaffStatisticsResponseDTO
+            {
+                GroupingType = revenueFilterDTO.StaticType,
+                Data = GroupRevenueStaff(staff, orders, revenueFilterDTO.StaticType)
+            };
+        }
+
+        private List<RevenueStaffDTO> GroupRevenueStaff(User staff, IEnumerable<Order> orders, GroupingType grouping)
+        {
+            var validOrders = orders
+                .Where(o => o.CreatedAt != null)
+                .Select(o => new
+                {
+                    Id = o.CreatedById,
+                    Name = staff.Email,
+                    Amount = o.Amount,
+                    CreatedAt = o.CreatedAt!.Value
+                });
+
+            var grouped = validOrders.GroupBy(o => new
+            {
+                o.Id,
+                Day = o.CreatedAt.Date,
+                Month = o.CreatedAt.Month,
+                Quarter = (o.CreatedAt.Month - 1) / 3 + 1,
+                Year = o.CreatedAt.Year
+            });
+
+            return grouped.Select(g =>
+            {
+                var key = g.Key;
+                return new RevenueStaffDTO
+                {
+                    Id = key.Id,
+                    Name = staff.Email,
+                    Day = grouping == GroupingType.Day ? key.Day : null,
+                    Month = grouping == GroupingType.Month ? key.Month : null,
+                    Quarter = grouping == GroupingType.Quarter ? key.Quarter : null,
+                    Year = grouping is GroupingType.Year or GroupingType.Quarter or GroupingType.Month ? key.Year : null,
+                    TotalRevenue = g.Sum(x => x.Amount),
+                    Count = g.Count()
+                };
+            }).ToList();
         }
     }
 }

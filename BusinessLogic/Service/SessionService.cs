@@ -131,5 +131,84 @@ namespace BusinessLogic.Service
 
             return null;
         }
+
+        public async Task<UsageChannelStatisticsResponseDTO> StaticUsageChannel(UsageChannelFilterDTO filter)
+        {
+            var today = DateTime.Today;
+            string includeProps = filter.ChannelGroupingType == ChannelGroupingType.Location
+                ? "PhotoHistory.Booth.Location"
+                : "PhotoHistory.Booth";
+
+            IEnumerable<Session> sessions = filter.StaticType switch
+            {
+                GroupingType.Day => await _unitOfWork.Session.GetAllAsync(
+                    s => (filter.ChannelGroupingType == ChannelGroupingType.Booth && (s.PhotoHistory.Booth.LocationId == filter.LocationId) 
+                    || filter.ChannelGroupingType == ChannelGroupingType.Location) && s.Expired.HasValue && s.Expired.Value.Date >= today.AddDays(-29),
+                    includeProperties: includeProps, asNoTracking: true),
+
+                GroupingType.Month or GroupingType.Quarter => await _unitOfWork.Session.GetAllAsync(
+                    s => (filter.ChannelGroupingType == ChannelGroupingType.Booth && (s.PhotoHistory.Booth.LocationId == filter.LocationId)
+                    || filter.ChannelGroupingType == ChannelGroupingType.Location) && s.Expired.HasValue && s.Expired.Value.Year == today.Year,
+                    includeProperties: includeProps, asNoTracking: true),
+
+                GroupingType.Year => await _unitOfWork.Session.GetAllAsync(
+                    s => (filter.ChannelGroupingType == ChannelGroupingType.Booth && (s.PhotoHistory.Booth.LocationId == filter.LocationId)
+                    || filter.ChannelGroupingType == ChannelGroupingType.Location) && s.Expired.HasValue,
+                    includeProperties: includeProps, asNoTracking: true),
+
+                _ => Enumerable.Empty<Session>()
+            };
+
+            var groupedData = GroupUsageChannel(sessions, filter.ChannelGroupingType, filter.StaticType);
+            return new UsageChannelStatisticsResponseDTO
+            {
+                GroupingType = filter.StaticType,
+                Data = groupedData
+            };
+        }
+
+        private List<UsageChannelDTO> GroupUsageChannel(IEnumerable<Session> sessions, ChannelGroupingType channelType, GroupingType grouping)
+        {
+            var validSessions = sessions
+                .Where(s => s.Expired.HasValue)
+                .Select(s => new
+                {
+                    Name = GetGroupName(s, channelType),
+                    Expired = s.Expired.Value
+                });
+
+            var grouped = validSessions.GroupBy(s => new
+            {
+                s.Name,
+                Day = s.Expired.Date,
+                Month = s.Expired.Month,
+                Quarter = (s.Expired.Month - 1) / 3 + 1,
+                Year = s.Expired.Year
+            });
+
+            return grouped.Select(g =>
+            {
+                var key = g.Key;
+                return new UsageChannelDTO
+                {
+                    Name = key.Name,
+                    Day = grouping == GroupingType.Day ? key.Day : null,
+                    Month = grouping == GroupingType.Month ? key.Month : null,
+                    Quarter = grouping == GroupingType.Quarter ? key.Quarter : null,
+                    Year = grouping == GroupingType.Year || grouping == GroupingType.Quarter || grouping == GroupingType.Month ? key.Year : null,
+                    TotalUsage = g.Count()
+                };
+            }).ToList();
+        }
+
+        private string GetGroupName(Session s, ChannelGroupingType type)
+        {
+            return type switch
+            {
+                ChannelGroupingType.Booth => s.PhotoHistory?.Booth?.BoothName ?? "Mobile",
+                ChannelGroupingType.Location => s.PhotoHistory?.Booth?.Location?.LocationName ?? "Mobile",
+                _ => "Unknown"
+            };
+        }
     }
 }
