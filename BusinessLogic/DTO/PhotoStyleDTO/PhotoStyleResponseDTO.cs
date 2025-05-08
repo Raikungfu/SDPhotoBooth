@@ -16,11 +16,11 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
         public string? BackgroundColor { get; set; }
         public int? Height { get; set; }
         public int? Width { get; set; }
+        public double? IP_Adapter_Scale { get; set; }
         public InpaintMode? Mode { get; set; }
         public int? NumInferenceSteps { get; set; }
         public double? GuidanceScale { get; set; }
         public double? Strength { get; set; }
-        public bool? FaceImage { get; set; }
         public bool? BackgroundRemover { get; set; }
 
         public DateTime CreatedAt { get; set; }

@@ -18,6 +18,19 @@ namespace DataAccess.Repository
             objFromDb.Name = photoStyle.Name;
             objFromDb.Description = photoStyle.Description;
             objFromDb.ImageUrl = photoStyle.ImageUrl;
+            objFromDb.Prompt = photoStyle.Prompt;
+            objFromDb.NegativePrompt = photoStyle.NegativePrompt;
+            objFromDb.Controlnets = photoStyle.Controlnets;
+            objFromDb.NumImagesPerGen = photoStyle.NumImagesPerGen;
+            objFromDb.BackgroundColor = photoStyle.BackgroundColor;
+            objFromDb.Height = photoStyle.Height;
+            objFromDb.Width = photoStyle.Width;
+            objFromDb.IP_Adapter_Scale = photoStyle.IP_Adapter_Scale;
+            objFromDb.Mode = photoStyle.Mode;
+            objFromDb.NumInferenceSteps = photoStyle.NumInferenceSteps;
+            objFromDb.GuidanceScale = photoStyle.GuidanceScale;
+            objFromDb.Strength = photoStyle.Strength;
+            objFromDb.BackgroundRemover = photoStyle.BackgroundRemover;
         }
 
         public Task UpdateAsync(PhotoStyle photoStyle)
@@ -26,6 +39,19 @@ namespace DataAccess.Repository
             objFromDb.Name = photoStyle.Name;
             objFromDb.Description = photoStyle.Description;
             objFromDb.ImageUrl = photoStyle.ImageUrl;
+            objFromDb.Prompt = photoStyle.Prompt;
+            objFromDb.NegativePrompt = photoStyle.NegativePrompt;
+            objFromDb.Controlnets = photoStyle.Controlnets;
+            objFromDb.NumImagesPerGen = photoStyle.NumImagesPerGen;
+            objFromDb.BackgroundColor = photoStyle.BackgroundColor;
+            objFromDb.Height = photoStyle.Height;
+            objFromDb.Width = photoStyle.Width;
+            objFromDb.IP_Adapter_Scale = photoStyle.IP_Adapter_Scale;
+            objFromDb.Mode = photoStyle.Mode;
+            objFromDb.NumInferenceSteps = photoStyle.NumInferenceSteps;
+            objFromDb.GuidanceScale = photoStyle.GuidanceScale;
+            objFromDb.Strength = photoStyle.Strength;
+            objFromDb.BackgroundRemover = photoStyle.BackgroundRemover;
             return Task.CompletedTask;
         }
     }

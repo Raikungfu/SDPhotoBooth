@@ -298,7 +298,7 @@ public static class SeedData
                 //Dummy Data
                 int counter = 100;
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -318,7 +318,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Admin");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -338,7 +338,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Manager");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -359,7 +359,7 @@ public static class SeedData
                         await userManager.AddToRoleAsync(user, "Staff");
                 }
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
                     var user = new User
                     {
@@ -551,7 +551,6 @@ public static class SeedData
                         NumInferenceSteps = 20,
                         GuidanceScale = 4.0,
                         Strength = 0.3,
-                        FaceImage = true,
                         BackgroundRemover = true,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:04:20.5382419"),
@@ -599,7 +598,6 @@ public static class SeedData
                         NumInferenceSteps = 26, 
                         GuidanceScale = 12.0,
                         Strength = 0.9,
-                        FaceImage = true,
                         BackgroundRemover = true,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:06:00.0000000"),
@@ -621,10 +619,10 @@ public static class SeedData
                         NumImagesPerGen = 6,
                         Height = null,
                         Width = null,
+                        IP_Adapter_Scale = 0.5,
                         NumInferenceSteps = 26,
                         GuidanceScale = 9.0,
                         Strength = 0.8,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:16:22.4802536"),
@@ -649,7 +647,6 @@ public static class SeedData
                         NumInferenceSteps = 32,
                         GuidanceScale = 12,
                         Strength = 0.9,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:10:24.5847326"),
@@ -672,9 +669,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 28,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.0,
                         Strength = 0.5,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:06:34.262168"),
@@ -697,9 +694,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5,
                         Strength = 0.6,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:34:08.9543789"),
@@ -722,9 +719,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 35,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,
                         Strength = 0.6,
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-14T05:45:36.871683"),
@@ -747,9 +744,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5,
                         Strength = 0.5,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:27:24.4834447"),
@@ -772,9 +769,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 30,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,
                         Strength = 0.6,
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:29:05.8312544"),
@@ -797,7 +794,6 @@ public static class SeedData
                         NumInferenceSteps = 30,
                         GuidanceScale = 7.5,
                         Strength = 0.5,   // 0.78 -> 0.5
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:38:00.0000000"),
@@ -818,9 +814,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 25,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 8.0,  //6.8 -> 8.0
                         Strength = 0.6,     //0.72 -> 0.6
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:39:00.0000000"),
@@ -841,9 +837,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 22,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 7.5, //6.2 -> 7.5
                         Strength = 0.6, //0.65 -> 0.6
-                        FaceImage = true,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:40:00.0000000"),
@@ -864,9 +860,9 @@ public static class SeedData
                         Height = null,
                         Width = null,
                         NumInferenceSteps = 27,
+                        IP_Adapter_Scale = 0.5,
                         GuidanceScale = 12.0, //7.3 -> 12
                         Strength = 0.9, //0.76 -> 0.9
-                        FaceImage = false,
                         BackgroundRemover = false,
                         CreatedAt = DateTime.Parse("2025-03-14T05:45:36.871683"),
                         LastModified = DateTime.Parse("2025-03-27T08:41:00.0000000"),
@@ -1227,36 +1223,33 @@ public static class SeedData
             #region Seed data for Order
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] ON");
 
+            var createdByOptions = new[] { staff.Id, staff2.Id, staff3.Id, manager.Id, manager2.Id, manager3.Id };
+            var orders = new List<Order>();
 
-            if (!context.Order.Any())
+            for (int i = 1; i <= 200; i++)
             {
-                var orders = new List<Order>
+                var createdById = createdByOptions[random.Next(createdByOptions.Length)];
+                var daysBack = (int)(Math.Pow(random.NextDouble(), 2) * 720);
+                var createdAt = now.AddDays(-daysBack); 
+
+                orders.Add(new Order
                 {
-                    // Completed orders “hôm nay”
-                    new Order { Id =  1, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer2.Id, Status = OrderStatus.Completed, Amount = 300_000, Email = customer2.Email, Phone = "123456789", CouponId = 9,  TypeSessionId =  9, CreatedById = customer2.Id, LastModifiedById = customer2.Id, CreatedAt = now },
-                    new Order { Id =  2, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id,  Status = OrderStatus.Completed, Amount = 500_000, Email = customer.Email,  Phone = "123456789", CouponId = 10, TypeSessionId =  8, CreatedById = customer.Id,  LastModifiedById = customer.Id,  CreatedAt = now },
-                    // Failed orders “hôm nay” (không tính vào thống kê Completed)
-                    new Order { Id =  3, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id,  Status = OrderStatus.Failed,    Amount = 200_000, Email = customer.Email,  Phone = "123456789", CouponId =  8, TypeSessionId =  7, CreatedById = customer.Id,  LastModifiedById = customer.Id,  CreatedAt = now },
-                    new Order { Id =  4, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer2.Id, Status = OrderStatus.Failed,    Amount = 150_000, Email = customer2.Email, Phone = "123456789", CouponId =  7, TypeSessionId =  6, CreatedById = customer2.Id, LastModifiedById = customer2.Id, CreatedAt = now },
-                    new Order { Id =  5, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id,  Status = OrderStatus.Failed,    Amount = 100_000, Email = customer.Email,  Phone = "123456789", CouponId =  6, TypeSessionId =  5, CreatedById = customer.Id,  LastModifiedById = customer.Id,  CreatedAt = now },
-                    new Order { Id =  6, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer2.Id, Status = OrderStatus.Failed,    Amount = 250_000, Email = customer2.Email, Phone = "123456789", CouponId =  5, TypeSessionId =  4, CreatedById = customer2.Id, LastModifiedById = customer2.Id, CreatedAt = now },
-
-                    // Một số Completed ở các mốc khác để test “current” vs “prev”
-                    new Order { Id =  7, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-1) },
-                    new Order { Id =  8, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-2) },
-                    new Order { Id =  9, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-5) },
-                    new Order { Id = 10, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-30) },
-                    new Order { Id = 11, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-31) },
-                    new Order { Id = 12, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-32) },
-                    new Order { Id = 13, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-33) },
-                    new Order { Id = 14, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-365) },
-                    new Order { Id = 15, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-366) },
-                    new Order { Id = 16, Code = rand.NextInt64(1_000_000_000, 9_999_999_999), CustomerId = customer.Id, Status = OrderStatus.Completed, Amount = 350_000, Email = customer.Email, Phone = "123456789", CouponId = 4, TypeSessionId = 3, CreatedById = customer.Id, LastModifiedById = customer.Id, CreatedAt = now.AddDays(-367) }
-                };
-
-                context.Order.AddRange(orders);
-                context.SaveChanges();
+                    Id = i,
+                    Code = random.NextInt64(1_000_000_000, 9_999_999_999),
+                    CustomerId = (i % 2 == 0) ? customer.Id : customer2.Id,  
+                    Status = random.Next(10) < 7 ? OrderStatus.Completed : OrderStatus.Failed,
+                    Amount = random.Next(10_000, 100_001),
+                    Email = (i % 2 == 0) ? customer.Email : customer2.Email,
+                    Phone = "0" + random.Next(100_000_000, 1_000_000_000).ToString(),
+                    CouponId = random.Next(1, 11), 
+                    TypeSessionId = random.Next(1, 11), 
+                    CreatedById = createdById,
+                    LastModifiedById = (i % 2 == 0) ? customer.Id : customer2.Id,
+                    CreatedAt = createdAt
+                });
             }
+            context.Order.AddRange(orders);
+            context.SaveChanges();
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Order] OFF");
             #endregion
@@ -1264,23 +1257,47 @@ public static class SeedData
             #region Seed data for Session
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Session] ON");
 
+            var ordersCompleteId = context.Order
+                .Where(o => o.Status == OrderStatus.Completed)
+                 .Select(o => new { o.Id, o.CreatedAt })
+                .ToList();
+
             if (!context.Session.Any())
             {
-                context.Session.AddRange(
-                    new Session { Id = 1, Code = "SESSION", Expired = DateTime.Now.AddDays(60), AbleTakenNumber = 100, IsActive = false, OrderId = 1 },
-                    new Session { Id = 2, Code = "SESSION2", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 2 },
-                    new Session { Id = 3, Code = "SESSION3", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 7 },
-                    new Session { Id = 4, Code = "SESSION4", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 8 },
-                    new Session { Id = 5, Code = "SESSION5", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 9 },
-                    new Session { Id = 6, Code = "SESSION6", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 10 },
-                    new Session { Id = 7, Code = "SESSION7", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 11 },
-                    new Session { Id = 8, Code = "SESSION8", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 12 },
-                    new Session { Id = 9, Code = "SESSION9", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 13 },
-                    new Session { Id = 10, Code = "SESSION10", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 14 },
-                    new Session { Id = 11, Code = "SESSION11", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 15 },
-                    new Session { Id = 12, Code = "SESSION12", Expired = DateTime.Now.AddDays(60), IsActive = true, AbleTakenNumber = 50, OrderId = 16 }
-                );
+                var sessions = new List<Session>();
 
+                for (int i = 0; i < ordersCompleteId.Count; i++)
+                {
+                    var orderId = ordersCompleteId[i];
+
+                    if (i == 0)
+                    {
+                        // Giữ nguyên session đầu tiên
+                        sessions.Add(new Session
+                        {
+                            Id = 1,
+                            Code = "SESSION",
+                            Expired = DateTime.Now.AddDays(60),
+                            AbleTakenNumber = 100,
+                            IsActive = false,
+                            OrderId = orderId.Id
+                        });
+                    }
+                    else
+                    {
+                        sessions.Add(new Session
+                        {
+                            Id = i + 1, // Id bắt đầu từ 1
+                            //Code = $"SESSION{i + 1}",
+                            Expired = orderId.CreatedAt.Value.AddDays(random.Next(1, 6)),
+                            AbleTakenNumber = random.Next(1, 11), // random 1..10
+                            IsActive = random.Next(2) == 0, // random true/false
+                            OrderId = orderId.Id
+                        });
+                    }
+                }
+
+                context.Session.AddRange(sessions);
                 context.SaveChanges();
             }
 
@@ -1293,16 +1310,19 @@ public static class SeedData
             var boothIds = context.Booth
                        .Select(b => b.Id)
                        .ToList();
+            var sessionIds = context.Session
+                       .Select(s => s.Id)
+                       .ToList();
 
             if (!context.PhotoHistory.Any())
             {
-                var histories = Enumerable.Range(1, 12)
+                var histories = Enumerable.Range(1, sessionIds.Count / 2)
                     .Select(i => new PhotoHistory
                     {
                         Id = i,
                         CustomerId = (i % 2 == 1) ? customer.Id : customer2.Id,
-                        BoothId = boothIds[(i - 1) % boothIds.Count],  
-                        SessionId = i
+                        BoothId = boothIds[(i - 1) % boothIds.Count],
+                        SessionId = sessionIds[(i - 1) % sessionIds.Count]
                     })
                     .ToList();
 
@@ -1316,21 +1336,49 @@ public static class SeedData
             #region Seed data for Photo
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Photo] ON");
 
+            var photoHistoryIds = context.PhotoHistory
+                .Select(ph => ph.Id)
+                .ToList();
+
+            var photoUrls = new List<string>
+                {
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlmtEDH8kbb.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F3EQLsfozA8.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRF583N9tuh.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fj5gbl9Iq2l.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F9hcRtilHjX.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fra2403PcfG.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F75suz3e6eU.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FOl6sWrWzVi.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FKvtV11AeCU.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FXVQ7YgFsi9.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRFqyNFBk8D.png?alt=media",
+                    "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlRJjkNJynq.png?alt=media"
+                };
+
+
             if (!context.Photo.Any())
             {
-                context.Photo.AddRange(
-            new Photo { Id = 1, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FlmtEDH8kbb.png?alt=media", PhotoStyleId = 1, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 2, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F3EQLsfozA8.png?alt=media", PhotoStyleId = 2, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 3, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FRF583N9tuh.png?alt=media", PhotoStyleId = 3, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 4, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fj5gbl9Iq2l.png?alt=media", PhotoStyleId = 4, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 5, PhotoHistoryId = 1, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F9hcRtilHjX.png?alt=media", PhotoStyleId = 5, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 6, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2Fra2403PcfG.png?alt=media", PhotoStyleId = 6, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 7, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2F75suz3e6eU.png?alt=media", PhotoStyleId = 7, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 8, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FOl6sWrWzVi.png?alt=media", PhotoStyleId = 8, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 9, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FKvtV11AeCU.png?alt=media", PhotoStyleId = 9, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false },
-            new Photo { Id = 10, PhotoHistoryId = 2, Url = "https://firebasestorage.googleapis.com/v0/b/social-networking-8c187.appspot.com/o/processed_images%2FXVQ7YgFsi9.png?alt=media", PhotoStyleId = 10, CreatedAt = DateTime.UtcNow, LastModified = DateTime.UtcNow, IsDeleted = false }
-                );
+                int id = 1;
+                var photos = new List<Photo>();
 
+                foreach (var photoHistoryId in photoHistoryIds)
+                {
+                    for (int i = 0; i < photoUrls.Count; i++)
+                    {
+                        photos.Add(new Photo
+                        {
+                            Id = id++,
+                            PhotoHistoryId = photoHistoryId,
+                            Url = photoUrls[i],
+                            PhotoStyleId = (i % photoUrls.Count) + 1,
+                            CreatedAt = DateTime.UtcNow,
+                            LastModified = DateTime.UtcNow
+                        });
+                    }
+                }
+
+                context.Photo.AddRange(photos);
                 context.SaveChanges();
             }
 
@@ -1340,31 +1388,33 @@ public static class SeedData
             #region Seed data for Deposit
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] ON");
 
-            if (!context.Deposit.Any())
+            var customerWalletIds = context.Wallet
+            .Select(w => w.Id)
+            .ToList();
+
+            var deposits = new List<Deposit>();
+
+            for (int i = 1; i <= 100; i++)
             {
+                var walletId = customerWalletIds[random.Next(customerWalletIds.Count)];
+                var status = random.Next(10) < 7 ? DepositStatus.Success : DepositStatus.Failed; // 70% success
+                var amount = random.Next(10_000, 100_001);
+                var createdAt = now.AddDays(-random.Next(0, 720));
+                var depositProductId = random.Next(1, 5);
 
-                var deposits = new List<Deposit>
-                    {
-                        // Thành công “hôm nay”
-                        new Deposit { Id =  1, WalletId = 1, Amount = 20_000,  Status = DepositStatus.Success, DepositProductId = 1, CreatedAt = now },
-                        new Deposit { Id =  2, WalletId = 1, Amount = 10_000,  Status = DepositStatus.Success, DepositProductId = 2, CreatedAt = now},
-
-                        // Thất bại “hôm nay” (không tính vào thống kê Success)
-                        new Deposit { Id =  3, WalletId = 2, Amount = 50_000,  Status = DepositStatus.Failed,  DepositProductId = 1, CreatedAt = now },
-
-                        // Thành công “ngày trước” (prev)
-                        new Deposit { Id =  4, WalletId = 1, Amount = 15_000,  Status = DepositStatus.Success, DepositProductId = 1, CreatedAt = now.AddDays(-1) },
-                        new Deposit { Id =  5, WalletId = 2, Amount = 25_000,  Status = DepositStatus.Success, DepositProductId = 2, CreatedAt = now.AddDays(-2) },
-
-                        // Cách xa hơn để test Monthly/Yearly
-                        new Deposit {Id = 6, WalletId = 1, Amount = 30_000, Status = DepositStatus.Success, DepositProductId = 3, CreatedAt = now.AddDays(-30)},
-                        new Deposit {Id = 7, WalletId = 2, Amount = 40_000, Status = DepositStatus.Success, DepositProductId = 1, CreatedAt = now.AddDays(-31)},
-                        new Deposit {Id = 8, WalletId = 1, Amount = 35_000, Status = DepositStatus.Success, DepositProductId = 2, CreatedAt = now.AddDays(-365)},
-                        new Deposit {Id = 9, WalletId = 2, Amount = 45_000, Status = DepositStatus.Success, DepositProductId = 3, CreatedAt = now.AddDays(-366)}
-                    };
-                context.Deposit.AddRange(deposits);
-                context.SaveChanges();
+                deposits.Add(new Deposit
+                {
+                    Id = i,
+                    WalletId = walletId,
+                    Amount = amount,
+                    Status = status,
+                    DepositProductId = depositProductId,
+                    CreatedAt = createdAt
+                });
             }
+
+            context.Deposit.AddRange(deposits);
+            context.SaveChanges();
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Deposit] OFF");
 
@@ -1373,39 +1423,41 @@ public static class SeedData
             #region Seed data for Payment
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] ON");
 
-            if (!context.Payment.Any())
+            var payments = new List<Payment>();
+            int paymentId = 1;
+
+            var ordersForDeposit = context.Order.ToList();
+            foreach (var order in ordersForDeposit)
             {
-                context.Payment.AddRange(
-                    new Payment { Id = 1, OrderId = 1, PaymentMethodId = 2, Status = PaymentStatus.Success, Amount = 150000, CreatedAt= now },
-                    new Payment { Id = 2, OrderId = 2, PaymentMethodId = 2, Status = PaymentStatus.Success, Amount = 200000, CreatedAt= now },
-                    new Payment { Id = 3, OrderId = 3, PaymentMethodId = 2, Status = PaymentStatus.Failed, Amount = 100000, CreatedAt = now },
-                    new Payment { Id = 4, OrderId = 4, PaymentMethodId = 3, Status = PaymentStatus.Failed, Amount = 250000, CreatedAt = now },
-                    new Payment { Id = 5, OrderId = 5, PaymentMethodId = 3, Status = PaymentStatus.Failed, Amount = 50000, CreatedAt = now },
-                    new Payment { Id = 6, OrderId = 6, PaymentMethodId = 3, Status = PaymentStatus.Failed, Amount = 150000, CreatedAt = now },
-                    new Payment { Id = 7, OrderId = 7, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 200000 , CreatedAt = now.AddDays(-1) },
-                    new Payment { Id = 8, OrderId = 8, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-2) },
-                    new Payment { Id = 9, OrderId = 9, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-5) },
-                    new Payment { Id = 10, OrderId = 10, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-30) },
-                    new Payment { Id = 11, OrderId = 11, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-31) },
-                    new Payment { Id = 12, OrderId = 12, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-32) },
-                    new Payment { Id = 13, OrderId = 13, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-33) },
-                    new Payment { Id = 14, OrderId = 14, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-365) },
-                    new Payment { Id = 15, OrderId = 15, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 200000,  CreatedAt = now.AddDays(-366) },
-                    new Payment { Id = 16, OrderId = 16, PaymentMethodId = 3, Status = PaymentStatus.Success, Amount = 100000,  CreatedAt = now.AddDays(-367) },
-                    new Payment { Id = 17, DepositId =1, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now },
-                    new Payment { Id = 18, DepositId = 2, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now },
-                    new Payment { Id = 19, DepositId = 3, PaymentMethodId = 4, Status = PaymentStatus.Failed, Amount = 200000, CreatedAt = now },
-                    new Payment { Id = 20, DepositId = 4, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-1) },
-                    new Payment { Id = 21, DepositId = 5, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-2) },
-                    new Payment { Id = 22, DepositId = 6, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-30) },
-                    new Payment { Id = 23, DepositId = 7, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-31) },
-                    new Payment { Id = 24, DepositId = 8, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 100000, CreatedAt = now.AddDays(-365) },
-                    new Payment { Id = 25, DepositId = 9, PaymentMethodId = 4, Status = PaymentStatus.Success, Amount = 200000, CreatedAt = now.AddDays(-366) }
-
-                );
-
-                context.SaveChanges();
+                payments.Add(new Payment
+                {
+                    Id = paymentId++,
+                    OrderId = order.Id,
+                    DepositId = null,
+                    PaymentMethodId = random.Next(1, 5), 
+                    Status = order.Status == OrderStatus.Completed ? PaymentStatus.Success : PaymentStatus.Failed,
+                    Amount = order.Amount,
+                    CreatedAt = order.CreatedAt ?? DateTime.UtcNow
+                });
             }
+            // Tạo payment từ Deposit
+            var depositsForPayment = context.Deposit.ToList();
+            foreach (var deposit in depositsForPayment)
+            {
+                payments.Add(new Payment
+                {
+                    Id = paymentId++,
+                    OrderId = null,
+                    DepositId = deposit.Id,
+                    PaymentMethodId = 4,
+                    Status = deposit.Status == DepositStatus.Success ? PaymentStatus.Success : PaymentStatus.Failed,
+                    Amount = deposit.Amount,
+                    CreatedAt = deposit.CreatedAt
+                });
+            }
+
+            context.Payment.AddRange(payments);
+            context.SaveChanges();
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Payment] OFF");
 
@@ -1414,33 +1466,25 @@ public static class SeedData
             #region Seed data for Transaction
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] ON");
 
-            if (!context.Transaction.Any())
-            {
-                context.Transaction.AddRange(
-                    new Transaction { Id = 1, Type = TransactionType.Purchase, Amount = 50000, PaymentId = 1, CreatedAt = now },
-                    new Transaction { Id = 2, Type = TransactionType.Purchase, Amount = 100000, PaymentId = 2, CreatedAt = now },
-                    new Transaction { Id = 3, Type = TransactionType.Purchase, Amount = 20000, PaymentId = 7, CreatedAt = now.AddDays(-1) },
-                    new Transaction { Id = 4, Type = TransactionType.Purchase, Amount = 10000, PaymentId = 8, CreatedAt = now.AddDays(-2) },
-                    new Transaction { Id = 5, Type = TransactionType.Purchase, Amount = 20000, PaymentId = 9, CreatedAt = now.AddDays(-5) },
-                    new Transaction { Id = 6, Type = TransactionType.Purchase, Amount = 10000, PaymentId = 10, CreatedAt = now.AddDays(-30) },
-                    new Transaction { Id = 7, Type = TransactionType.Purchase, Amount = 20000, PaymentId = 11, CreatedAt = now.AddDays(-31) },
-                    new Transaction { Id = 8, Type = TransactionType.Purchase, Amount = 10000, PaymentId = 12, CreatedAt = now.AddDays(-32) },
-                    new Transaction { Id = 9, Type = TransactionType.Purchase, Amount = 20000, PaymentId = 13, CreatedAt = now.AddDays(-33) },
-                    new Transaction { Id = 10, Type = TransactionType.Purchase, Amount = 10000, PaymentId = 14, CreatedAt = now.AddDays(-365) },
-                    new Transaction { Id = 11, Type = TransactionType.Purchase, Amount = 20000, PaymentId = 15, CreatedAt = now.AddDays(-366) },
-                    new Transaction { Id = 12, Type = TransactionType.Purchase, Amount = 10000, PaymentId = 16, CreatedAt = now.AddDays(-367) },
-                    new Transaction { Id = 13, Type = TransactionType.Deposit, Amount = 20000, PaymentId = 17, CreatedAt = now },
-                    new Transaction { Id = 15, Type = TransactionType.Deposit, Amount = 20000, PaymentId = 18, CreatedAt = now },
-                    new Transaction { Id = 16, Type = TransactionType.Deposit, Amount = 10000, PaymentId = 20, CreatedAt = now.AddDays(-1) },
-                    new Transaction { Id = 17, Type = TransactionType.Deposit, Amount = 20000, PaymentId = 21, CreatedAt = now.AddDays(-2) },
-                    new Transaction { Id = 18, Type = TransactionType.Deposit, Amount = 10000, PaymentId = 22, CreatedAt = now.AddDays(-30) },
-                    new Transaction { Id = 19, Type = TransactionType.Deposit, Amount = 20000, PaymentId = 23, CreatedAt = now.AddDays(-31) },
-                    new Transaction { Id = 20, Type = TransactionType.Deposit, Amount = 10000, PaymentId = 24, CreatedAt = now.AddDays(-365) },
-                    new Transaction { Id = 21, Type = TransactionType.Deposit, Amount = 20000, PaymentId = 25, CreatedAt = now.AddDays(-366) }
-                );
+            int transactionId = 1;
+            var transactions = new List<Transaction>();
+            var validPayments = context.Payment
+            .Where(p => p.PaymentMethodId != 1 && p.Status == PaymentStatus.Success)
+            .ToList();
 
-                context.SaveChanges();
+            foreach (var payment in validPayments)
+            {
+                transactions.Add(new Transaction
+                {
+                    Id = transactionId++,
+                    Type = payment.OrderId.HasValue ? TransactionType.Purchase : TransactionType.Deposit,
+                    Amount = payment.Amount,
+                    PaymentId = payment.Id,
+                    CreatedAt = payment.CreatedAt
+                });
             }
+            context.Transaction.AddRange(transactions);
+            context.SaveChanges();
 
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [Transaction] OFF");
 

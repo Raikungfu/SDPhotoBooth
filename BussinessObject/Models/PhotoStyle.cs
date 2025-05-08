@@ -28,11 +28,12 @@ namespace BussinessObject.Models
 
         public int? Width { get; set; }
 
+        public double? IP_Adapter_Scale { get; set; }
+
         public InpaintMode? Mode { get; set; } = InpaintMode.None;
         public int? NumInferenceSteps { get; set; }
         public double? GuidanceScale { get; set; }
         public double? Strength { get; set; }
-        public bool? FaceImage { get; set; }
         public bool? BackgroundRemover { get; set; }
 
         public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
