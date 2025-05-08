@@ -140,9 +140,9 @@ namespace BusinessLogic.Service
             {
                 photoStyleObj.Strength = photoStyle.Strength;
             }
-            if (photoStyle.IP_Adapter_Scale != null)
+            if (photoStyle.IPAdapterScale != null)
             {
-                photoStyleObj.IP_Adapter_Scale = photoStyle.IP_Adapter_Scale;
+                photoStyleObj.IPAdapterScale = photoStyle.IPAdapterScale;
             }
             if (photoStyle.BackgroundRemover != null)
             {

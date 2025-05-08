@@ -25,7 +25,7 @@ namespace DataAccess.Repository
             objFromDb.BackgroundColor = photoStyle.BackgroundColor;
             objFromDb.Height = photoStyle.Height;
             objFromDb.Width = photoStyle.Width;
-            objFromDb.IP_Adapter_Scale = photoStyle.IP_Adapter_Scale;
+            objFromDb.IPAdapterScale = photoStyle.IPAdapterScale;
             objFromDb.Mode = photoStyle.Mode;
             objFromDb.NumInferenceSteps = photoStyle.NumInferenceSteps;
             objFromDb.GuidanceScale = photoStyle.GuidanceScale;
@@ -46,7 +46,7 @@ namespace DataAccess.Repository
             objFromDb.BackgroundColor = photoStyle.BackgroundColor;
             objFromDb.Height = photoStyle.Height;
             objFromDb.Width = photoStyle.Width;
-            objFromDb.IP_Adapter_Scale = photoStyle.IP_Adapter_Scale;
+            objFromDb.IPAdapterScale = photoStyle.IPAdapterScale;
             objFromDb.Mode = photoStyle.Mode;
             objFromDb.NumInferenceSteps = photoStyle.NumInferenceSteps;
             objFromDb.GuidanceScale = photoStyle.GuidanceScale;

@@ -16,7 +16,7 @@ namespace BusinessLogic.DTO.PhotoStyleDTO
         public string? BackgroundColor { get; set; }
         public int? Height { get; set; }
         public int? Width { get; set; }
-        public double? IP_Adapter_Scale { get; set; }
+        public double? IPAdapterScale { get; set; }
         public InpaintMode? Mode { get; set; }
         public int? NumInferenceSteps { get; set; }
         public double? GuidanceScale { get; set; }

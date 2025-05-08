@@ -28,7 +28,7 @@ namespace BussinessObject.Models
 
         public int? Width { get; set; }
 
-        public double? IP_Adapter_Scale { get; set; }
+        public double? IPAdapterScale { get; set; }
 
         public InpaintMode? Mode { get; set; } = InpaintMode.None;
         public int? NumInferenceSteps { get; set; }
