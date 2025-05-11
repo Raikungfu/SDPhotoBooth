@@ -57,9 +57,9 @@ namespace ServerAPI.Controllers
                 firebaseUrl = await _firebaseService.UploadImageAsync(stream, request.image.FileName, request.image.ContentType);
             }
 
-            string queueName = QueueRoutingHelper.GetQueueName(photoStyle.Controlnets);
+            //string queueName = QueueRoutingHelper.GetQueueName(photoStyle.Controlnets);
 
-            await _rabbitService.SendMessageAsync(firebaseUrl, request.connectionId, photoStyle, request.sessionCode, queueName);
+            await _rabbitService.SendMessageAsync(firebaseUrl, request.connectionId, photoStyle, request.sessionCode);
 
             return Ok(new { Message = "Image sent for processing", ImageUrl = firebaseUrl });
         }

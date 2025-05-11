@@ -30,5 +30,17 @@ namespace ServerAPI.Helpers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public static byte[] Base64UrlDecode(string input)
+        {
+            string output = input.Replace('-', '+').Replace('_', '/');
+            switch (output.Length % 4)
+            {
+                case 2: output += "=="; break;
+                case 3: output += "="; break;
+            }
+            return Convert.FromBase64String(output);
+        }
+
     }
 }

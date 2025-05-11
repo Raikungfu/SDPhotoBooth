@@ -18,7 +18,7 @@ namespace ServerAPI.Helpers
 {
     public class GoogleTokenHelper
     {
-        private static string CredentialPath = "Key/sd-photobooth-452212-20ba22c87361.json";
+        private static string CredentialPath = "Key/sd-photobooth-452212-2ff885bdb49e.json";
 
         public static async Task<GoogleJsonWebSignature.Payload?> VerifyAccessTokenAsync(string idToken, string googleWebClientId, string googleMobileClientId)
         {

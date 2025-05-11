@@ -105,7 +105,7 @@ namespace ServerAPI.Controllers
                     }
 
                     await _userManager.AddToRoleAsync(newUser, UserType.Customer.ToString());
-                    await _walletService.CreateWallet(user.Id, new WalletRequestDTO());
+                    await _walletService.CreateWallet(newUser.Id, new WalletRequestDTO());
 
                     await _membershipCardService.Create(new CreateMembershipCardRequestDTO()
                     {

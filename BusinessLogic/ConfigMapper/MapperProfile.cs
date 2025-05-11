@@ -77,7 +77,11 @@ namespace BusinessLogic.ConfigMapper
             CreateMap<Coupon, CouponResponseDTO>();
 
             CreateMap<SessionRequestDTO, Session>();
-            CreateMap<Session, SessionResponseDTO>();
+            CreateMap<Session, SessionResponseDTO>().ForMember(dest => dest.Expired,
+                 opt => opt.MapFrom(src => src.Expired.HasValue
+                                            ? src.Expired.Value.ToLocalTime()
+                                            : (DateTime?)null));
+
 
 
 
