@@ -47,7 +47,11 @@ namespace BusinessLogic.Service
                 pagination: pagination
             );
 
-            return _mapper.Map<IEnumerable<TransactionResponseDTO>>(transactions);
+            var sorted = transactions
+            .OrderByDescending(o => o.CreatedAt)
+            .ToList();
+
+            return _mapper.Map<IEnumerable<TransactionResponseDTO>>(sorted);
         }
 
         public async Task<IEnumerable<TransactionResponseDTO>> GetTransactionByCusId(string cusId)

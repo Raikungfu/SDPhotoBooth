@@ -85,7 +85,11 @@ namespace BusinessLogic.Service
                 pagination: pagination
             );
 
-            return _mapper.Map<IEnumerable<PaymentResponseDTO>>(payments);
+            var sorted = payments
+            .OrderByDescending(o => o.CreatedAt)
+            .ToList();
+
+            return _mapper.Map<IEnumerable<PaymentResponseDTO>>(sorted);
         }
 
         public Task<PaymentResponseDTO> GetPaymentById(int id)
