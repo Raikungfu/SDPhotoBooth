@@ -60,13 +60,12 @@ namespace BusinessLogic.Service
         {
             var orders = await _unitOfWork.Order.GetAllAsync(
                 includeProperties: "Customer,Payment,Payment.PaymentMethod,Session,Coupon,TypeSession,Session.PhotoHistory.Booth,Session.PhotoHistory.Booth.Location",
+                orderBy: o => o.OrderByDescending(o => o.CreatedAt),
                 asNoTracking: true,
                 pagination: pagination
             );
 
-            var sorted = orders
-            .OrderByDescending(o => o.CreatedAt)
-            .ToList();
+            var sorted = orders.ToList();
 
             return _mapper.Map<IEnumerable<OrderResponseDTO>>(sorted);
         }

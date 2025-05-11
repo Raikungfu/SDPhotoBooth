@@ -82,12 +82,11 @@ namespace BusinessLogic.Service
         {
             var payments = await _unitOfWork.Payment.GetAllAsync(
                 includeProperties: "Order,PaymentMethod",
+                orderBy: o => o.OrderByDescending(o => o.CreatedAt),
                 pagination: pagination
             );
 
-            var sorted = payments
-            .OrderByDescending(o => o.CreatedAt)
-            .ToList();
+            var sorted = payments.ToList();
 
             return _mapper.Map<IEnumerable<PaymentResponseDTO>>(sorted);
         }
